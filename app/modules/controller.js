@@ -5,7 +5,6 @@ the controller model should remove any non-route code from router.js
 
 define([
   "app",
-
   // Libs
   "backbone",
 
@@ -37,7 +36,7 @@ function(app, Backbone, State, UI) {
         render base layout
         the base layout contains the logic for the player skin (citations, ui, etc)
       */
-      app.layout = new UI.Layout();  
+      app.layout = new UI.Layout();
     },
 
     initPlayer: function() {
