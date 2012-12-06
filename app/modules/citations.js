@@ -12,6 +12,8 @@ function(app, Backbone) {
   // This will fetch the tutorial template and render it.
   Citations.View = Backbone.View.extend({
     
+    visible : true,
+
     template: 'citations',
 
     className: 'ZEEGA-player-citations',
@@ -40,8 +42,18 @@ function(app, Backbone) {
         });
     },
 
-    events: {
-    
+    fadeOut: function() {
+        if(this.visible) {
+            this.visible = false;
+            this.$el.fadeOut();
+        }
+    },
+ 
+    fadeIn: function() {
+        if(!this.visible) {
+            this.visible = true;
+            this.$el.fadeIn();
+        }
     }
 
   });
