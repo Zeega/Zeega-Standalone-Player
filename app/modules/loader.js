@@ -12,7 +12,7 @@ function(app, Backbone) {
   // This will fetch the tutorial template and render it.
   Loader.View = Backbone.View.extend({
 
-    DELAY: 3000,
+    DELAY: 0,
     /* variables keeping track of generic layer states */
     layerCount : 0,
     layersReady : 0,

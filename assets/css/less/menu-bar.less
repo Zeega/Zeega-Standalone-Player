@@ -1,0 +1,41 @@
+.ZEEGA-player-menu-bar {
+
+	background: rgba(0,0,0,0.5);
+
+	.menu-bar-left {
+		float:left;
+	}
+
+	.menu-bar-right {
+		float:right;
+	}
+
+	.ZEEGA-menu-bar {
+
+		.menu-bar-title {
+			padding: 10px;
+			color:white;
+		}
+
+		&>li {
+			float:left;
+
+			border-right: 1px solid rgba(0,0,0,0.5);
+			&:last-child {
+				border-right:none;
+			}
+
+			&>a {
+				padding: 10px;
+				display: block;
+			}
+
+		}
+	}
+
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
