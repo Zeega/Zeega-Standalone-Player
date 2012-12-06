@@ -1,6 +1,111 @@
+html {
+  background: black;
+}
 #main {
   height: 100%;
   width: 100%;
   position: absolute;
   z-index: 10;
+}
+.ZEEGA-player-controls {
+  position: absolute;
+  top: 40%;
+  width: 100%;
+}
+.arrow {
+  display: inline-block;
+  height: 60px;
+  border-left: 10px solid;
+  border-top: 10px solid;
+  border-color: #ffffff;
+  opacity: 0.85;
+  position: absolute;
+  transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+  transition: border-color 0.5s;
+  -moz-transition: border-color 0.5s;
+  /* Firefox 4 */
+
+  -webkit-transition: border-color 0.5s;
+  /* Safari and Chrome */
+
+  -o-transition: border-color 0.5s;
+  /* Opera */
+
+  width: 60px;
+  z-index: 100;
+  box-shadow: 0 0 50px transparent;
+}
+.arrow:hover {
+  border-color: #ffa500;
+  transition: border-color 0.5s;
+  -moz-transition: border-color 0.5s;
+  -webkit-transition: border-color 0.5s;
+  -o-transition: border-color 0.5s;
+  opacity: 1;
+  transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  /* Firefox 4 */
+
+  -webkit-transition: opacity 0.5s;
+  /* Safari and Chrome */
+
+  -o-transition: opacity 0.5s;
+  /* Opera */
+
+}
+.arrow.arrow-left {
+  left: 15px;
+  transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  /* IE 9 */
+
+  -moz-transform: rotate(-45deg);
+  /* Firefox */
+
+  -webkit-transform: rotate(-45deg);
+  /* Safari and Chrome */
+
+  -o-transform: rotate(-45deg);
+  /* Opera */
+
+  -webkit-filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.5));
+}
+.arrow.arrow-left:hover {
+  -webkit-filter: drop-shadow(-8px 8px 6px rgba(0, 0, 0, 0.5));
+}
+.arrow.arrow-right {
+  right: 15px;
+  transform: rotate(135deg);
+  -ms-transform: rotate(135deg);
+  /* IE 9 */
+
+  -moz-transform: rotate(135deg);
+  /* Firefox */
+
+  -webkit-transform: rotate(135deg);
+  /* Safari and Chrome */
+
+  -o-transform: rotate(135deg);
+  /* Opera */
+
+  -webkit-filter: drop-shadow(4px -4px 4px rgba(0, 0, 0, 0.5));
+}
+.arrow.arrow-right:hover {
+  -webkit-filter: drop-shadow(8px -8px 6px rgba(0, 0, 0, 0.5));
+}
+.arrow.disabled {
+  opacity: 0.0;
+  transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  /* Firefox 4 */
+
+  -webkit-transition: opacity 0.5s;
+  /* Safari and Chrome */
+
+  -o-transition: opacity 0.5s;
+  /* Opera */
+
 }

@@ -1,16 +1,11 @@
 define([
 	// Application.
 	"app",
-
-	//"app",
-
 	// Modules.
-	"modules/state",
-	"modules/ui"
-
+	"modules/controller"
 ],
 
-function(app, State, UI) {
+function(app, Controller) {
 	// Defining the application router, you can attach sub routers here.
 	var Router = Backbone.Router.extend({
 		routes: {
@@ -49,15 +44,7 @@ function(app, State, UI) {
 
 	/* create init fxn that can only run once per load */
 	var init = function() {
-		/*
-			app.state stores information on the current state of the application
-		*/
-		app.state = new State();
-		/*
-			render base layout
-			the base layout contains the logic for the player skin (citations, ui, etc)
-		*/
-		app.layout = new UI.Layout();
+		new Controller.Model();
 	};
 	var initialize = _.once(init);
 	
