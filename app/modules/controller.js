@@ -42,9 +42,9 @@ function(app, Backbone, State, UI) {
     initPlayer: function() {
       var player = new Zeega.player({
         'window_fit': true,
-        'autoplay': true
+        'autoplay': false
       });
-      player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('player: e:',e,obj);});
+      //player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('player: e:',e,obj);});
       player.load({
         url: 'http://staging.zeega.org/api/projects/3662'
       });
