@@ -35,6 +35,7 @@ function(app, Backbone) {
 
     onPause: function() {
       this.$('#project-play-pause i').addClass('icon-play').removeClass('icon-pause');
+      this.fadeIn();
     },
 
     events: {
@@ -91,7 +92,7 @@ function(app, Backbone) {
     },
 
     fadeOut: function() {
-      if(this.visible && !this.hover) {
+      if(this.visible && !this.hover && app.player.status != 'paused') {
           this.visible = false;
           this.$el.fadeOut();
       }

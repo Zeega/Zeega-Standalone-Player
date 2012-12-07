@@ -14,6 +14,8 @@ function(app, Backbone) {
     
     visible : true,
     hover: false,
+    playing: false,
+
 
     template: 'citations',
 
@@ -27,6 +29,7 @@ function(app, Backbone) {
       /* update the arrow state whenever a frame is rendered */
       this.model.on('frame_rendered', this.updateCitations, this);
       this.model.on('data_loaded', this.render, this);
+      this.model.on('pause', this.fadeIn, this );
     },
 
     updateCitations: function(info) {
@@ -49,7 +52,7 @@ function(app, Backbone) {
     },
 
     fadeOut: function() {
-        if(this.visible && !this.hover ) {
+        if(this.visible && !this.hover && app.player.status != 'paused' ) {
             this.visible = false;
             this.$el.fadeOut();
         }
