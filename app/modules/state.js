@@ -13,7 +13,8 @@ function(app, Backbone) {
   State = Backbone.Model.extend({
     defaults: {
       'base_rendered': false,
-      'first_visit': true
+      'first_visit': true,
+      'fullscreen': false
     }
   });
 

@@ -39,7 +39,7 @@ function(app, Backbone) {
       'click #project-play-pause': 'playpause',
       'click #project-share': 'share',
       'click #project-credits': 'credits',
-      'click #project-fullscreen-toggle': 'fullscreen'
+      'click #project-fullscreen-toggle': 'toggleFullscreen'
     },
 
     playpause: function() {
@@ -58,9 +58,31 @@ function(app, Backbone) {
       return false;
     },
 
-    fullscreen: function() {
-      console.log('fullscreen');
+    toggleFullscreen : function()
+    {
+      if(app.state.get('fullscreen')) this.leaveFullscreen();
+      else this.goFullscreen();
       return false;
+    },
+
+    goFullscreen : function() {
+      app.state.set('fullscreen', true);
+      docElm = document.getElementById('main');
+          
+      if (docElm.requestFullscreen) docElm.requestFullscreen();
+      else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();
+      else if (docElm.webkitRequestFullScreen) docElm.webkitRequestFullScreen();
+
+      //this.$el.find('.zicon-go-fullscreen').removeClass('zicon-go-fullscreen').addClass('zicon-exit-fullscreen');
+    },
+
+    leaveFullscreen : function() {
+      app.state.set('fullscreen', false);
+      if (document.exitFullscreen)        document.exitFullscreen();
+      else if (document.mozCancelFullScreen)    document.mozCancelFullScreen();
+      else if (document.webkitCancelFullScreen)   document.webkitCancelFullScreen();
+
+      //this.$el.find('.zicon-exit-fullscreen').removeClass('zicon-exit-fullscreen').addClass('zicon-go-fullscreen');
     },
 
     fadeOut: function() {
