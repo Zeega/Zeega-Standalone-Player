@@ -73,7 +73,7 @@ function(app, Backbone) {
       else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();
       else if (docElm.webkitRequestFullScreen) docElm.webkitRequestFullScreen();
 
-      //this.$el.find('.zicon-go-fullscreen').removeClass('zicon-go-fullscreen').addClass('zicon-exit-fullscreen');
+      this.$('#project-fullscreen-toggle i').removeClass('icon-resize-full').addClass('icon-resize-small');
     },
 
     leaveFullscreen : function() {
@@ -82,7 +82,7 @@ function(app, Backbone) {
       else if (document.mozCancelFullScreen)    document.mozCancelFullScreen();
       else if (document.webkitCancelFullScreen)   document.webkitCancelFullScreen();
 
-      //this.$el.find('.zicon-exit-fullscreen').removeClass('zicon-exit-fullscreen').addClass('zicon-go-fullscreen');
+      this.$('#project-fullscreen-toggle i').addClass('icon-resize-full').removeClass('icon-resize-small');
     },
 
     fadeOut: function() {

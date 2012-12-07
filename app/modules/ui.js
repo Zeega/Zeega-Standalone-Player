@@ -38,10 +38,10 @@ function(app, Backbone, Loader, Controls, Citations, MenuBar) {
       this.citations = new Citations.View({model: app.player});
       this.menuBar = new MenuBar.View({model: app.player});
 
-      this.insertView( this.loader );
-      this.insertView( this.controls );
-      this.insertView( this.citations );
-      this.insertView( this.menuBar );
+      this.insertView('#overlays', this.loader );
+      this.insertView('#overlays', this.controls );
+      this.insertView('#overlays', this.citations );
+      this.insertView('#overlays', this.menuBar );
       this.render();
     },
 

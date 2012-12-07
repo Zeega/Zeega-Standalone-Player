@@ -905,6 +905,18 @@ html {
   position: absolute;
   z-index: 10;
 }
+#main #overlays {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+}
+#main #player {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
 a {
   color: white;
   text-decoration: none;
@@ -1143,6 +1155,9 @@ a:active {
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a {
   padding: 10px;
   display: block;
+}
+.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 .ZEEGA-player-menu-bar:after {
   content: "";
