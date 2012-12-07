@@ -12,6 +12,9 @@ function(app, Backbone) {
   // This will fetch the tutorial template and render it.
   MenuBar.View = Backbone.View.extend({
     
+    visible: true,
+    hover: false,
+
     template: 'menu-bar',
 
     className: 'ZEEGA-player-menu-bar',
@@ -22,7 +25,6 @@ function(app, Backbone) {
 
     initialize: function() {
       this.model.on('data_loaded', this.render, this);
-
       this.model.on('play', this.onPlay, this );
       this.model.on('pause', this.onPause, this );
     },
@@ -39,7 +41,9 @@ function(app, Backbone) {
       'click #project-play-pause': 'playpause',
       'click #project-share': 'share',
       'click #project-credits': 'credits',
-      'click #project-fullscreen-toggle': 'toggleFullscreen'
+      'click #project-fullscreen-toggle': 'toggleFullscreen',
+      'mouseenter': 'onMouseenter',
+      'mouseleave': 'onMouseleave'
     },
 
     playpause: function() {
@@ -50,6 +54,7 @@ function(app, Backbone) {
 
     share: function() {
       console.log('share');
+      this.model.pause();
       return false;
     },
 
@@ -86,7 +91,7 @@ function(app, Backbone) {
     },
 
     fadeOut: function() {
-      if(this.visible) {
+      if(this.visible && !this.hover) {
           this.visible = false;
           this.$el.fadeOut();
       }
@@ -97,6 +102,14 @@ function(app, Backbone) {
           this.visible = true;
           this.$el.fadeIn();
       }
+    },
+
+    onMouseenter: function() {
+      this.hover = true;
+    },
+
+    onMouseleave: function() {
+      this.hover = false;
     }
 
   });

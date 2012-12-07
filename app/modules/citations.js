@@ -13,6 +13,7 @@ function(app, Backbone) {
   Citations.View = Backbone.View.extend({
     
     visible : true,
+    hover: false,
 
     template: 'citations',
 
@@ -42,8 +43,13 @@ function(app, Backbone) {
         });
     },
 
+    events: {
+      'mouseenter': 'onMouseenter',
+      'mouseleave': 'onMouseleave'
+    },
+
     fadeOut: function() {
-        if(this.visible) {
+        if(this.visible && !this.hover ) {
             this.visible = false;
             this.$el.fadeOut();
         }
@@ -54,6 +60,14 @@ function(app, Backbone) {
             this.visible = true;
             this.$el.fadeIn();
         }
+    },
+
+    onMouseenter: function() {
+      this.hover = true;
+    },
+
+    onMouseleave: function() {
+      this.hover = false;
     }
 
   });
