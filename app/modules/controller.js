@@ -45,9 +45,9 @@ function(app, Backbone, State, UI) {
         'autoplay': false,
         'div_id' : 'player'
       });
-      player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('player: e:',e,obj);});
+      player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('    player event:',e,obj);});
       player.load({
-        url: 'http://staging.zeega.org/api/projects/3662'
+        url: 'http://dev.zeega.org/joseph/web/api/projects/3631'
       });
       app.player = player;
     }
