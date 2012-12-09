@@ -35,7 +35,6 @@ function(app, Backbone) {
     },
 
     updateArrowState: function( info ) {
-      console.log('update arrow state', info);
       switch(info.connections) {
         case 'l':
           this.activateArrow('prev');
