@@ -64,6 +64,9 @@ function(app, Backbone) {
     share: function() {
       console.log('share');
       this.model.pause();
+
+      this.$('.slide-menu').toggle();
+
       return false;
     },
 

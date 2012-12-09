@@ -1,3 +1,24 @@
+[class^="zsocial-"] {
+  background-image: url('../img/social-sprites-20px.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 17px;
+  vertical-align: text-top;
+  width: 17px;
+}
+.zsocial-twitter {
+  background-position: 0px 0px;
+}
+.zsocial-facebook {
+  background-position: 0px -17px;
+}
+.zsocial-tumblr {
+  background-position: 0px -34px;
+}
+.zsocial-email {
+  background-position: 0px -51px;
+}
 [class^="zitem-"] {
   background-image: url('../img/zitems-50px.png');
   background-position: 0px 0px;
@@ -1159,6 +1180,12 @@ a:active {
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar > li:last-child {
   border-right: none;
+}
+.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li.slide-menu {
+  display: none;
+}
+.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li.slide-menu a {
+  float: left;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a {
   padding: 10px;
