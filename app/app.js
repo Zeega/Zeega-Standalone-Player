@@ -4,18 +4,24 @@ define([
 	"lodash",
 	"backbone",
 
+	"modules/state",
 	// Plugins.
 	"plugins/backbone.layoutmanager"
 ],
 
-function($, _, Backbone) {
+function($, _, Backbone, State) {
 	// Provide a global location to place configuration settings and module
 	// creation.
 	var app = {
 		// The root path to run the application.
 		root: "/",
+		// the path of the zeega api
+        api: 'http://dev.zeega.org/joseph/web/api/projects/',
 
-		players : new Backbone.Model()
+      /*
+        app.state stores information on the current state of the application
+      */
+		state: new State()
 	};
 
 	// Localize or create a new JavaScript Template object.

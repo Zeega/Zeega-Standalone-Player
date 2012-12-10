@@ -28,10 +28,12 @@ function(app, Backbone) {
 
     next: function() {
       this.model.cueNext();
+      return false;
     },
 
     prev: function() {
       this.model.cuePrev();
+      return false;
     },
 
     updateArrowState: function( info ) {

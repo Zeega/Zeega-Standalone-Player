@@ -11,6 +11,10 @@ function(app, Controller) {
 		routes: {
 			"": "base",
 
+			":project_id": 'goToProject',
+			":project_id/frame/:frame_id": 'goToProjectFrame',
+			":project_id/f/:frame_id": 'goToProjectFrame',
+
 			"project/:project_id" : 'goToProject',
 			"p/:project_id" : 'goToProject',
 
@@ -28,16 +32,17 @@ function(app, Controller) {
 		},
 
 		goToProject: function(project_id) {
-			initialize();
 			app.state.set('project_id',project_id);
+			initialize();
 		},
 
 		goToProjectFrame: function(project_id,frame_id) {
-			initialize();
 			app.state.set({
 				'project_id': project_id,
 				'frame_id': frame_id
 			});
+			if(app.state.get('initialized')) app.player.cueFrame(frame_id);
+			initialize();
 		}
 
 	});
@@ -45,6 +50,7 @@ function(app, Controller) {
 	/* create init fxn that can only run once per load */
 	var init = function() {
 		new Controller.Model();
+		app.state.set('initialized', true);
 	};
 	var initialize = _.once(init);
 	

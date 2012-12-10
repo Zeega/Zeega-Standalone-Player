@@ -14,7 +14,10 @@ function(app, Backbone) {
     defaults: {
       'base_rendered': false,
       'first_visit': true,
-      'fullscreen': false
+      'fullscreen': false,
+      'initialized': false,
+      'project_id': 3631,
+      'frame_id': null
     }
   });
 
