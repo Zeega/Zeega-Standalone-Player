@@ -46,6 +46,7 @@ function(app, Backbone, UI) {
       player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('    player event:',e,obj);});
       // listen for frame events to update the router
       player.on('frame_rendered', this.onFrameRender, this);
+      player.on('sequence_enter', this.updateWindowTitle, this);
 
       player.load({
         url: app.api + app.state.get('project_id'),
@@ -57,6 +58,12 @@ function(app, Backbone, UI) {
 
     onFrameRender: function(info) {
       app.router.navigate( app.state.get('project_id') +'/f/'+ info.id );
+    },
+
+    updateWindowTitle: function(info) {
+      var def = /Sequence ([0-9]*)/g.test(info.title);
+      var seqTitle = def ? '' : ' - '+ info.title;
+      $('title').text( app.player.get('title')+ seqTitle );
     }
 
   });
