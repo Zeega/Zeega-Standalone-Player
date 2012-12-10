@@ -53,9 +53,10 @@ function(app, Backbone) {
 
     onLayerLoading: function(layer) {
       this.layerCount++;
-
-      var item = '<li><i class="zitem-'+ layer.type.toLowerCase() +' zitem-30" data-id="'+ layer.id +'"></i></li>';
-      this.$('.ZEEGA-loading-layers').append(item);
+      if(layer.citation) {
+        var item = '<li><i class="zitem-'+ layer.type.toLowerCase() +' zitem-30" data-id="'+ layer.id +'"></i></li>';
+        this.$('.ZEEGA-loading-layers').append(item);
+      }
     },
 
     onLayerReady: function(layer) {
