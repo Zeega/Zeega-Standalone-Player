@@ -36,7 +36,8 @@ function(app, Backbone) {
         var _this = this;
         this.$('.ZEEGA-citations-primary').empty();
         var layersToCite = _.map(info.layers,function(layer){
-            if(layer.showCitation) return layer;
+            console.log('citation', layer);
+            if(layer.citation) return layer;
             return false;
         });
         _.each( _.compact(layersToCite), function(layer){
