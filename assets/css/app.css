@@ -1042,6 +1042,7 @@ a:active {
 }
 .arrow.disabled {
   opacity: 0.0;
+  pointer-events: none;
   transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
   /* Firefox 4 */
