@@ -37,13 +37,13 @@ function(app, Backbone, UI) {
     initPlayer: function()
     {
       var player = new Zeega.player({
-        'window_fit': true,
+        'window_fit': false,
         'autoplay': false,
         'div_id' : 'player'
       });
 
       // outputs player events to the console
-      player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('    player event:',e,obj);});
+      // player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('    player event:',e,obj);});
       // listen for frame events to update the router
       player.on('frame_rendered', this.onFrameRender, this);
       player.on('sequence_enter', this.updateWindowTitle, this);
