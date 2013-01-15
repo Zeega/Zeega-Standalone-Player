@@ -31,17 +31,20 @@ function(app, Controller) {
 			initialize();
 		},
 
-		goToProject: function(projectID) {
+		goToProject: function( projectID ) {
 			app.state.set('projectID',projectID);
 			initialize();
 		},
 
-		goToProjectFrame: function(projectID,frameID) {
+		goToProjectFrame: function( projectID, frameID ) {
+console.log("go to project frame", projectID, frameID );
 			app.state.set({
-				'projectID': projectID,
-				'frameID': frameID
+				projectID: projectID,
+				frameID: frameID
 			});
-			if(app.state.get('initialized')) app.player.cueFrame(frameID);
+			if(app.state.get("initialized")) {
+				app.player.cueFrame(frameID);
+			}
 			initialize();
 		}
 

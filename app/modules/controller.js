@@ -40,7 +40,7 @@ function(app, Backbone, UI) {
         autoplay: true,
         target: '#player',
         url: app.api + app.state.get("projectID"),
-        start_frame: app.state.get("frameID")
+        startFrame: app.state.get("frameID")
       });
 
       // outputs player events to the console
