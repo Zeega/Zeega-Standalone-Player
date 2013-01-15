@@ -1,62 +1,60 @@
 define([
-	// Application.
-	"app",
-	// Modules.
-	"modules/controller"
+    // Application.
+    "app",
+    // Modules.
+    "modules/controller"
 ],
 
-function(app, Controller) {
-	// Defining the application router, you can attach sub routers here.
-	var Router = Backbone.Router.extend({
-		routes: {
-			"": "base",
+function( app, Controller ) {
+    // Defining the application router, you can attach sub routers here.
+    var Router = Backbone.Router.extend({
+        routes: {
+            "": "base",
 
-			":projectID": 'goToProject',
-			":projectID/frame/:frameID": 'goToProjectFrame',
-			":projectID/f/:frameID": 'goToProjectFrame',
+            ":projectID": 'goToProject',
+            ":projectID/frame/:frameID": 'goToProjectFrame',
+            ":projectID/f/:frameID": 'goToProjectFrame',
 
-			"project/:projectID" : 'goToProject',
-			"p/:projectID" : 'goToProject',
+            "project/:projectID" : 'goToProject',
+            "p/:projectID" : 'goToProject',
 
-			"project/:projectID/frame/:frameID": 'goToProjectFrame',
-			"p/:projectID/f/:frameID": 'goToProjectFrame'
-		},
+            "project/:projectID/frame/:frameID": 'goToProjectFrame',
+            "p/:projectID/f/:frameID": 'goToProjectFrame'
+        },
 
-		/*
-		when no route is present.
+        /*
+        when no route is present.
 
-		player could wait for user input or rely on bootstrapped data
-		*/
-		base: function() {
-			initialize();
-		},
+        player could wait for user input or rely on bootstrapped data
+        */
+        base: function() {
+            initialize();
+        },
 
-		goToProject: function( projectID ) {
-			app.state.set('projectID',projectID);
-			initialize();
-		},
+        goToProject: function( projectID ) {
+            app.state.set("projectID",projectID);
+            initialize();
+        },
 
-		goToProjectFrame: function( projectID, frameID ) {
-console.log("go to project frame", projectID, frameID );
-			app.state.set({
-				projectID: projectID,
-				frameID: frameID
-			});
-			if(app.state.get("initialized")) {
-				app.player.cueFrame(frameID);
-			}
-			initialize();
-		}
+        goToProjectFrame: function( projectID, frameID ) {
+            app.state.set({
+                projectID: projectID,
+                frameID: frameID
+            });
+            if(app.state.get("initialized")) {
+                app.player.cueFrame(frameID);
+            }
+            initialize();
+        }
 
-	});
+    });
 
-	/* create init fxn that can only run once per load */
-	var init = function() {
-		new Controller.Model();
-		app.state.set('initialized', true);
-	};
-	var initialize = _.once(init);
-	
-	return Router;
-
+    /* create init fxn that can only run once per load */
+    var init = function() {
+        new Controller.Model();
+        app.state.set("initialized", true );
+    };
+    var initialize = _.once( init );
+    
+    return Router;
 });

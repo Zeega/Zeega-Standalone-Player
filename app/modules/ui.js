@@ -6,68 +6,67 @@
 */
 
 define([
-  "app",
+    "app",
 
-  // Libs
-  "backbone",
+    // Libs
+    "backbone",
 
-  // Modules,
-  'modules/loader',
-  'modules/controls',
-  'modules/citations',
-  'modules/menu-bar'
-
+    // Modules,
+    "modules/loader",
+    "modules/controls",
+    "modules/citations",
+    "modules/menu-bar"
 ],
 
-function(app, Backbone, Loader, Controls, Citations, MenuBar) {
+function( app, Backbone, Loader, Controls, Citations, MenuBar ) {
 
-  // Create a new module
-  var UI = {};
+    // Create a new module
+    var UI = {};
 
-  var FADE_OUT_DELAY = 3000;
+    var FADE_OUT_DELAY = 3000;
 
-  // This will fetch the tutorial template and render it.
-  UI.Layout = Backbone.Layout.extend({
-    
-    el: '#main',
+    // This will fetch the tutorial template and render it.
+    UI.Layout = Backbone.Layout.extend({
+        
+        el: "#main",
 
-    initialize: function() {
+        initialize: function() {
 
-      this.loader = new Loader.View({model: app.player});
-      this.controls = new Controls.View({model: app.player});
-      this.citations = new Citations.View({model: app.player});
-      this.menuBar = new MenuBar.View({model: app.player});
+            this.loader = new Loader.View({ model: app.player });
+            this.controls = new Controls.View({ model: app.player });
+            this.citations = new Citations.View({ model: app.player });
+            this.menuBar = new MenuBar.View({ model: app.player });
 
-      this.insertView('#overlays', this.loader );
-      this.insertView('#overlays', this.controls );
-      this.insertView('#overlays', this.citations );
-      this.insertView('#overlays', this.menuBar );
-      this.render();
-    },
+            this.insertView("#overlays", this.loader );
+            this.insertView("#overlays", this.controls );
+            this.insertView("#overlays", this.citations );
+            this.insertView("#overlays", this.menuBar );
+            this.render();
+        },
 
-    afterRender: function() {
-      app.state.set('baseRendered', true);
-      this.resetFadeOutTimer();
-    },
+        afterRender: function() {
+            app.state.set("baseRendered", true );
+            this.resetFadeOutTimer();
+        },
 
-    events : {
-      'mousemove': 'resetFadeOutTimer'
-    },
+        events : {
+            "mousemove": "resetFadeOutTimer"
+        },
 
-    resetFadeOutTimer: function() {
-      var _this =  this;
-      this.citations.fadeIn();
-      this.menuBar.fadeIn();
-      if(this.timer) clearTimeout( this.timer );
-      this.timer = setTimeout(function(){
-        _this.citations.fadeOut();
-        _this.menuBar.fadeOut();
-      }, FADE_OUT_DELAY);
-    }
+        resetFadeOutTimer: function() {
+            this.citations.fadeIn();
+            this.menuBar.fadeIn();
+            if ( this.timer ) {
+                clearTimeout( this.timer );
+            }
+            this.timer = setTimeout(function(){
+                this.citations.fadeOut();
+                this.menuBar.fadeOut();
+            }.bind( this ), FADE_OUT_DELAY);
+        }
 
-  });
+    });
 
-  // Required, return the module for AMD compliance
-  return UI;
-
+    // Required, return the module for AMD compliance
+    return UI;
 });
