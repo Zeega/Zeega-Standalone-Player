@@ -11,15 +11,15 @@ function(app, Controller) {
 		routes: {
 			"": "base",
 
-			":project_id": 'goToProject',
-			":project_id/frame/:frame_id": 'goToProjectFrame',
-			":project_id/f/:frame_id": 'goToProjectFrame',
+			":projectID": 'goToProject',
+			":projectID/frame/:frameID": 'goToProjectFrame',
+			":projectID/f/:frameID": 'goToProjectFrame',
 
-			"project/:project_id" : 'goToProject',
-			"p/:project_id" : 'goToProject',
+			"project/:projectID" : 'goToProject',
+			"p/:projectID" : 'goToProject',
 
-			"project/:project_id/frame/:frame_id": 'goToProjectFrame',
-			"p/:project_id/f/:frame_id": 'goToProjectFrame'
+			"project/:projectID/frame/:frameID": 'goToProjectFrame',
+			"p/:projectID/f/:frameID": 'goToProjectFrame'
 		},
 
 		/*
@@ -31,17 +31,17 @@ function(app, Controller) {
 			initialize();
 		},
 
-		goToProject: function(project_id) {
-			app.state.set('project_id',project_id);
+		goToProject: function(projectID) {
+			app.state.set('projectID',projectID);
 			initialize();
 		},
 
-		goToProjectFrame: function(project_id,frame_id) {
+		goToProjectFrame: function(projectID,frameID) {
 			app.state.set({
-				'project_id': project_id,
-				'frame_id': frame_id
+				'projectID': projectID,
+				'frameID': frameID
 			});
-			if(app.state.get('initialized')) app.player.cueFrame(frame_id);
+			if(app.state.get('initialized')) app.player.cueFrame(frameID);
 			initialize();
 		}
 

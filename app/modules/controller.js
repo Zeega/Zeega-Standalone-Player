@@ -34,36 +34,34 @@ function(app, Backbone, UI) {
       app.layout = new UI.Layout();
     },
 
-    initPlayer: function()
-    {
+    initPlayer: function() {
       var player = new Zeega.player({
-        'window_fit': false,
-        'autoplay': false,
-        'div_id' : 'player'
+        // window_fit: false,
+        autoplay: true,
+        target: '#player',
+        url: app.api + app.state.get("projectID"),
+        start_frame: app.state.get("frameID")
       });
 
       // outputs player events to the console
-      // player.on('all', function(e, obj){ if(e!='media_timeupdate') console.log('    player event:',e,obj);});
+      player.on('all', function(e, obj) { if(e!='media_timeupdate') console.log('    player event:',e,obj);});
       // listen for frame events to update the router
       player.on('frame_rendered', this.onFrameRender, this);
       player.on('sequence_enter', this.updateWindowTitle, this);
 
-      player.load({
-        url: app.api + app.state.get('project_id'),
-        start_frame: app.state.get('frame_id')
-      });
-
       app.player = player;
     },
 
-    onFrameRender: function(info) {
-      app.router.navigate( app.state.get('project_id') +'/f/'+ info.id );
+    onFrameRender: function( info ) {
+      app.router.navigate( app.state.get('projectID') +'/f/'+ info.id );
     },
 
-    updateWindowTitle: function(info) {
-      var def = /Sequence ([0-9]*)/g.test(info.title);
-      var seqTitle = def ? '' : ' - '+ info.title;
-      $('title').text( app.player.get('title')+ seqTitle );
+    updateWindowTitle: function( info ) {
+      var rDefaultText = /^Sequence ([0-9]*)/g.test( info.title ),
+        seqTitle = rDefaultText ? '' : ' - '+ info.title,
+        projectTitle = _.isUndefined( app.player.get("title") ) ? "Untitled" : app.player.get("title");
+      console.log('title', rDefaultText, app.player.get("title"));
+      $('title').text( projectTitle + seqTitle );
     }
 
   });

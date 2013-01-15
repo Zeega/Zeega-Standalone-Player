@@ -46,7 +46,7 @@ function(app, Backbone, Loader, Controls, Citations, MenuBar) {
     },
 
     afterRender: function() {
-      app.state.set('base_rendered', true);
+      app.state.set('baseRendered', true);
       this.resetFadeOutTimer();
     },
 

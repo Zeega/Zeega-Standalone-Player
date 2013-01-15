@@ -12,12 +12,12 @@ function(app, Backbone) {
   // This will fetch the tutorial template and render it.
   State = Backbone.Model.extend({
     defaults: {
-      'base_rendered': false,
-      'first_visit': true,
-      'fullscreen': false,
-      'initialized': false,
-      'project_id': 3631,
-      'frame_id': null
+      baseRendered: false,
+      firstVisit: true,
+      fullscreen: false,
+      initialized: false,
+      projectID: 4328,
+      frameID: null
     }
   });
 
