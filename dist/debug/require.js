@@ -401,7 +401,9 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( user_id )+
 '" target="blank" style="padding:7px;">\n            <img src="assets/img/zeega-logo-header.png" height="20px">\n        </a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
 ( title )+
-'</span><span class="sequence-description"></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
+'</span><span class="sequence-description"></span><span class="sequence-author"> by '+
+( authors )+
+'</span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
 ( id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -411,7 +413,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n        <a href="http://www.tumblr.com/share" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a href="mailto:friend@example.com?subject=Check out this Zeega!&body=http://alpha.zeega.org/'+
 ( id )+
-'"><i class="zsocial-email"></i></a>\n    </li>\n    <li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
+'"><i class="zsocial-email"></i></a>\n    </li>\n    <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
 }
 return __p;
 };;
@@ -57882,7 +57884,6 @@ function(app, Backbone) {
         },
 
         onHover: function() {
-            console.log(' on hover ')
             this.$("i").toggleClass("loaded");
         }
   
@@ -57920,11 +57921,16 @@ function(app, Backbone) {
             this.model.on("sequence_enter", this.onEnterSequence, this );
         },
 
-        onEnterSequence: function(info) {
+        onEnterSequence: function( info ) {
+            this.updateDescription( info );
+        },
+
+        updateDescription: function( info ) {
             /* update the sequence title in the menu bar */
-            var def = /Sequence ([0-9]*)/g.test(info.title);
-            var seqTitle = def ? "" : " - "+ info.title;
-            this.$(".sequence-description").text(seqTitle);
+            // var def = /Sequence ([0-9]*)/g.test(info.title);
+            // var seqTitle = def ? "" : " - "+ info.title;
+            // this.$(".sequence-description").text(seqTitle);
+
         },
 
         events: {
@@ -58240,10 +58246,7 @@ function( app, Router ) {
     // Define your master router on the application namespace and trigger all
     // navigation from this instance.
     var routes = window.projectJSON ? new Router().bootstrappedRoutes : new Router().routes;
-console.log( routes );
     app.router = new Router({ routes: routes });
-
-    console.log( app.router );
 
     // Trigger the initial route and enable HTML5 History API support, set the
     // root folder to '/' by default.  Change in app.js.
