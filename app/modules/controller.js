@@ -32,7 +32,7 @@ function(app, Backbone, UI) {
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                url: window.projectJSON ? null : app.api + app.state.get("projectID"),
+                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });
             // outputs player events to the console
@@ -41,7 +41,7 @@ function(app, Backbone, UI) {
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
-                player.on('data_loaded', this.onDataLoaded, this);
+                app.player.on('data_loaded', this.onDataLoaded, this);
             }
             app.player.on('frame_rendered', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
