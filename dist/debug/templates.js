@@ -28,16 +28,6 @@ __p+='<i class="zitem-'+
 return __p;
 };
 
-this["JST"]["app/templates/citations.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<ul class="ZEEGA-citations-primary citations-left"></ul>\n<ul class="ZEEGA-citations-aux citations-left">\n    <li>\n        <a href="http://alpha.zeega.org/user/'+
-( user_id )+
-'" target="blank"><i class="zitem-zeega00 zitem-30 loaded"></i></a>\n    </li>\n</ul>';
-}
-return __p;
-};
-
 this["JST"]["app/templates/controls.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -58,10 +48,20 @@ __p+='<div class="ZEEGA-loader-inner">\n    <h1>'+
 return __p;
 };
 
-this["JST"]["app/templates/menu-bar.html"] = function(obj){
+this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li><a id="project-play-pause" href="#" ><i class="icon-pause icon-white"></i></a></li>\n    <li class="menu-bar-title"><span class="project-title">'+
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="icon-pause icon-white"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+}
+return __p;
+};
+
+this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://alpha.zeega.org/user/'+
+( user_id )+
+'" target="blank" style="padding:7px;">\n            <img src="assets/img/zeega-logo-header.png" height="20px">\n        </a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
 ( title )+
 '</span><span class="sequence-description"></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
 ( id )+

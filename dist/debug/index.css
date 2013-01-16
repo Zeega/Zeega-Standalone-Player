@@ -1306,6 +1306,7 @@ a:active {
 .ZEEGA-player-citations ul.ZEEGA-citations-primary {
   margin: 0;
   padding: 0;
+  float: right;
 }
 .ZEEGA-player-citations ul.ZEEGA-citations-primary > li {
   float: left;
@@ -1314,8 +1315,9 @@ a:active {
 .ZEEGA-player-citations ul.ZEEGA-citations-primary > li:hover .player-citation-bubble {
   display: block;
 }
-.ZEEGA-player-citations ul.ZEEGA-citations-aux {
-  float: right;
+.ZEEGA-player-citations ul.ZEEGA-standalone-controls {
+  position: absolute;
+  bottom: 10px;
 }
 .ZEEGA-player-citations .player-citation-bubble {
   background: rgba(0, 0, 0, 0.75);
@@ -1329,6 +1331,7 @@ a:active {
   padding: 10px;
   position: absolute;
   line-height: 18px;
+  right: 0;
   width: 300px;
 }
 .ZEEGA-player-citations .player-citation-bubble:after {
