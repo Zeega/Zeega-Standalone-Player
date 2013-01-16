@@ -84,7 +84,7 @@ function(app, Backbone) {
         },
 
         playpause: function() {
-            if ( this.model.status == "paused") {
+            if ( this.model.state == "paused") {
                 this.model.play();
             } else {
                 this.model.pause();
