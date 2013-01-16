@@ -201,8 +201,7 @@ module.exports = function(grunt) {
 				},
 
 				files: {
-					"dist/debug/img/": "assets/img/**",
-					"dist/release/img/": "assets/img/**"
+					"dist/img/": "assets/img/**"
 				}
 			}
 
