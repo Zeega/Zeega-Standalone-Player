@@ -1,0 +1,61 @@
+.ZEEGA-player-menu-bar {
+
+	background: rgba(0,0,0,0.5);
+	pointer-events:auto;
+
+	.menu-bar-left {
+		float:left;
+	}
+
+	.menu-bar-right {
+		float:right;
+	}
+
+	.ZEEGA-menu-bar {
+
+		.menu-bar-title {
+			padding: 10px;
+			color:white;
+		}
+
+		.sequence-description {
+			opacity: 0.5;
+		}
+
+		.sequence-author {
+			opacity: 0.5;
+		}
+
+		&>li {
+			float:left;
+
+			border-right: 1px solid rgba(0,0,0,0.5);
+			&:last-child {
+				border-right:none;
+			}
+
+			&.slide-menu {
+				display:none;
+				a {
+					float: left;
+				}
+			}
+
+			&>a {
+				padding: 10px;
+				display: block;
+
+				&:hover {
+					background: rgba(0,0,0,0.1);
+				}
+			}
+
+		}
+	}
+
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
