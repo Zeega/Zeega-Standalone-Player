@@ -397,13 +397,13 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://alpha.zeega.org/user/'+
-( user_id )+
-'" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
 ( title )+
-'</span><span class="sequence-description"></span><span class="sequence-author"> by '+
+'</span><span class="sequence-description"></span><span class="sequence-author"> by <a href="http://alpha.zeega.org/user/'+
+( user_id )+
+'">'+
 ( authors )+
-'</span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
+'</a></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
 ( id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -40476,7 +40476,7 @@ function() {
 
     Parser[ type ].validate = function( response ) {
 
-        if ( response.items && response.items[0].media_type == "project" ) {
+        if ( response.items && response.items[0].media_type == "project"&& response.items.length==1) {
             return true;
         }
         return false;
@@ -40486,6 +40486,57 @@ function() {
     Parser[type].parse = function( response, opts ) {
         return response.items[0].text;
     };
+
+    return Parser;
+});
+
+zeega.define('zeega_dir/parsers/zeega-project-collection',[
+    "lodash"
+],
+function() {
+    var type = "zeega-project-collection",
+        Parser = {};
+
+    Parser[ type ] = { name: type };
+
+    Parser[ type ].validate = function( response ) {
+        if ( response.items && response.items.length>1 ) {
+            _.each(response.items,function(item){
+                if(item.media_type!="project"){
+                    return false;
+                }
+            });
+            return true;
+        }
+        return false;
+    };
+
+    Parser[ type ].parse = function( response, opts ) {
+        
+        var project = {
+
+            title : "Project Collection",
+            sequences : [],
+            frames : [],
+            layers : []
+        };
+
+        _.each(response.items, function(item){
+            project.layers = _.union(project.layers,item.text.layers);
+            project.frames = _.union(project.frames,item.text.frames);
+            if(project.sequences.length>0){
+                console.log(item);
+                project.sequences[project.sequences.length-1].advance_to=item.text.sequences[0].id;
+            }
+            project.sequences = _.union(project.sequences,item.text.sequences);
+
+        });
+
+        console.log("PROJECT",project);
+        return project;
+    };
+
+
 
     return Parser;
 });
@@ -40817,6 +40868,7 @@ this should be auto generated probably!!
 zeega.define('zeega_dir/parsers/_all',[
     "zeega_dir/parsers/zeega-project",
     "zeega_dir/parsers/zeega-project-published",
+    "zeega_dir/parsers/zeega-project-collection",
     "zeega_dir/parsers/zeega-collection",
     "zeega_dir/parsers/zeega-dynamic-collection",
     "zeega_dir/parsers/flickr",
@@ -40825,6 +40877,7 @@ zeega.define('zeega_dir/parsers/_all',[
 function(
     zProject,
     zProjectPublished,
+    zProjectCollection,
     zCollection,
     zDynamicCollection,
     flickr,
@@ -40837,6 +40890,7 @@ function(
         Parsers,
         zProject,
         zProjectPublished,
+        zProjectCollection,
         zCollection,
         zDynamicCollection,
         flickr,
@@ -56711,7 +56765,7 @@ function( app, Backbone ) {
             firstVisit: true,
             fullscreen: false,
             initialized: false,
-            projectID: 4328,
+            projectID: 74886,
             frameID: null
         }
     });
@@ -57863,7 +57917,7 @@ function(app, Backbone) {
         },
 
         playpause: function() {
-            if ( this.model.status == "paused") {
+            if ( this.model.state == "paused") {
                 this.model.play();
             } else {
                 this.model.pause();
@@ -58117,7 +58171,8 @@ function(app, Backbone, UI) {
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
+                url: "http://dev.zeega.org/joseph/web/api/projects/4338",
+//                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });
             // outputs player events to the console
@@ -58170,20 +58225,6 @@ function( app, Controller ) {
 
         routes: {
             "": "base",
-
-            ":projectID": 'goToProject',
-            ":projectID/frame/:frameID": 'goToProjectFrame',
-            ":projectID/f/:frameID": 'goToProjectFrame',
-
-            "project/:projectID" : 'goToProject',
-            "p/:projectID" : 'goToProject',
-
-            "project/:projectID/frame/:frameID": 'goToProjectFrame',
-            "p/:projectID/f/:frameID": 'goToProjectFrame'
-        },
-
-        bootstrappedRoutes: {
-            "": "base",
             "f/:frameID": 'goToFrame'
         },
 
@@ -58193,22 +58234,6 @@ function( app, Controller ) {
         player could wait for user input or rely on bootstrapped data
         */
         base: function() {
-            initialize();
-        },
-
-        goToProject: function( projectID ) {
-            app.state.set("projectID",projectID);
-            initialize();
-        },
-
-        goToProjectFrame: function( projectID, frameID ) {
-            app.state.set({
-                projectID: projectID,
-                frameID: frameID
-            });
-            if(app.state.get("initialized")) {
-                app.player.cueFrame(frameID);
-            }
             initialize();
         },
 
@@ -58242,12 +58267,9 @@ require([
 ],
 
 function( app, Router ) {
-
     // Define your master router on the application namespace and trigger all
     // navigation from this instance.
-    var routes = window.projectJSON ? new Router().bootstrappedRoutes : new Router().routes;
-    app.router = new Router({ routes: routes });
-
+    app.router = new Router();
     // Trigger the initial route and enable HTML5 History API support, set the
     // root folder to '/' by default.  Change in app.js.
     Backbone.history.start({
