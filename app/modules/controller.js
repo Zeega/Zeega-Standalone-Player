@@ -41,11 +41,11 @@ function(app, Backbone, UI) {
             });
 
             // outputs player events to the console
-            player.on('all', function(e, obj) { if(e!='media_timeupdate') console.log('    player event:',e,obj);});
+            // player.on('all', function(e, obj) { if(e!='media_timeupdate') console.log('    player event:',e,obj);});
             // listen for frame events to update the router
             player.on('frame_rendered', this.onFrameRender, this);
             player.on('sequence_enter', this.updateWindowTitle, this);
-
+console.log( player );
             app.player = player;
         },
 

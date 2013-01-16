@@ -32,8 +32,7 @@ function(app, Backbone) {
         },
 
         updateCitations: function( info ) {
-            var layersToCite = _.map(info.layers,function(layer){
-                console.log("citation", layer);
+            var layersToCite = _.map( info.layers, function(layer){
                 if(layer.citation) return layer;
                 return false;
             });
