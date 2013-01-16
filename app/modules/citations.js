@@ -21,7 +21,7 @@ function(app, Backbone) {
         className: "ZEEGA-player-citations",
 
         serialize: function() {
-            return this.model.toJSON();
+            return this.model.data.toJSON();
         },
 
         initialize: function() {
