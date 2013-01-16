@@ -11,20 +11,6 @@ function( app, Controller ) {
 
         routes: {
             "": "base",
-
-            ":projectID": 'goToProject',
-            ":projectID/frame/:frameID": 'goToProjectFrame',
-            ":projectID/f/:frameID": 'goToProjectFrame',
-
-            "project/:projectID" : 'goToProject',
-            "p/:projectID" : 'goToProject',
-
-            "project/:projectID/frame/:frameID": 'goToProjectFrame',
-            "p/:projectID/f/:frameID": 'goToProjectFrame'
-        },
-
-        bootstrappedRoutes: {
-            "": "base",
             "f/:frameID": 'goToFrame'
         },
 
@@ -34,22 +20,6 @@ function( app, Controller ) {
         player could wait for user input or rely on bootstrapped data
         */
         base: function() {
-            initialize();
-        },
-
-        goToProject: function( projectID ) {
-            app.state.set("projectID",projectID);
-            initialize();
-        },
-
-        goToProjectFrame: function( projectID, frameID ) {
-            app.state.set({
-                projectID: projectID,
-                frameID: frameID
-            });
-            if(app.state.get("initialized")) {
-                app.player.cueFrame(frameID);
-            }
             initialize();
         },
 
