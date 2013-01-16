@@ -34,7 +34,7 @@ function(app, Backbone, UI) {
         initPlayer: function() {
             var player = new Zeega.player({
                 // window_fit: false,
-                autoplay: true,
+                autoplay: false,
                 target: '#player',
                 url: app.api + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
@@ -45,7 +45,6 @@ function(app, Backbone, UI) {
             // listen for frame events to update the router
             player.on('frame_rendered', this.onFrameRender, this);
             player.on('sequence_enter', this.updateWindowTitle, this);
-console.log( player );
             app.player = player;
         },
 

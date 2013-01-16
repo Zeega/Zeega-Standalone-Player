@@ -28,14 +28,15 @@ function( app, Backbone ) {
         },
 
         serialize: function() {
-            return this.model.toJSON();
+            return this.data;
         },
 
-        onDataLoaded: function() {
+        onDataLoaded: function( data ) {
             var coverImage;
 
+            this.data = data;
             this.render();
-            coverImage = this.model.get("cover_image");
+            coverImage = this.data.cover_image;
             if( !_.isNull( coverImage ) && coverImage != "../../../images/default_cover.png" ) {
                 this.$(".ZEEGA-loader-bg").css({
                     "background": "url('" + coverImage +"')",
