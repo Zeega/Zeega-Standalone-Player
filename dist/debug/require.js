@@ -57962,25 +57962,28 @@ function(app, Backbone, UI) {
         },
 
         initPlayer: function() {
-            var player = new Zeega.player({
+            app.player = new Zeega.player({
                 // window_fit: false,
                 autoplay: false,
                 target: '#player',
-                url: app.api + app.state.get("projectID"),
+                data: $.parseJSON( window.projectJSON ) || null,
+                url: window.projectJSON ? null : app.api + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });
-
             // outputs player events to the console
             // player.on('all', function(e, obj) { if(e!='media_timeupdate') console.log('    player event:',e,obj);});
             // listen for frame events to update the router
-            player.on('data_loaded', this.onDataLoaded, this);
-            player.on('frame_rendered', this.onFrameRender, this);
-            player.on('sequence_enter', this.updateWindowTitle, this);
-            app.player = player;
+            if( window.projectJSON ) {
+                this.onDataLoaded();
+            } else {
+                player.on('data_loaded', this.onDataLoaded, this);
+            }
+            app.player.on('frame_rendered', this.onFrameRender, this);
+            app.player.on('sequence_enter', this.updateWindowTitle, this);
         },
 
-        onDataLoaded: function( data ) {
-                        /*
+        onDataLoaded: function() {
+            /*
             render base layout
             the base layout contains the logic for the player skin (citations, ui, etc)
             */
@@ -57988,7 +57991,7 @@ function(app, Backbone, UI) {
         },
 
         onFrameRender: function( info ) {
-            app.router.navigate( app.state.get('projectID') +'/f/'+ info.id );
+            app.router.navigate( 'f/'+ info.id );
         },
 
         updateWindowTitle: function( info ) {
@@ -58014,6 +58017,7 @@ define('router',[
 function( app, Controller ) {
     // Defining the application router, you can attach sub routers here.
     var Router = Backbone.Router.extend({
+
         routes: {
             "": "base",
 
@@ -58026,6 +58030,11 @@ function( app, Controller ) {
 
             "project/:projectID/frame/:frameID": 'goToProjectFrame',
             "p/:projectID/f/:frameID": 'goToProjectFrame'
+        },
+
+        bootstrappedRoutes: {
+            "": "base",
+            "f/:frameID": 'goToFrame'
         },
 
         /*
@@ -58049,6 +58058,16 @@ function( app, Controller ) {
             });
             if(app.state.get("initialized")) {
                 app.player.cueFrame(frameID);
+            }
+            initialize();
+        },
+
+        goToFrame: function( frameID ) {
+            app.state.set({
+                frameID: frameID
+            });
+            if(app.state.get("initialized")) {
+                app.player.cueFrame( frameID );
             }
             initialize();
         }
@@ -58076,11 +58095,18 @@ function( app, Router ) {
 
     // Define your master router on the application namespace and trigger all
     // navigation from this instance.
-    app.router = new Router();
+    var routes = window.projectJSON ? new Router().bootstrappedRoutes : new Router().routes;
+console.log( routes );
+    app.router = new Router({ routes: routes });
+
+    console.log( app.router );
 
     // Trigger the initial route and enable HTML5 History API support, set the
     // root folder to '/' by default.  Change in app.js.
-    Backbone.history.start({ pushState: false, root: app.root });
+    Backbone.history.start({
+        pushState: false,
+        root: app.root
+    });
 
     // All navigation that is relative should be passed through the navigate
     // method, to be processed by the router. If the link has a `data-bypass`

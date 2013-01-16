@@ -36,7 +36,6 @@ function(app, Backbone, UI) {
                 url: window.projectJSON ? null : app.api + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });
-console.log( 'player', app.player, player.ready )
             // outputs player events to the console
             // player.on('all', function(e, obj) { if(e!='media_timeupdate') console.log('    player event:',e,obj);});
             // listen for frame events to update the router
