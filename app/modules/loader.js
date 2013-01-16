@@ -23,20 +23,16 @@ function( app, Backbone ) {
         initialize: function() {
             this.model.on("layer_loading", this.onLayerLoading, this );
             this.model.on("layer_ready", this.onLayerReady, this );
-            this.model.on("data_loaded", this.onDataLoaded, this);
-            //this.model.on("can_play", this.onCanPlay, this );
         },
 
         serialize: function() {
-            return this.data;
+            return this.model.data.toJSON();
         },
 
-        onDataLoaded: function( data ) {
+        afterRender: function() {
             var coverImage;
 
-            this.data = data;
-            this.render();
-            coverImage = this.data.cover_image;
+            coverImage = this.model.data.get("cover_image");
             if( !_.isNull( coverImage ) && coverImage != "../../../images/default_cover.png" ) {
                 this.$(".ZEEGA-loader-bg").css({
                     "background": "url('" + coverImage +"')",
