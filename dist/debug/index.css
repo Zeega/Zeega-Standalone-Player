@@ -1404,6 +1404,13 @@ a:active {
   background: rgba(0, 0, 0, 0.5);
   pointer-events: auto;
 }
+.ZEEGA-player-menu-bar .ZEEGA-standalone-logo {
+  background: url("../img/zeega-logo-header.png");
+  height: 11px;
+  margin: 5px;
+  width: 62px;
+  display: inline-block;
+}
 .ZEEGA-player-menu-bar .menu-bar-left {
   float: left;
 }
@@ -1436,9 +1443,6 @@ a:active {
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a {
   padding: 10px;
   display: block;
-}
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a:hover {
-  background: rgba(0, 0, 0, 0.1);
 }
 .ZEEGA-player-menu-bar:after {
   content: "";

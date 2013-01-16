@@ -399,7 +399,7 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://alpha.zeega.org/user/'+
 ( user_id )+
-'" target="blank" style="padding:7px;">\n            <img src="assets/img/zeega-logo-header.png" height="20px">\n        </a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
+'" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
 ( title )+
 '</span><span class="sequence-description"></span><span class="sequence-author"> by '+
 ( authors )+
@@ -58108,7 +58108,6 @@ function(app, Backbone, UI) {
 
         initialize: function() {
             this.initPlayer();
-
         },
 
         initPlayer: function() {

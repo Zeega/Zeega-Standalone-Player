@@ -24,7 +24,6 @@ function(app, Backbone, UI) {
 
         initialize: function() {
             this.initPlayer();
-
         },
 
         initPlayer: function() {
