@@ -8,6 +8,7 @@ define([
 function( app, Controller ) {
     // Defining the application router, you can attach sub routers here.
     var Router = Backbone.Router.extend({
+
         routes: {
             "": "base",
 
@@ -20,6 +21,11 @@ function( app, Controller ) {
 
             "project/:projectID/frame/:frameID": 'goToProjectFrame',
             "p/:projectID/f/:frameID": 'goToProjectFrame'
+        },
+
+        bootstrappedRoutes: {
+            "": "base",
+            "f/:frameID": 'goToFrame'
         },
 
         /*
@@ -43,6 +49,16 @@ function( app, Controller ) {
             });
             if(app.state.get("initialized")) {
                 app.player.cueFrame(frameID);
+            }
+            initialize();
+        },
+
+        goToFrame: function( frameID ) {
+            app.state.set({
+                frameID: frameID
+            });
+            if(app.state.get("initialized")) {
+                app.player.cueFrame( frameID );
             }
             initialize();
         }
