@@ -187,12 +187,25 @@ module.exports = function(grunt) {
 		},
 		
 		copy: {
-			dist: {
+			pre: {
 				files: {
 					"assets/img/zeegaplayer/": "assets/vendor/zeegaplayer/dist/release/img/*"
 				},
 				options: { "basePath" : "/", "flatten" : true }
+			},
+
+			dist: {
+				options: {
+					cwd: "/",
+					flatten : false
+				},
+
+				files: {
+					"dist/debug/img/": "assets/img/**",
+					"dist/release/img/": "assets/img/**"
+				}
 			}
+
 		}
 
 	});
