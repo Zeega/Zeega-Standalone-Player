@@ -20,7 +20,6 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
-            console.log(this.model.data.toJSON())
             return this.model.data.toJSON();
         },
 
@@ -38,7 +37,6 @@ function(app, Backbone) {
             // var def = /Sequence ([0-9]*)/g.test(info.title);
             // var seqTitle = def ? "" : " - "+ info.title;
             // this.$(".sequence-description").text(seqTitle);
-
         },
 
         events: {

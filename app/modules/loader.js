@@ -12,7 +12,7 @@ function( app, Backbone ) {
     // This will fetch the tutorial template and render it.
     Loader.View = Backbone.View.extend({
 
-        DELAY: 0,
+        DELAY: 2000,
         /* variables keeping track of generic layer states */
         layerCount : 0,
         layersReady : 0,
@@ -54,7 +54,7 @@ function( app, Backbone ) {
         onLayerLoading: function( layer ) {
             this.layerCount++;
             if( layer.citation ) {
-                var item = "<li><i class='zitem-" + layer.type.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
+                var item = "<li><i class='zitem-" + layer.attr.archive.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
                 this.$(".ZEEGA-loading-layers").append( item );
             }
         },
