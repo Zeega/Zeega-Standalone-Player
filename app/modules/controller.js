@@ -42,7 +42,7 @@ function(app, Backbone, UI) {
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
-                player.on('data_loaded', this.onDataLoaded, this);
+                app.player.on('data_loaded', this.onDataLoaded, this);
             }
             app.player.on('frame_rendered', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
