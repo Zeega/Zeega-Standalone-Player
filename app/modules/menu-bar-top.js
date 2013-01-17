@@ -15,7 +15,7 @@ function(app, Backbone) {
         visible: true,
         hover: false,
 
-        template: "menu-bar",
+        template: "menu-bar-top",
 
         className: "ZEEGA-player-menu-bar",
 
@@ -25,40 +25,27 @@ function(app, Backbone) {
 
         initialize: function() {
             this.model.on("data_loaded", this.render, this);
-            this.model.on("play", this.onPlay, this );
-            this.model.on("pause", this.onPause, this );
             this.model.on("sequence_enter", this.onEnterSequence, this );
         },
 
-        onPlay: function() {
-            this.$("#project-play-pause i").addClass("icon-pause").removeClass("icon-play");
+        onEnterSequence: function( info ) {
+            this.updateDescription( info );
         },
 
-        onPause: function() {
-            this.$("#project-play-pause i").addClass("icon-play").removeClass("icon-pause");
-            this.fadeIn();
-        },
-
-        onEnterSequence: function(info) {
+        updateDescription: function( info ) {
             /* update the sequence title in the menu bar */
-            var def = /Sequence ([0-9]*)/g.test(info.title);
-            var seqTitle = def ? "" : " - "+ info.title;
-            this.$(".sequence-description").text(seqTitle);
+            // var def = /Sequence ([0-9]*)/g.test(info.title);
+            // var seqTitle = def ? "" : " - "+ info.title;
+            // this.$(".sequence-description").text(seqTitle);
+
         },
 
         events: {
-            "click #project-play-pause": "playpause",
             "click #project-share": "share",
             "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave"
-        },
-
-        playpause: function() {
-            if(this.model.status == "paused") this.model.play();
-            else this.model.pause();
-            return false;
         },
 
         share: function() {

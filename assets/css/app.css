@@ -1259,6 +1259,7 @@ a:active {
 .ZEEGA-player-citations ul.ZEEGA-citations-primary {
   margin: 0;
   padding: 0;
+  float: right;
 }
 .ZEEGA-player-citations ul.ZEEGA-citations-primary > li {
   float: left;
@@ -1267,8 +1268,9 @@ a:active {
 .ZEEGA-player-citations ul.ZEEGA-citations-primary > li:hover .player-citation-bubble {
   display: block;
 }
-.ZEEGA-player-citations ul.ZEEGA-citations-aux {
-  float: right;
+.ZEEGA-player-citations ul.ZEEGA-standalone-controls {
+  position: absolute;
+  bottom: 10px;
 }
 .ZEEGA-player-citations .player-citation-bubble {
   background: rgba(0, 0, 0, 0.75);
@@ -1282,6 +1284,7 @@ a:active {
   padding: 10px;
   position: absolute;
   line-height: 18px;
+  right: 0;
   width: 300px;
 }
 .ZEEGA-player-citations .player-citation-bubble:after {
@@ -1354,6 +1357,13 @@ a:active {
   background: rgba(0, 0, 0, 0.5);
   pointer-events: auto;
 }
+.ZEEGA-player-menu-bar .ZEEGA-standalone-logo {
+  background: url("../img/zeega-logo-header.png");
+  height: 11px;
+  margin: 5px;
+  width: 62px;
+  display: inline-block;
+}
 .ZEEGA-player-menu-bar .menu-bar-left {
   float: left;
 }
@@ -1365,6 +1375,9 @@ a:active {
   color: white;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar .sequence-description {
+  opacity: 0.5;
+}
+.ZEEGA-player-menu-bar .ZEEGA-menu-bar .sequence-author {
   opacity: 0.5;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar > li {
@@ -1383,9 +1396,6 @@ a:active {
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a {
   padding: 10px;
   display: block;
-}
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a:hover {
-  background: rgba(0, 0, 0, 0.1);
 }
 .ZEEGA-player-menu-bar:after {
   content: "";

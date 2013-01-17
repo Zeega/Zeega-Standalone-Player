@@ -14,11 +14,11 @@ define([
     // Modules,
     "modules/loader",
     "modules/controls",
-    "modules/citations",
-    "modules/menu-bar"
+    "modules/menu-bar-bottom",
+    "modules/menu-bar-top"
 ],
 
-function( app, Backbone, Loader, Controls, Citations, MenuBar ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
 
     // Create a new module
     var UI = {};
@@ -34,8 +34,8 @@ function( app, Backbone, Loader, Controls, Citations, MenuBar ) {
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
-            this.citations = new Citations.View({ model: app.player });
-            this.menuBar = new MenuBar.View({ model: app.player });
+            this.citations = new MenuBarBottom.View({ model: app.player });
+            this.menuBar = new MenuBarTop.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );

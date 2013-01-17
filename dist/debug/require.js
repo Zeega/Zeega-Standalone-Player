@@ -366,16 +366,6 @@ __p+='<i class="zitem-'+
 return __p;
 };
 
-this["JST"]["app/templates/citations.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<ul class="ZEEGA-citations-primary citations-left"></ul>\n<ul class="ZEEGA-citations-aux citations-left">\n    <li>\n        <a href="http://alpha.zeega.org/user/'+
-( user_id )+
-'" target="blank"><i class="zitem-zeega00 zitem-30 loaded"></i></a>\n    </li>\n</ul>';
-}
-return __p;
-};
-
 this["JST"]["app/templates/controls.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -396,12 +386,24 @@ __p+='<div class="ZEEGA-loader-inner">\n    <h1>'+
 return __p;
 };
 
-this["JST"]["app/templates/menu-bar.html"] = function(obj){
+this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li><a id="project-play-pause" href="#" ><i class="icon-pause icon-white"></i></a></li>\n    <li class="menu-bar-title"><span class="project-title">'+
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="icon-pause icon-white"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+}
+return __p;
+};
+
+this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
 ( title )+
-'</span><span class="sequence-description"></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
+'</span><span class="sequence-description"></span><span class="sequence-author"> by <a href="http://alpha.zeega.org/user/'+
+( user_id )+
+'">'+
+( authors )+
+'</a></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
 ( id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -411,7 +413,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li><a id="project-play-pau
 ( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n        <a href="http://www.tumblr.com/share" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a href="mailto:friend@example.com?subject=Check out this Zeega!&body=http://alpha.zeega.org/'+
 ( id )+
-'"><i class="zsocial-email"></i></a>\n    </li>\n    <li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
+'"><i class="zsocial-email"></i></a>\n    </li>\n    <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
 }
 return __p;
 };;
@@ -433,6 +435,14 @@ return __p;
 };
 
 this["JST"]["app/templates/plugins/audio.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='';
+}
+return __p;
+};
+
+this["JST"]["app/templates/plugins/geo.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
@@ -23954,7 +23964,8 @@ function( Backbone, jquery ) {
     // creation.
     var app = {
         // The root path to run the application.
-        root: "/"
+        root: "/",
+        gmapAPI: "waiting"
     };
 
     // Localize or create a new JavaScript Template object.
@@ -39752,6 +39763,135 @@ function( Zeega, _Layer, MediaPlayer ) {
   return Layer;
 });
 
+zeega.define('zeega_dir/plugins/layers/geo/geo',[
+    "zeega",
+    "zeega_dir/plugins/layers/_layer/_layer",
+    //plugins
+    "plugins/jquery.imagesloaded.min"
+],
+
+function( Zeega, _Layer ){
+
+    var Layer = Zeega.module();
+
+    Layer.Geo = _Layer.extend({
+
+        layerType: "Geo",
+
+        defaultAttributes: {
+            title: "Streetview Layer",
+            url: null,
+            left: 0,
+            top: 0,
+            height: 100,
+            width: 100,
+            opacity: 1,
+            aspect: 1.33,
+
+            // streetview specific
+            lat: 42.373613,
+            lng: -71.119146,
+            zoom: 10,
+            streetZoom: 1,
+            heading: -235,
+            pitch: 17.79,
+            mapType: 'satellite'
+        },
+
+        controls: []
+    });
+
+    Layer.Geo.Visual = _Layer.Visual.extend({
+
+        streetview: null,
+
+        template: "plugins/geo",
+
+        // dynamically load the google maps api only once!
+        initialize: function() {
+            if ( Zeega.gmapAPI == "waiting" ) {
+                Zeega.gmapAPI = "loading";
+
+                window._gmapAPIReady = function() {
+                    Zeega.gmapAPI = "loaded";
+                    Zeega.trigger("gmaps_loaded");
+                }.bind( this );
+
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=_gmapAPIReady";
+                document.body.appendChild(script);
+            }
+        },
+
+        serialize: function() {
+            return this.model.toJSON();
+        },
+
+        verifyReady: function() {
+            if ( Zeega.gmapAPI == "loaded" ) {
+                this.renderStreetView();
+                this.model.trigger( "visual_ready", this.model.id );
+            } else {
+                Zeega.on("gmaps_loaded", function() {
+                    Zeega.off("gmaps_loaded");
+                    this.renderStreetView();
+                    this.model.trigger( "visual_ready", this.model.id );
+                }.bind( this ));
+            }
+        },
+
+        renderStreetView: function() {
+            var center = new google.maps.LatLng( this.model.get("attr").lat, this.model.get("attr").lng ),
+                panoOptions = {
+                    addressControl : false,
+                    disableDoubleClickZoom : false,
+                    panControl : false,
+                    panControlOptions : false,
+                    position : center,
+                    pov : {
+                        heading: this.model.get("attr").heading,
+                        pitch: this.model.get("attr").pitch,
+                        zoom: this.model.get("attr").streetZoom
+                    },
+                    zoomControl :false
+                };
+            
+            this.streetview = new google.maps.StreetViewPanorama( this.$el[0], panoOptions );
+            //this.initMapListeners(); // not needed for the player. EDITOR ONLY !!
+        },
+
+        initMapListeners: function() {
+            google.maps.event.addListener( this.streetview, "position_changed", function(){
+                delayedUpdate();
+            });
+
+            google.maps.event.addListener( this.streetview, "pov_changed", function(){
+                delayedUpdate();
+            });
+
+            // need this so we don't spam the servers
+            var delayedUpdate = _.debounce( function(){
+                var a = this.model.get("attr");
+                
+                if ( a.heading != this.streetview.getPov().heading || a.pitch != this.streetview.getPov().pitch || a.streetZoom != this.streetview.getPov().zoom || Math.floor( a.lat * 1000 ) != Math.floor( this.streetview.getPosition().lat() * 1000 ) || Math.floor( a.lng * 1000 ) != Math.floor( this.streetview.getPosition().lng() * 1000 ) ) {
+                    this.model.update({
+                        heading: this.streetview.getPov().heading,
+                        pitch: this.streetview.getPov().pitch,
+                        streetZoom: Math.floor( this.streetview.getPov().zoom ),
+                        lat: this.streetview.getPosition().lat(),
+                        lng: this.streetview.getPosition().lng()
+                    }, true );
+                }
+                
+            }.bind( this ) , 1000);
+        }
+
+    });
+
+    return Layer;
+});
+
 /*
 
 plugin/layer manifest file
@@ -39768,7 +39908,8 @@ zeega.define('zeega_dir/plugins/layers/_all',[
     "zeega_dir/plugins/layers/audio/audio",
     "zeega_dir/plugins/layers/rectangle/rectangle",
     "zeega_dir/plugins/layers/text/text",
-    "zeega_dir/plugins/layers/popup/popup"
+    "zeega_dir/plugins/layers/popup/popup",
+    "zeega_dir/plugins/layers/geo/geo"
 ],
 function(
     image,
@@ -39778,7 +39919,8 @@ function(
     audio,
     rectangle,
     text,
-    popup
+    popup,
+    geo
 ) {
     var Plugins = {};
     // extend the plugin object with all the layers
@@ -39791,7 +39933,8 @@ function(
         audio,
         rectangle,
         text,
-        popup
+        popup,
+        geo
     );
 });
 
@@ -40189,6 +40332,8 @@ function( Zeega, Layer ) {
                             next = frames[ index +1 ];
                         } else if ( advance && sequenceCollection.get( advance ) ) {
                             next = sequenceCollection.get( advance ).get("frames")[0];
+                        } else if ( frame.get("attr").advance ) {
+                            next = sequenceCollection.get( sequence.id ).get("frames")[0];
                         }
 
                         frame.set({
@@ -40333,7 +40478,7 @@ function() {
 
     Parser[ type ].validate = function( response ) {
 
-        if ( response.items && response.items[0].media_type == "project" ) {
+        if ( response.items && response.items[0].media_type == "project"&& response.items.length==1) {
             return true;
         }
         return false;
@@ -40343,6 +40488,57 @@ function() {
     Parser[type].parse = function( response, opts ) {
         return response.items[0].text;
     };
+
+    return Parser;
+});
+
+zeega.define('zeega_dir/parsers/zeega-project-collection',[
+    "lodash"
+],
+function() {
+    var type = "zeega-project-collection",
+        Parser = {};
+
+    Parser[ type ] = { name: type };
+
+    Parser[ type ].validate = function( response ) {
+        if ( response.items && response.items.length>1 ) {
+            _.each(response.items,function(item){
+                if(item.media_type!="project"){
+                    return false;
+                }
+            });
+            return true;
+        }
+        return false;
+    };
+
+    Parser[ type ].parse = function( response, opts ) {
+        
+        var project = {
+
+            title : "Project Collection",
+            sequences : [],
+            frames : [],
+            layers : []
+        };
+
+        _.each(response.items, function(item){
+            project.layers = _.union(project.layers,item.text.layers);
+            project.frames = _.union(project.frames,item.text.frames);
+            if(project.sequences.length>0){
+                console.log(item);
+                project.sequences[project.sequences.length-1].advance_to=item.text.sequences[0].id;
+            }
+            project.sequences = _.union(project.sequences,item.text.sequences);
+
+        });
+
+        console.log("PROJECT",project);
+        return project;
+    };
+
+
 
     return Parser;
 });
@@ -40674,6 +40870,7 @@ this should be auto generated probably!!
 zeega.define('zeega_dir/parsers/_all',[
     "zeega_dir/parsers/zeega-project",
     "zeega_dir/parsers/zeega-project-published",
+    "zeega_dir/parsers/zeega-project-collection",
     "zeega_dir/parsers/zeega-collection",
     "zeega_dir/parsers/zeega-dynamic-collection",
     "zeega_dir/parsers/flickr",
@@ -40682,6 +40879,7 @@ zeega.define('zeega_dir/parsers/_all',[
 function(
     zProject,
     zProjectPublished,
+    zProjectCollection,
     zCollection,
     zDynamicCollection,
     flickr,
@@ -40694,6 +40892,7 @@ function(
         Parsers,
         zProject,
         zProjectPublished,
+        zProjectCollection,
         zCollection,
         zDynamicCollection,
         flickr,
@@ -41038,6 +41237,7 @@ function( Zeega, Data, Frame, Layer, Parser, Relay, Status, PlayerLayout ) {
         state: "paused",
         relay: null,
         status: null,
+        gmapAPI: "waiting",
 
         Layout: null,
 
@@ -41488,7 +41688,6 @@ function( Zeega, Data, Frame, Layer, Parser, Relay, Status, PlayerLayout ) {
 
             // render current frame // should trigger a frame rendered event when successful
             this.status.get("current_frame_model").render( oldID );
-
             if ( this.state !== "playing" ) {
                 this.state = "playing";
                 this.status.emit( "play", this );
@@ -56567,7 +56766,7 @@ function( app, Backbone ) {
             firstVisit: true,
             fullscreen: false,
             initialized: false,
-            projectID: 4328,
+            projectID: 74886,
             frameID: null
         }
     });
@@ -57393,7 +57592,8 @@ function( $, _, Backbone, State ) {
         // The root path to run the application.
         root: "/",
         // the path of the zeega api
-        api: "http://dev.zeega.org/joseph/web/api/projects/",
+        // only required for dynamically loaded zeegas
+        api: localStorage.getItem("api") || "http://dev.zeega.org/joseph/web/api/projects/",
 
       /*
         app.state stores information on the current state of the application
@@ -57632,7 +57832,7 @@ function(app, Backbone) {
 
     return Controls;
 });
-define('modules/citations',[
+define('modules/menu-bar-bottom',[
     "app",
     // Libs
     "backbone"
@@ -57650,7 +57850,7 @@ function(app, Backbone) {
         hover: false,
         playing: false,
 
-        template: "citations",
+        template: "menu-bar-bottom",
 
         className: "ZEEGA-player-citations",
 
@@ -57662,7 +57862,17 @@ function(app, Backbone) {
             /* update the arrow state whenever a frame is rendered */
             this.model.on("frame_rendered", this.updateCitations, this);
             this.model.on("data_loaded", this.render, this);
-            this.model.on("pause", this.fadeIn, this );
+            this.model.on("play", this.onPlay, this );
+            this.model.on("pause", this.onPause, this );
+        },
+
+        onPlay: function() {
+            this.$("#project-play-pause i").addClass("icon-pause").removeClass("icon-play");
+        },
+
+        onPause: function() {
+            this.$("#project-play-pause i").addClass("icon-play").removeClass("icon-pause");
+            this.fadeIn();
         },
 
         updateCitations: function( info ) {
@@ -57680,8 +57890,9 @@ function(app, Backbone) {
         },
 
         events: {
-          "mouseenter": "onMouseenter",
-          "mouseleave": "onMouseleave"
+            "mouseenter": "onMouseenter",
+            "mouseleave": "onMouseleave",
+            "click #project-play-pause": "playpause"
         },
 
         fadeOut: function() {
@@ -57704,6 +57915,15 @@ function(app, Backbone) {
 
         onMouseleave: function() {
             this.hover = false;
+        },
+
+        playpause: function() {
+            if ( this.model.state == "paused") {
+                this.model.play();
+            } else {
+                this.model.pause();
+            }
+            return false;
         }
     });
 
@@ -57719,8 +57939,7 @@ function(app, Backbone) {
             "hover": "onHover"
         },
 
-        onHover: function()
-        {
+        onHover: function() {
             this.$("i").toggleClass("loaded");
         }
   
@@ -57728,7 +57947,7 @@ function(app, Backbone) {
 
     return Citations;
 });
-define('modules/menu-bar',[
+define('modules/menu-bar-top',[
     "app",
     // Libs
     "backbone"
@@ -57745,7 +57964,7 @@ function(app, Backbone) {
         visible: true,
         hover: false,
 
-        template: "menu-bar",
+        template: "menu-bar-top",
 
         className: "ZEEGA-player-menu-bar",
 
@@ -57755,40 +57974,27 @@ function(app, Backbone) {
 
         initialize: function() {
             this.model.on("data_loaded", this.render, this);
-            this.model.on("play", this.onPlay, this );
-            this.model.on("pause", this.onPause, this );
             this.model.on("sequence_enter", this.onEnterSequence, this );
         },
 
-        onPlay: function() {
-            this.$("#project-play-pause i").addClass("icon-pause").removeClass("icon-play");
+        onEnterSequence: function( info ) {
+            this.updateDescription( info );
         },
 
-        onPause: function() {
-            this.$("#project-play-pause i").addClass("icon-play").removeClass("icon-pause");
-            this.fadeIn();
-        },
-
-        onEnterSequence: function(info) {
+        updateDescription: function( info ) {
             /* update the sequence title in the menu bar */
-            var def = /Sequence ([0-9]*)/g.test(info.title);
-            var seqTitle = def ? "" : " - "+ info.title;
-            this.$(".sequence-description").text(seqTitle);
+            // var def = /Sequence ([0-9]*)/g.test(info.title);
+            // var seqTitle = def ? "" : " - "+ info.title;
+            // this.$(".sequence-description").text(seqTitle);
+
         },
 
         events: {
-            "click #project-play-pause": "playpause",
             "click #project-share": "share",
             "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave"
-        },
-
-        playpause: function() {
-            if(this.model.status == "paused") this.model.play();
-            else this.model.pause();
-            return false;
         },
 
         share: function() {
@@ -57876,11 +58082,11 @@ define('modules/ui',[
     // Modules,
     "modules/loader",
     "modules/controls",
-    "modules/citations",
-    "modules/menu-bar"
+    "modules/menu-bar-bottom",
+    "modules/menu-bar-top"
 ],
 
-function( app, Backbone, Loader, Controls, Citations, MenuBar ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
 
     // Create a new module
     var UI = {};
@@ -57896,8 +58102,8 @@ function( app, Backbone, Loader, Controls, Citations, MenuBar ) {
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
-            this.citations = new Citations.View({ model: app.player });
-            this.menuBar = new MenuBar.View({ model: app.player });
+            this.citations = new MenuBarBottom.View({ model: app.player });
+            this.menuBar = new MenuBarTop.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
@@ -57958,7 +58164,6 @@ function(app, Backbone, UI) {
 
         initialize: function() {
             this.initPlayer();
-
         },
 
         initPlayer: function() {
@@ -57967,7 +58172,8 @@ function(app, Backbone, UI) {
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                url: window.projectJSON ? null : app.api + app.state.get("projectID"),
+                // url: "http://dev.zeega.org/joseph/web/api/projects/4458",
+                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });
             // outputs player events to the console
@@ -57976,7 +58182,7 @@ function(app, Backbone, UI) {
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
-                player.on('data_loaded', this.onDataLoaded, this);
+                app.player.on('data_loaded', this.onDataLoaded, this);
             }
             app.player.on('frame_rendered', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
@@ -58020,20 +58226,6 @@ function( app, Controller ) {
 
         routes: {
             "": "base",
-
-            ":projectID": 'goToProject',
-            ":projectID/frame/:frameID": 'goToProjectFrame',
-            ":projectID/f/:frameID": 'goToProjectFrame',
-
-            "project/:projectID" : 'goToProject',
-            "p/:projectID" : 'goToProject',
-
-            "project/:projectID/frame/:frameID": 'goToProjectFrame',
-            "p/:projectID/f/:frameID": 'goToProjectFrame'
-        },
-
-        bootstrappedRoutes: {
-            "": "base",
             "f/:frameID": 'goToFrame'
         },
 
@@ -58043,22 +58235,6 @@ function( app, Controller ) {
         player could wait for user input or rely on bootstrapped data
         */
         base: function() {
-            initialize();
-        },
-
-        goToProject: function( projectID ) {
-            app.state.set("projectID",projectID);
-            initialize();
-        },
-
-        goToProjectFrame: function( projectID, frameID ) {
-            app.state.set({
-                projectID: projectID,
-                frameID: frameID
-            });
-            if(app.state.get("initialized")) {
-                app.player.cueFrame(frameID);
-            }
             initialize();
         },
 
@@ -58092,15 +58268,9 @@ require([
 ],
 
 function( app, Router ) {
-
     // Define your master router on the application namespace and trigger all
     // navigation from this instance.
-    var routes = window.projectJSON ? new Router().bootstrappedRoutes : new Router().routes;
-console.log( routes );
-    app.router = new Router({ routes: routes });
-
-    console.log( app.router );
-
+    app.router = new Router();
     // Trigger the initial route and enable HTML5 History API support, set the
     // root folder to '/' by default.  Change in app.js.
     Backbone.history.start({

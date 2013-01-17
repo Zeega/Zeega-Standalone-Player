@@ -16,7 +16,7 @@ function(app, Backbone) {
         hover: false,
         playing: false,
 
-        template: "citations",
+        template: "menu-bar-bottom",
 
         className: "ZEEGA-player-citations",
 
@@ -28,7 +28,17 @@ function(app, Backbone) {
             /* update the arrow state whenever a frame is rendered */
             this.model.on("frame_rendered", this.updateCitations, this);
             this.model.on("data_loaded", this.render, this);
-            this.model.on("pause", this.fadeIn, this );
+            this.model.on("play", this.onPlay, this );
+            this.model.on("pause", this.onPause, this );
+        },
+
+        onPlay: function() {
+            this.$("#project-play-pause i").addClass("icon-pause").removeClass("icon-play");
+        },
+
+        onPause: function() {
+            this.$("#project-play-pause i").addClass("icon-play").removeClass("icon-pause");
+            this.fadeIn();
         },
 
         updateCitations: function( info ) {
@@ -46,8 +56,9 @@ function(app, Backbone) {
         },
 
         events: {
-          "mouseenter": "onMouseenter",
-          "mouseleave": "onMouseleave"
+            "mouseenter": "onMouseenter",
+            "mouseleave": "onMouseleave",
+            "click #project-play-pause": "playpause"
         },
 
         fadeOut: function() {
@@ -70,6 +81,15 @@ function(app, Backbone) {
 
         onMouseleave: function() {
             this.hover = false;
+        },
+
+        playpause: function() {
+            if ( this.model.state == "paused") {
+                this.model.play();
+            } else {
+                this.model.pause();
+            }
+            return false;
         }
     });
 
@@ -85,8 +105,7 @@ function(app, Backbone) {
             "hover": "onHover"
         },
 
-        onHover: function()
-        {
+        onHover: function() {
             this.$("i").toggleClass("loaded");
         }
   

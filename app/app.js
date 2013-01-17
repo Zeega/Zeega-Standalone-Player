@@ -16,7 +16,8 @@ function( $, _, Backbone, State ) {
         // The root path to run the application.
         root: "/",
         // the path of the zeega api
-        api: "http://dev.zeega.org/joseph/web/api/projects/",
+        // only required for dynamically loaded zeegas
+        api: localStorage.getItem("api") || "http://dev.zeega.org/joseph/web/api/projects/",
 
       /*
         app.state stores information on the current state of the application

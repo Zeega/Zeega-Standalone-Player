@@ -28,16 +28,6 @@ __p+='<i class="zitem-'+
 return __p;
 };
 
-this["JST"]["app/templates/citations.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<ul class="ZEEGA-citations-primary citations-left"></ul>\n<ul class="ZEEGA-citations-aux citations-left">\n    <li>\n        <a href="http://alpha.zeega.org/user/'+
-( user_id )+
-'" target="blank"><i class="zitem-zeega00 zitem-30 loaded"></i></a>\n    </li>\n</ul>';
-}
-return __p;
-};
-
 this["JST"]["app/templates/controls.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -58,12 +48,24 @@ __p+='<div class="ZEEGA-loader-inner">\n    <h1>'+
 return __p;
 };
 
-this["JST"]["app/templates/menu-bar.html"] = function(obj){
+this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li><a id="project-play-pause" href="#" ><i class="icon-pause icon-white"></i></a></li>\n    <li class="menu-bar-title"><span class="project-title">'+
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="icon-pause icon-white"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+}
+return __p;
+};
+
+this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
 ( title )+
-'</span><span class="sequence-description"></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
+'</span><span class="sequence-description"></span><span class="sequence-author"> by <a href="http://alpha.zeega.org/user/'+
+( user_id )+
+'">'+
+( authors )+
+'</a></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
 ( id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -73,7 +75,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li><a id="project-play-pau
 ( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n        <a href="http://www.tumblr.com/share" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a href="mailto:friend@example.com?subject=Check out this Zeega!&body=http://alpha.zeega.org/'+
 ( id )+
-'"><i class="zsocial-email"></i></a>\n    </li>\n    <li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
+'"><i class="zsocial-email"></i></a>\n    </li>\n    <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
 }
 return __p;
 };
