@@ -43,12 +43,14 @@ function(app, Backbone) {
 
         updateCitations: function( info ) {
             var layersToCite = _.map( info.layers, function(layer){
-                if(layer.citation) return layer;
+                if( layer.citation ) return layer;
                 return false;
             });
 
+            console.log( layersToCite );
+
             this.$(".ZEEGA-citations-primary").empty();
-            _.each( _.compact(layersToCite), function(layer){
+            _.each( _.compact( layersToCite ), function(layer){
                 var citation = new CitationView({ model: new Backbone.Model(layer) });
                 this.$(".ZEEGA-citations-primary").append(citation.el);
                 citation.render();
