@@ -47,8 +47,6 @@ function(app, Backbone) {
                 return false;
             });
 
-            console.log( layersToCite );
-
             this.$(".ZEEGA-citations-primary").empty();
             _.each( _.compact( layersToCite ), function(layer){
                 var citation = new CitationView({ model: new Backbone.Model(layer) });

@@ -30,6 +30,9 @@ function( app, Backbone ) {
         },
 
         afterRender: function() {
+
+            // investigate the ui for this
+            /*
             var coverImage;
 
             coverImage = this.model.data.get("cover_image");
@@ -45,6 +48,7 @@ function( app, Backbone ) {
                     "background-size": "cover"
                 });
             }
+            */
         },
 
         onLayerLoading: function( layer ) {
