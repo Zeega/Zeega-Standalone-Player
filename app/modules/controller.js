@@ -32,8 +32,8 @@ function(app, Backbone, UI) {
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                url: "http://dev.zeega.org/joseph/web/api/projects/4338",
-//                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
+                // url: "http://dev.zeega.org/joseph/web/api/projects/4458",
+                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });
             // outputs player events to the console
