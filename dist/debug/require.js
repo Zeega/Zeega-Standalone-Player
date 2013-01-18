@@ -24062,7 +24062,7 @@ function( Zeega ) {
 
         controls: [],
 
-        defaults: {
+        defaultAttr: {
             citation: true,
             default_controls: true,
             draggable: true,
@@ -24072,10 +24072,11 @@ function( Zeega ) {
             resizable: false
         },
 
-        defaultAttributes: {},
+        attr: {},
 
         initialize: function() {
-            this.defaults = _.extend({}, this.defaults, this.defaultAttributes );
+            var attr = _.extend({}, this.defaultAttr, this.attr );
+            this.set( "attr", attr );
             this.init();
         },
 
@@ -24138,7 +24139,7 @@ function( Zeega ) {
 
             this.$el.addClass( "visual-element-" + this.model.get("type").toLowerCase() );
             this.moveOffStage();
-            this.applySize();
+            this.applyStyles();
         },
 
         afterRender: function() {
@@ -24148,10 +24149,11 @@ function( Zeega ) {
 
         onRender: function() {},
 
-        applySize: function() {
+        applyStyles: function() {
             this.$el.css({
                 height: this.getAttr("height") + "%", // photos need a height!
-                width: this.getAttr("width") + "%"
+                width: this.getAttr("width") + "%",
+                opacity: this.getAttr("opacity") || 1
             });
         },
 
@@ -24168,6 +24170,9 @@ function( Zeega ) {
         },
 
         player_onPlay: function() {
+            if ( this.getAttr("blink_on_start") ) {
+                this.glowOnFrameStart();
+            }
             this.onPlay();
         },
 
@@ -24188,6 +24193,14 @@ function( Zeega ) {
         onPlay: function() {},
         onPause: function() {},
         onExit: function() {},
+
+
+        glowOnFrameStart: function() {
+            this.model.visualElement.$el.addClass("glow-blink");
+            _.delay(function() {
+                this.model.visualElement.$el.removeClass("glow-blink");
+            }.bind( this ), 1000 );
+        },
 
         /*
         TODO: Why is this special cased?
@@ -24314,7 +24327,7 @@ function( Zeega, _Layer ){
 
         layerType: "Image",
 
-        defaultAttributes: {
+        attr: {
             "title": "Image Layer",
             "url": "none",
             "left": 0,
@@ -24387,22 +24400,23 @@ function( Zeega, _Layer ) {
 
         layerType: "Link",
 
-        defaultAttributes: {
-            "title": "Link Layer",
-            "from_sequence": null,
-            "to_frame": null,
-            "from_frame": null,
-            "left": 25,
-            "top": 25,
-            "height": 50,
-            "width": 50,
-            "opacity": 1,
-            "opacity_hover": 1,
-            "blink_on_start": true,
-            "glow_on_hover": true,
-            "citation": false,
-            "linkable": false,
-            "default_controls": false
+        attr: {
+            title: "Poop Layer",
+            from_sequence: null,
+            to_frame: null,
+            from_frame: null,
+            left: 25,
+            top: 25,
+            height: 50,
+            width: 50,
+            opacity: 1,
+            opacity_hover: 1,
+            blink_on_start: true,
+            glow_on_hover: true,
+            citation: false,
+            link_type: "default",
+            linkable: false,
+            default_controls: false
         }
     });
 
@@ -24411,44 +24425,22 @@ function( Zeega, _Layer ) {
     template: "plugins/link",
 
     serialize: function() {
-        console.log("link layer", this.model);
         return this.model.toJSON();
     },
 
     beforePlayerRender: function() {
-        var _this = this,
-        style = {
-            "border-radius": "0",
-            "height": this.getAttr("height") + "%",
-            "background": this.getAttr("backgroundColor"),
-            "opacity": this.getAttr("opacity"),
-            "box-shadow": "0 0 10px rgba(255,255,255,"+ this.getAttr("opacity") +")"
-        };
+      style = {
+          "border-radius": "0",
+          "height": this.getAttr("height") + "%",
+          "background": this.getAttr("backgroundColor"),
+          "opacity": this.getAttr("opacity"),
+          "box-shadow": "0 0 10px rgba(255,255,255,"+ this.getAttr("opacity") + ")"
+      };
 
       this.$el.attr("data-glowOnHover", this.getAttr("glow_on_hover") );
-/*
-      this.$el.removeClass("link-arrow-right link-arrow-down link-arrow-up link-arrow-left");
 
-      if( this.preview ) this.delegateEvents({"click":"goClick"});
-
-      if(this.model.get("attr").link_type == "arrow_left")
-        this.$el.html( this.getTemplate() ).css( style ).addClass("link-arrow-left");
-      else if(this.model.get("attr").link_type == "arrow_right")
-        this.$el.html( this.getTemplate() ).css( style ).addClass("link-arrow-right");
-      else if(this.model.get("attr").link_type == "arrow_up")
-        this.$el.html( this.getTemplate() ).css( style ).addClass("link-arrow-up");
-
-      if( this.model.get("attr").glow_on_hover ) this.$el.addClass("linked-layer-glow");
-
-      if( this.getAttr("mode") == "editor" )
-      {
-        _.extend( style, {
-          "border": "2px dashed orangered",
-          "border-radius": "6px"
-        });
-      }
-*/
-        this.$(".ZEEGA-link-inner").css( style );
+      this.$el.addClass("link-type-" + this.getAttr("link_type") );
+      this.$(".ZEEGA-link-inner").css( style );
     },
 
     events: {
@@ -24470,28 +24462,10 @@ function( Zeega, _Layer ) {
         return false;
     }
 
-    /*
-    player_onPlay: function()
-    {
-      this.render();
-      this.delegateEvents({
-        "click":"goClick",
-        "mouseover": "onMouseOver",
-        "mouseout": "onMouseOut"
-      });
-      var _this = this;
-      this.$el.animate({opacity:1},1000,function(){
-        _this.$el.animate({opacity:0},1000);
-      });
-    }
-    */
-
-
-    });
+  });
 
     return Layer;
 });
-
 zeega.define('zeega_dir/plugins/layers/slideshow/slideshow-metadata',[
     "zeega",
     "zeega_dir/plugins/layers/_layer/_layer"
@@ -26188,6 +26162,40 @@ $.fn.cycle.transitions.wipe = function($cont, $slides, opts) {
 })(jQuery);
 zeega.define("plugins/cycle", function(){});
 
+/*
+    possible transitions: [via http://jquery.malsup.com/cycle/browser.html]
+
+    blindX
+    blindY
+    blindZ
+    cover
+    curtainX
+    curtainY
+    fade
+    fadeZoom
+    growX
+    growY
+    none
+    scrollUp
+    scrollDown
+    scrollLeft
+    scrollRight
+    scrollHorz
+    scrollVert
+    shuffle
+    slideX
+    slideY
+    toss
+    turnUp
+    turnDown
+    turnLeft
+    turnRight
+    uncover
+    wipe
+    zoom
+
+*/
+
 zeega.define('zeega_dir/plugins/layers/slideshow/slideshow',[
     "zeega",
     "zeega_dir/plugins/layers/_layer/_layer",
@@ -26203,7 +26211,7 @@ function( Zeega, _Layer, SSSlider ) {
 
         layerType: "SlideShow",
 
-        defaultAttributes: {
+        attr: {
             arrows: true, // turns on/off visual arrow controls
             keyboard: false, // turns on/off keyboard controls
             thumbnail_slider: true, // turns on/off thumbnail drawer
@@ -26236,7 +26244,6 @@ function( Zeega, _Layer, SSSlider ) {
         },
 
         serialize: function() {
-            console.log( this.model.toJSON() );
             return this.model.toJSON();
         },
 
@@ -26254,7 +26261,8 @@ function( Zeega, _Layer, SSSlider ) {
             // investigate why this is needed
             Zeega.$( this.$(".slideshow-container")[0] ).cycle({
                 timeout: 0,
-                fx: "scrollHorz",
+                fx: this.model.get("transition") || "scrollHorz",
+                speed: this.model.get("speed") || 1000,
                 startingSlide: this.slide
             });
 
@@ -26319,8 +26327,8 @@ function( Zeega, _Layer, SSSlider ) {
         positionArrows: function() {
             this.$(".slideshow-arrow").css({
                 top: (this.$el.closest(".ZEEGA-player").height() / 2 - 50) + "px",
-                height: (this.$el.closest(".ZEEGA-player").height() / 10 )+ "px",
-                width: (this.$el.closest(".ZEEGA-player").height() / 10 )+ "px"
+                height: (this.$el.closest(".ZEEGA-player").height() / 10 ) + "px",
+                width: (this.$el.closest(".ZEEGA-player").height() / 10 ) + "px"
             });
         },
 
@@ -26341,7 +26349,7 @@ function( Zeega, _Layer, SSSlider ) {
         initKeyboard: function() {
             if ( this.getAttr("keyboard") ) {
 
-                Zeega.$(window).on("keyup.slideshow", function( e ) {
+                Zeega.$( window ).on("keyup.slideshow", function( e ) {
                     switch( e.which ) {
                         case 37: // left arrow
                             _this.goLeft();
@@ -26356,7 +26364,7 @@ function( Zeega, _Layer, SSSlider ) {
 
         killKeyboard: function() {
             if ( this.getAttr("keyboard") ) {
-                Zeega.$(window).off("keyup.slideshow");
+                Zeega.$( window ).off("keyup.slideshow");
             }
         }
     });
@@ -39357,7 +39365,7 @@ function( Zeega, _Layer, MediaPlayer ) {
 
         layerType: "Video",
 
-        defaultAttributes: {
+        attr: {
             "title": "Video Layer",
             "url": "none",
             "left": 0,
@@ -39394,13 +39402,11 @@ function( Zeega, _Layer, MediaPlayer ) {
         },
 
         onPlay: function() {
-
             this.ended = false;
             this.mediaPlayer.play();
         },
 
         onPause: function() {
-
             this.mediaPlayer.pause();
         },
 
@@ -39471,7 +39477,6 @@ function( Zeega, _Layer, MediaPlayer ) {
                 // TODO: the missing else statement leads me to believe
                 // that this entire condition tree could be refactored
 
-
                 // send updates to the player. must include the layer
                 // info incase there are > 1 media layers on a single frame
                 var info = {
@@ -39483,9 +39488,8 @@ function( Zeega, _Layer, MediaPlayer ) {
                     current_time: this.mediaPlayer.getCurrentTime(),
                     duration: this.mediaPlayer.getDuration()
                 };
-
                 this.model.status.emit("media_timeupdate", info );
-                if ( this.mediaPlayer.getCurrentTime() >= out ) {
+                if ( info.current_time >= out - 1 ) {
                     this.onEnded();
                 }
             }
@@ -39493,9 +39497,10 @@ function( Zeega, _Layer, MediaPlayer ) {
 
         onEnded: function() {
             this.playbackCount++;
-            this.model.trigger("playback_ended", this.model.toJSON() );
+            //this.model.trigger("playback_ended", this.model.toJSON() );
+            this.model.status.emit( "ended", this.model.toJSON() );
             if ( this.getAttr("loop") ) {
-                this.mediaPlayer.currentTime( this.getAttr("cue_in") );
+                this.mediaPlayer.setCurrentTime( this.getAttr("cue_in") );
                 this.mediaPlayer.play();
             } else {
                 this.ended = true;
@@ -39526,7 +39531,7 @@ function( Zeega, _Layer, VideoLayer ){
 
         layerType: "Audio",
 
-        defaultAttributes: {
+        attr: {
             "title": "Audio Layer",
             "url": "none",
             "left": 0,
@@ -39563,7 +39568,7 @@ function( Zeega, _Layer ) {
         // this is a Layer, wouldn't "type" be sufficient?
         layerType: "Rectangle",
 
-        defaultAttributes: {
+        attr: {
             "citation": false,
             "default_controls": false,
             "height": 50,
@@ -39615,7 +39620,7 @@ function( Zeega, _Layer ) {
         // this is a Layer, wouldn't "type" be sufficient?
         layerType: "Text",
 
-        defaultAttributes: {
+        attr: {
             "citation": false,
             "default_controls": true,
             "left": 30,
@@ -39661,7 +39666,7 @@ function( Zeega, _Layer, MediaPlayer ) {
 
         layerType: "Popup",
 
-        defaultAttributes: {
+        attr: {
             citation: false,
             default_controls: true,
             left: 30,
@@ -39778,7 +39783,7 @@ function( Zeega, _Layer ){
 
         layerType: "Geo",
 
-        defaultAttributes: {
+        attr: {
             title: "Streetview Layer",
             url: null,
             left: 0,
@@ -39961,19 +39966,22 @@ function( Zeega, Plugin ) {
 
             // init link layer type inside here
             if ( plugin ) {
-                var _this = this;
+                var newAttr;
+
                 this.layerClass = new plugin();
-                this.set( _.defaults( this.toJSON(), this.layerClass.defaults ) );
+
+                newAttr = _.defaults( this.toJSON().attr, this.layerClass.attr );
+                this.set({ attr: newAttr });
 
                 // create and store the layerClass
                 this.visualElement = new plugin.Visual({
                     model: this,
                     attributes: function() {
                         return _.extend( {}, _.result( this, "domAttributes" ), {
-                            id: "visual-element-" + _this.id,
-                            "data-layer_id": _this.id
+                            id: "visual-element-" + this.id,
+                            "data-layer_id": this.id
                         });
-                    }
+                    }.bind( this )
                 });
                 // listen to visual element events
                 this.on( "visual_ready", this.onVisualReady, this );
@@ -40106,6 +40114,7 @@ function( Zeega, Layer ) {
                 next = this.get("_next");
 
             this.set( "connections",
+                this.get('attr').advance ? "none" :
                 prev & next ? "lr" :
                 prev ? "l" :
                 next ? "r" : "none"
@@ -40502,39 +40511,36 @@ function() {
     Parser[ type ] = { name: type };
 
     Parser[ type ].validate = function( response ) {
-        if ( response.items && response.items.length>1 ) {
-            _.each(response.items,function(item){
-                if(item.media_type!="project"){
-                    return false;
-                }
-            });
-            return true;
+        if ( response.items && response.items.length > 1 ) {
+            var mediaTypes = _.pluck( response.items, "media_type" );
+                nonProjects = _.without( mediaTypes, "project");
+
+            if ( nonProjects.length === 0 ) {
+                return true;
+            }
         }
         return false;
     };
 
     Parser[ type ].parse = function( response, opts ) {
-        
         var project = {
-
-            title : "Project Collection",
-            sequences : [],
-            frames : [],
-            layers : []
+            title: response.request.query.tags,
+            sequences: [],
+            frames: [],
+            layers: []
         };
-
-        _.each(response.items, function(item){
-            project.layers = _.union(project.layers,item.text.layers);
-            project.frames = _.union(project.frames,item.text.frames);
-            if(project.sequences.length>0){
-                console.log(item);
-                project.sequences[project.sequences.length-1].advance_to=item.text.sequences[0].id;
+        
+        _.each( response.items, function( item ) {
+            if ( item.text !== "" ) {
+                project.layers = _.union( project.layers, item.text.layers );
+                project.frames = _.union( project.frames, item.text.frames );
+                if ( project.sequences.length > 0 ) {
+                    project.sequences[ project.sequences.length - 1 ].advance_to = item.text.sequences[0].id;
+                }
+                project.sequences = _.union( project.sequences, item.text.sequences );
             }
-            project.sequences = _.union(project.sequences,item.text.sequences);
-
         });
 
-        console.log("PROJECT",project);
         return project;
     };
 
@@ -40594,6 +40600,7 @@ function() {
         var frames,slideshowLayer,
             imageLayers = [],
             timebasedLayers = [];
+
         _.each( response.items, function( item ) {
             if ( item.layer_type == "Image" ) {
                 imageLayers.push(item);
@@ -40603,7 +40610,7 @@ function() {
         });
         // slideshow layer from image items
         if ( imageLayers.length ) {
-            slideshowLayer = generateSlideshowLayer( imageLayers, opts.layerOptions.slideshow.start, opts.layerOptions.slideshow.start_id, opts.layerOptions.slideshow.bleed );
+            slideshowLayer = generateSlideshowLayer( imageLayers, opts.layerOptions );
         }
         // layers from timebased items
         var layers = generateLayerArrayFromItems( timebasedLayers );
@@ -40669,7 +40676,7 @@ function() {
         });
     }
 
-    function generateSlideshowLayer( imageLayerArray, slideshow_start_slide, slideshow_start_slide_id, slides_bleed ) {
+    function generateSlideshowLayer( imageLayerArray, layerOptions ) {
         var layerDefaults = {
                 keyboard: false,
                 width: 100,
@@ -40686,9 +40693,11 @@ function() {
 
         return {
             attr: _.defaults({ slides: slides }, layerDefaults ),
-            start_slide: parseInt(slideshow_start_slide,10) || 0,
-            start_slide_id: parseInt(slideshow_start_slide_id,10) || null,
-            slides_bleed: slides_bleed,
+            start_slide: parseInt( layerOptions.slideshow.start, 10 ) || 0,
+            start_slide_id: parseInt( layerOptions.slideshow.start_id, 10 ) || null,
+            slides_bleed: layerOptions.slideshow.bleed,
+            transition: layerOptions.slideshow.transition,
+            speed: layerOptions.slideshow.speed,
             type: "SlideShow",
             id: 1
         };
@@ -40696,9 +40705,6 @@ function() {
 
     return Parser;
 });
-
-// parsers.zeega-dynamic-collection;
-zeega.define("zeega_dir/parsers/zeega-dynamic-collection", function(){});
 
 zeega.define('zeega_dir/parsers/flickr',[
     "lodash"
@@ -40872,7 +40878,6 @@ zeega.define('zeega_dir/parsers/_all',[
     "zeega_dir/parsers/zeega-project-published",
     "zeega_dir/parsers/zeega-project-collection",
     "zeega_dir/parsers/zeega-collection",
-    "zeega_dir/parsers/zeega-dynamic-collection",
     "zeega_dir/parsers/flickr",
     "zeega_dir/parsers/youtube"
 ],
@@ -40881,7 +40886,6 @@ function(
     zProjectPublished,
     zProjectCollection,
     zCollection,
-    zDynamicCollection,
     flickr,
     youtube
 ) {
@@ -40894,7 +40898,6 @@ function(
         zProjectPublished,
         zProjectCollection,
         zCollection,
-        zDynamicCollection,
         flickr,
         youtube
     );
@@ -41032,6 +41035,9 @@ function( Zeega ) {
             emit the state change to the external api
         */
         emit: function( e, info ) {
+            if ( this.get("project").get("debugEvents") && e != "media_timeupdate") {
+                console.log( e, info );
+            }
             if ( !this.silent ) {
                 this.get("project").trigger( e, info );
             }
@@ -41254,6 +41260,16 @@ function( Zeega, Data, Frame, Layer, Parser, Relay, Status, PlayerLayout ) {
             data: null,
 
             /**
+            Turns on verbose console logs of player events
+
+            @property debugEvents
+            @type Boolean
+            @default false
+            **/
+
+            debugEvents: false,
+
+            /**
             Instance of a Frame.Collection
 
             @property frames
@@ -41414,6 +41430,7 @@ function( Zeega, Data, Frame, Layer, Parser, Relay, Status, PlayerLayout ) {
         */
 
         initialize: function( attributes ) {
+            this._mergeAttributes( attributes );
             this.relay = new Relay.Model();
             this.status = new Status.Model({ project: this });
 
@@ -41422,6 +41439,11 @@ function( Zeega, Data, Frame, Layer, Parser, Relay, Status, PlayerLayout ) {
 
             this._setTarget();
             this._load( attributes );
+        },
+
+        _mergeAttributes: function( attributes ) {
+            var attr = _.pick( attributes, _.keys( this.defaults ) );
+            this.set( attr, { silent: true });
         },
 
         _load: function( attributes ) {
@@ -41456,7 +41478,9 @@ function( Zeega, Data, Frame, Layer, Parser, Relay, Status, PlayerLayout ) {
             // determine which parser to use
             _.each( Parser, function( p ) {
                 if ( p.validate( response ) ) {
-                    console.log( "parsed using: " + p.name );
+                    if ( this.get("debugEvents") ) {
+                        console.log( "parsed using: " + p.name );
+                    }
                     // parse the response
                     this.parser = p.name;
                     parsed = p.parse( response, this.toJSON() );
@@ -41482,7 +41506,7 @@ function( Zeega, Data, Frame, Layer, Parser, Relay, Status, PlayerLayout ) {
             sequences = new Zeega.Backbone.Collection( this.data.get("sequences") );
 
             // should be done another way ?
-            _.each(layers, function( layer ) {
+            _.each( layers, function( layer ) {
                 layer._target = this.get("target");
             }.bind( this ));
             frames.relay = this.relay;
