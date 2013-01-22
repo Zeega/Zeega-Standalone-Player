@@ -53,7 +53,6 @@ function( app, Backbone ) {
         },
 
         onLayerLoading: function( layer ) {
-            console.log( layer )
             this.layerCount++;
             if( layer.attr.citation ) {
                 var item = "<li><i class='zitem-" + layer.attr.archive.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
