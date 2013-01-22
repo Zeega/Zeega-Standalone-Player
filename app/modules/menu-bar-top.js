@@ -20,7 +20,7 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
-            return this.model.data.toJSON();
+            return this.model.project.toJSON();
         },
 
         initialize: function() {
