@@ -62,11 +62,9 @@ function(app, Backbone, UI) {
         },
 
         updateWindowTitle: function( info ) {
-            var rDefaultText = /^Sequence ([0-9]*)/g.test( info.title ),
-                seqTitle = rDefaultText ? '' : ' - '+ info.title,
-                projectTitle = _.isUndefined( app.player.get("title") ) ? "Untitled" : app.player.get("title");
+            var title = app.player.project.get("title") + " by " + app.player.project.get("authors");
 
-            $('title').text( projectTitle + seqTitle );
+            $('title').text( title );
         }
 
   });
