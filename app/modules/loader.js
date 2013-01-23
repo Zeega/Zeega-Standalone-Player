@@ -21,7 +21,6 @@ function( app, Backbone ) {
         template: "loader",
 
         initialize: function() {
-            console.log("this model:", this.model );
             this.model.on("layer_loading", this.onLayerLoading, this );
             this.model.on("layer_ready", this.onLayerReady, this );
         },
@@ -55,7 +54,10 @@ function( app, Backbone ) {
         onLayerLoading: function( layer ) {
             this.layerCount++;
             if( layer.attr.citation ) {
-                var item = "<li><i class='zitem-" + layer.attr.archive.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
+                var item, itemType;
+
+                itemType = layer.attr.archive || layer.type;
+                item = "<li><i class='zitem-" + itemType.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
                 this.$(".ZEEGA-loading-layers").append( item );
             }
         },
