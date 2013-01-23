@@ -24449,11 +24449,10 @@ function( Zeega ) {
             this.$el.css({
                 top: this.getAttr("top") + "%",
                 left: this.getAttr("left") + "%",
-                opacity: this.getAttr("opacity") || 1,
-                display: this.getAttr("dissolve") ? "none" : "block"
+                opacity: this.getAttr("dissolve") ? 0 : this.getAttr("opacity") || 1
             });
             if ( this.getAttr("dissolve") ) {
-                this.$el.fadeIn();
+                this.$el.animate({ "opacity": this.getAttr("opacity") }, 500 );
             }
 
         },
@@ -39308,7 +39307,7 @@ function(Zeega) {
         },
         updateElapsed: function() {
             var elapsed = this.popcorn.currentTime();
-            console.log('update', elapsed);
+
             this.$(".media-time-elapsed").html( convertTime( elapsed ) );
             this.$(".media-scrubber").slider("value", elapsed);
         },
@@ -39624,6 +39623,7 @@ function( Zeega, _Layer, MediaPlayer ) {
         verifyReady: function() {
             if ( this.mediaPlayer_loaded !== true ) {
                 var _this = this;
+
                 this.mediaPlayer = new MediaPlayer.Views.Player({
                     model: this.model,
                     control_mode: "none",
@@ -39632,7 +39632,7 @@ function( Zeega, _Layer, MediaPlayer ) {
                 this.$el.append( this.mediaPlayer.el );
                 this.mediaPlayer.render();
                 this.mediaPlayer.placePlayer();
-                this.mediaPlayer.popcorn.listen("timeupdate", function() {
+                this.mediaPlayer.popcorn.on("timeupdate", function() {
                   _this.onTimeUpdate();
                 });
                 this.model.on("media_ended", function() {
