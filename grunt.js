@@ -194,21 +194,25 @@ module.exports = function(grunt) {
 		},
 		
 		copy: {
+
 			pre: {
-				files: {
-					"assets/img/zeegaplayer/": "assets/vendor/zeegaplayer/dist/release/img/*"
+				options: {
+					cwd: "/",
+					flatten : false
 				},
-				options: { "basePath" : "/", "flatten" : true }
+				files: {
+					"assets/img/zeegaplayer/": "assets/vendor/zeegaplayer/dist/release/img/**/*"
+				}
 			},
 
 			dist: {
 				options: {
 					cwd: "/",
-					flatten : false
+					flatten : true
 				},
-
 				files: {
-					"dist/img/": "assets/img/**"
+					"dist/img/": [ "assets/img/*", "assets/img/zeegaplayer/*" ],
+					"dist/img/layers/": "assets/img/zeegaplayer/layers/*"
 				}
 			}
 
