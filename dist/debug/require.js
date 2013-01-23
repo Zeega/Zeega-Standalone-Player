@@ -24032,6 +24032,7 @@ function( Zeega ) {
         renderOnReady: null,
 
         defaults: {
+            _order: 0,
             attr: { advance: 0 },
             // ids of frames and their common layers for loading
             common_layers: {},
@@ -24349,8 +24350,7 @@ function( Zeega ) {
         applyStyles: function() {
             this.$el.css({
                 height: this.getAttr("height") + "%", // photos need a height!
-                width: this.getAttr("width") + "%",
-                opacity: this.getAttr("opacity") || 1
+                width: this.getAttr("width") + "%"
             });
         },
 
@@ -24448,8 +24448,14 @@ function( Zeega ) {
         moveOnStage: function() {
             this.$el.css({
                 top: this.getAttr("top") + "%",
-                left: this.getAttr("left") + "%"
+                left: this.getAttr("left") + "%",
+                opacity: this.getAttr("opacity") || 1,
+                display: this.getAttr("dissolve") ? "none" : "block"
             });
+            if ( this.getAttr("dissolve") ) {
+                this.$el.fadeIn();
+            }
+
         },
 
         play: function() {
@@ -27231,7 +27237,7 @@ window.Modernizr = (function( window, document, undefined ) {
 zeega.define("libs/modernizr", function(){});
 
 /*
- * popcorn.js version fe02796
+ * popcorn.js version 99dc749
  * http://popcornjs.org
  *
  * Copyright 2011, Mozilla Foundation
@@ -27332,7 +27338,7 @@ zeega.define("libs/modernizr", function(){});
   };
 
   //  Popcorn API version, automatically inserted via build system.
-  Popcorn.version = "fe02796";
+  Popcorn.version = "99dc749";
 
   //  Boolean flag allowing a client to determine if Popcorn can be supported
   Popcorn.isSupported = true;
@@ -38492,7 +38498,9 @@ Popcorn.player( "flashvideo", {
 
           media.dispatchEvent( "playing" );
           timeupdate();
-          media.youtubeObject.playVideo();
+          if ( media.youtubeObject.playVideo ) {
+            media.youtubeObject.playVideo();
+          }
         };
 
         media.pause = function()
@@ -40153,6 +40161,8 @@ function( Zeega, LayerPlugin ) {
         ready: false,
         state: "waiting", // waiting, loading, ready, destroyed, error
 
+        order: [],
+
         defaults: {
             attr: {},
             id: null,
@@ -40193,7 +40203,6 @@ function( Zeega, LayerPlugin ) {
             }
         },
 
-        
         render: function() {
             // make sure the layer class is loaded or fail gracefully
             if ( this.visualElement ) {
@@ -40268,7 +40277,15 @@ zeega.define('zeega_parser/modules/layer.collection',[
 function( Zeega, LayerModel ) {
 
     return Zeega.Backbone.Collection.extend({
-        model: LayerModel
+        model: LayerModel,
+
+        frame: null,
+
+        comparator: function( layer ) {
+            if ( this.frame ) {
+                return layer.order[ this.frame.id ];
+            }
+        }
     });
     
 });
@@ -40288,24 +40305,36 @@ function( Zeega, FrameModel, LayerCollection ) {
         initLayers: function( layerCollection ) {
             this.each(function( frame ) {
                 var frameLayers = layerCollection.filter(function( layer ) {
-                    var contains = _.contains( frame.get("layers"), layer.id ),
-                        invalidLink = layer.get("type") == "Link" && layer.get("attr").to_frame == frame.id;
+                    var invalidLink, index;
 
-                    // remove invalid link ids from frames. this kind of sucks
-                    // have filipe rm these from the data??
+                    invalidLink = layer.get("type") == "Link" && layer.get("attr").to_frame == frame.id;
+                    index = _.indexOf( frame.get("layers"), layer.id );
+
                     if ( invalidLink ) {
+                        // remove invalid link ids from frames. this kind of sucks
+                        // have filipe rm these from the data??
                         frame.put("layers", _.without( frame.get("layers"), layer.id ) );
+                        return false;
+                    } else if ( index > -1 ) {
+                        //console.log( layer, frame, index )
+                        layer.order[ frame.id ] = index;
+                        return true;
                     }
-
-                    return contains && !invalidLink;
+                    return false;
                 });
-
 
                 frame.layers = new LayerCollection( frameLayers );
-                frame.layers.each(function( frame ) {
-                    frame.collection = frame.layers;
+                frame.layers.frame = frame;
+                frame.layers.sort({ silent: true });
+                // update the layer collection attribute
+                frame.layers.each(function( layer ) {
+                    layer.collection = frame.layers;
                 });
             });
+        },
+
+        comparator: function( frame ) {
+            return frame.get("_order");
         }
     });
 
@@ -40324,10 +40353,19 @@ function( Zeega, SequenceModel, FrameCollection, LayerCollection ) {
         model: SequenceModel,
 
         initFrames: function( options ) {
+            var layerCollection = new LayerCollection( options.layers );
+
             this.each(function( sequence ) {
-                var layerCollection = new LayerCollection( options.layers );
-                var seqFrames = options.frames.filter(function( frame ) {
-                    return _.contains( sequence.get("frames"), frame.id );
+                var seqFrames;
+
+                seqFrames = options.frames.filter(function( frame ) {
+                    var index = _.indexOf( sequence.get("frames"), frame.id );
+
+                    if ( index > -1 ) {
+                        frame._order = index;
+                        return true;
+                    }
+                    return false;
                 });
 
                 sequence.frames = new FrameCollection( seqFrames );
@@ -40446,9 +40484,11 @@ function( Zeega, SequenceCollection ) {
 
                     frame.layers.each(function( layer ) {
                         if ( layer.get("type") == "Link" && layer.get("attr").to_frame != frame.id ) {
-                            var targetFrameID = parseInt( layer.get("attr").to_frame, 10 ),
-                                targetFrame = this.getFrame( targetFrameID );
-                                linksFrom = [].concat( targetFrame.get("linksFrom") );
+                            var targetFrameID, targetFrame, linksFrom;
+
+                            targetFrameID = parseInt( layer.get("attr").to_frame, 10 );
+                            targetFrame = this.getFrame( targetFrameID );
+                            linksFrom = [].concat( targetFrame.get("linksFrom") );
 
                             linksTo.push( targetFrameID );
                             linksFrom.push( frame.id );
@@ -40487,6 +40527,8 @@ function( Zeega, SequenceCollection ) {
 
                     preloadTargets = preloadTargets.filter( Boolean );
 
+                    this._setConnections( frame );
+
                     frame.put( "preload_frames",
                         _.union(
                             preloadTargets, frame.get("linksTo"), frame.get("linksFrom")
@@ -40496,6 +40538,20 @@ function( Zeega, SequenceCollection ) {
                 }, this );
             }, this );
 
+        },
+
+        _setConnections: function( frame ) {
+            var prev, next;
+
+            prev = frame.get("_prev"),
+            next = frame.get("_next");
+
+            frame.put( "_connections",
+                frame.get('attr').advance ? "none" :
+                prev & next ? "lr" :
+                prev ? "l" :
+                next ? "r" : "none"
+            );
         },
 
         _setFrameCommonLayers: function() {
@@ -57838,7 +57894,6 @@ function( app, Backbone ) {
         template: "loader",
 
         initialize: function() {
-            console.log("this model:", this.model );
             this.model.on("layer_loading", this.onLayerLoading, this );
             this.model.on("layer_ready", this.onLayerReady, this );
         },
@@ -57872,7 +57927,10 @@ function( app, Backbone ) {
         onLayerLoading: function( layer ) {
             this.layerCount++;
             if( layer.attr.citation ) {
-                var item = "<li><i class='zitem-" + layer.attr.archive.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
+                var item, itemType;
+
+                itemType = layer.attr.archive || layer.type;
+                item = "<li><i class='zitem-" + itemType.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
                 this.$(".ZEEGA-loading-layers").append( item );
             }
         },
@@ -57945,7 +58003,7 @@ function(app, Backbone) {
         },
 
         updateArrowState: function( info ) {
-            switch(info.connections) {
+            switch(info._connections) {
                 case "l":
                     this.activateArrow("prev");
                     this.disableArrow("next");
