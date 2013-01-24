@@ -24036,6 +24036,7 @@ function( Zeega ) {
             attr: { advance: 0 },
             // ids of frames and their common layers for loading
             common_layers: {},
+            _connections: "none",
             controllable: true,
             id: null,
             // ids of layers contained on frame
@@ -40446,10 +40447,21 @@ function( Zeega, SequenceCollection ) {
                 var frames = sequence.frames;
 
                 if ( frames.length > 1 ) {
+                    var animationStart = null;
+
                     frames.each(function( frame, j ) {
+                        var lastStart = animationStart;
+
+                        // return to the start of an animation sequence
+                        animationStart = frame.get("attr").advance && animationStart === null ? frame.id :
+                            frame.get("attr").advance && animationStart !== null ? animationStart : null;
+
                         frame.put({
                             _next: frames.at( j + 1 ) ? frames.at( j + 1 ).id : null,
-                            _prev: frames.at( j - 1 ) ? frames.at( j - 1 ).id : null
+                            _prev: animationStart && lastStart === null && frames.at( j - 1 ) ? frames.at( j - 1 ).id :
+                                animationStart ? animationStart :
+                                animationStart === null && lastStart !== null ? lastStart :
+                                frames.at( j - 1 ) ? frames.at( j - 1 ).id : null
                         });
                     });
                 }
@@ -41762,13 +41774,15 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
                             _this.cuePrev();
                             break;
                         case 39: // right arrow
-                            _this.cueNext();
+                            if ( this.status.get("current_frame_model").get("attr").advance === 0 ) {
+                                _this.cueNext();
+                            }
                             break;
                         case 32: // spacebar
                             _this.playPause();
                             break;
                     }
-                });
+                }.bind( this ));
             }
         },
 
@@ -41845,8 +41859,7 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
         // goes to specified frame after n ms
         cueFrame: function( id, ms ) {
             ms = ms || 0;
-
-            if ( id !== undefined && this.project.getFrame( id ) !== undefined ) {
+            if ( id !== undefined && id !== null && this.project.getFrame( id ) !== undefined ) {
                 if ( ms > 0 ) {
                     _.delay(function() {
                         this._goToFrame( id );
