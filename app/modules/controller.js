@@ -33,7 +33,7 @@ function(app, Backbone, UI) {
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                //url: "http://dev.zeega.org/joseph/web/api/projects/4458",
+                // url: "http://staging.zeega.org/api/projects/2707",
                 url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });

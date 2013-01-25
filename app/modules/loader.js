@@ -26,7 +26,9 @@ function( app, Backbone ) {
         },
 
         serialize: function() {
-            return this.model.project.toJSON();
+            if ( this.model.project ) {
+                return this.model.project.toJSON();
+            }
         },
 
         afterRender: function() {
