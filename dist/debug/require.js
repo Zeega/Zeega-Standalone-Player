@@ -24077,7 +24077,11 @@ function( Zeega ) {
         },
 
         preload: function() {
-            if ( !this.ready ) {
+            var isFrameReady = this.isFrameReady();
+            
+            if ( !this.ready && isFrameReady ) {
+                this.onFrameReady();
+            } else if ( !this.ready && !isFrameReady ) {
                 this.layers.each(function( layer ) {
                     if ( layer.state === "waiting" || layer.state === "loading" ) {
                         layer.on( "layer_ready", this.onLayerReady, this );
@@ -24092,7 +24096,7 @@ function( Zeega ) {
             var commonLayers;
             // if frame is completely loaded, then just render it
             // else try preloading the layers
-           if ( this.ready ) {
+            if ( this.ready ) {
                 // only render non-common layers. allows for persistent layers
                 commonLayers = this.get("common_layers")[ oldID ] || [];
                 // if the frame is "ready", then just render the layers
@@ -24106,6 +24110,7 @@ function( Zeega ) {
                 this.status.set( "current_frame",this.id );
                 // set frame timer
                 advance = this.get("attr").advance;
+
                 if ( advance ) {
                     this.startTimer( advance );
                 }
@@ -24127,10 +24132,6 @@ function( Zeega ) {
             if ( this.isFrameReady() && !this.ready ) {
                 this.onFrameReady();
             }
-
-            // TODO: This does nothing?
-            // trigger events on layer readiness
-            // var states = this.layers.map(function(layer){ return layer.state; });
         },
 
         onFrameReady: function() {
@@ -24150,31 +24151,15 @@ function( Zeega ) {
             }
         },
 
-        getLayerStates: function() {
-            var layers = _.toArray( this.layers );
-
-            return [
-                "ready", "waiting", "loading", "destroyed", "error"
-            ].reduce(function( states, which ) {
-                var filtereds = layers.filter(function( layer ) {
-                    return layer.state === which;
-                });
-
-                states[ which ] = filtereds.map(function( layer ) {
-                    return layer.attributes;
-                });
-
-                return states;
-            }, {});
-        },
-
         isFrameReady: function() {
-            var states = this.getLayerStates();
+            var states, value;
 
-            if ( (states.ready.length + states.error.length) === this.layers.length ) {
-                return true;
-            }
-            return false;
+            states = _.pluck( this.layers.models, "state");
+            value = _.find( states, function( state ) {
+                return state != "ready";
+            });
+
+            return value === undefined;
         },
 
         pause: function() {
@@ -41256,7 +41241,9 @@ function( Zeega ) {
             emit the state change to the external api
         */
         emit: function( e, info ) {
-            if ( this.get("project").get("debugEvents") && e != "media_timeupdate") {
+            if ( this.get("project").get("debugEvents") === true && e != "media_timeupdate") {
+                console.log( "--player event: ",e, info );
+            } else if ( this.get("project").get("debugEvents") == e ) {
                 console.log( "--player event: ",e, info );
             }
             if ( !this.silent ) {
@@ -41374,30 +41361,54 @@ function( Zeega ) {
         },
 
         // calculate and return the correct window size for the player window
-        // uses the player"s window_ratio a || 4/3ttribute
         getWindowSize: function() {
-            // TODO: This could be refactored a bit more
-            var css = {},
-                windowRatio = this.model.get("window_ratio") || 4/3,
-                winWidth = Zeega.$( this.model.get("target") ).find(".ZEEGA-player").width(),
-                winHeight = Zeega.$( this.model.get("target") ).find(".ZEEGA-player").height(),
-                actualRatio = winWidth / winHeight;
+            var windowRatio, winWidth, winHeight, actualRatio,
+                css = {
+                    width: 0,
+                    height: 0,
+                    top: 0,
+                    left: 0
+                };
 
-            if ( this.model.get("window_fit") ) {
-                if ( actualRatio > windowRatio ) {
+            windowRatio = this.model.get("windowRatio");
+            winWidth = Zeega.$( this.model.get("target") ).find(".ZEEGA-player").width();
+            winHeight = Zeega.$( this.model.get("target") ).find(".ZEEGA-player").height();
+            actualRatio = winWidth / winHeight;
+
+            if ( this.model.get("cover") === true ) {
+                if ( actualRatio > windowRatio ) { // width > height // fit left & right
                     css.width = winWidth;
                     css.height = winWidth / windowRatio;
-                } else {
+                    css.top = (winHeight - css.height) / 2;
+                } else if ( this.model.get("cover") == "vertical" ) {
                     css.width = winHeight * windowRatio;
                     css.height = winHeight;
+                    css.left = (winWidth - css.width) / 2;
+                } else { // width < height
+                    css.width = winHeight * windowRatio;
+                    css.height = winHeight;
+                    css.left = (winWidth - css.width) / 2;
+                }
+            } else if ( this.model.get("cover") === false ) {
+                if ( actualRatio > windowRatio ) { // width > height
+                    css.width = winHeight * windowRatio;
+                    css.height = winHeight;
+                } else { // width < height
+                    css.width = winWidth;
+                    css.height = winWidth / windowRatio;
+                    css.top = (winHeight - css.height) / 2;
                 }
             } else {
-                if ( actualRatio > windowRatio ) {
-                    css.width = winHeight * windowRatio;
-                    css.height = winHeight;
-                } else {
+                if ( this.model.get("cover") == "horizontal" ) { // width > height // fit left & right
                     css.width = winWidth;
                     css.height = winWidth / windowRatio;
+                    css.top = (winHeight - css.height) / 2;
+                } else if ( this.model.get("cover") == "vertical" ) {
+                    var left = ( winWidth - winHeight * windowRatio ) / 2;
+
+                    css.width = winHeight * windowRatio;
+                    css.height = winHeight;
+                    css.left = left < 0 ? left : 0;
                 }
             }
 
@@ -41463,6 +41474,16 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
 
         // default settings -  can be overridden by project data
         defaults: {
+            
+            /**
+            Tells the player how to handle extra space around the player. Can be true, false, "horizontal", or "vertical"
+            @property cover
+            @type mixed
+            @default false
+            **/
+
+            cover: false,
+
             /**
             Instance of a Data.Model
 
@@ -41605,6 +41626,15 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
             prev: null,
 
             /**
+            The aspect ratio that the zeega should be played in (width/height)
+
+            @property windowRatio
+            @type Float
+            @default 4/3
+            **/
+            windowRatio: 4/3,
+
+            /**
             The frame id to start the player
 
             @property startFrame
@@ -41720,7 +41750,7 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
         },
 
         _remote_cueFrame: function( info, id ) {
-            this.cueFrame(id);
+            this.cueFrame( id );
         },
 
         // renders the player to the dom // this could be a _.once
@@ -57912,7 +57942,9 @@ function( app, Backbone ) {
         },
 
         serialize: function() {
-            return this.model.project.toJSON();
+            if ( this.model.project ) {
+                return this.model.project.toJSON();
+            }
         },
 
         afterRender: function() {
@@ -58069,7 +58101,9 @@ function(app, Backbone) {
         className: "ZEEGA-player-citations",
 
         serialize: function() {
-            return this.model.project.toJSON();
+            if ( this.model.project ) {
+                return this.model.project.toJSON();
+            }
         },
 
         initialize: function() {
@@ -58183,7 +58217,9 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
-            return this.model.project.toJSON();
+            if ( this.model.project ) {
+                return this.model.project.toJSON();
+            }
         },
 
         initialize: function() {
@@ -58386,7 +58422,7 @@ function(app, Backbone, UI) {
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                //url: "http://dev.zeega.org/joseph/web/api/projects/4458",
+                // url: "http://staging.zeega.org/api/projects/2707",
                 url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
                 startFrame: app.state.get("frameID")
             });
