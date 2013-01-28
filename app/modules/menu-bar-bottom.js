@@ -45,7 +45,7 @@ function(app, Backbone) {
 
         updateCitations: function( info ) {
             var layersToCite = _.map( info.layers, function(layer){
-                if( layer.attr.citation ) return layer;
+                if( layer.attr.citation && layer.attr.archive ) return layer;
                 return false;
             });
 
