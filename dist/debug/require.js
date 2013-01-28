@@ -24039,6 +24039,8 @@ function( Zeega ) {
             _connections: "none",
             controllable: true,
             id: null,
+            // id of frame before current
+            _last: null,
             // ids of layers contained on frame
             layers: [],
             // ids of frames this frame can lead to
@@ -24049,7 +24051,7 @@ function( Zeega ) {
             preload_frames: [],
             // id of the next frame
             _next: null,
-            // id of the previous frame
+            // id of frame to be navigated to the left
             _prev: null,
             thumbnail_url: null
         },
@@ -24516,14 +24518,14 @@ function( Zeega, _Layer ){
         layerType: "Image",
 
         attr: {
-            "title": "Image Layer",
-            "url": "none",
-            "left": 0,
-            "top": 0,
-            "height": 100,
-            "width": 100,
-            "opacity": 1,
-            "aspect": 1.33
+            title: "Image Layer",
+            url: "none",
+            left: 0,
+            top: 0,
+            height: 100,
+            width: 100,
+            opacity: 1,
+            aspect: 1.33
         },
 
         controls: [
@@ -39557,22 +39559,22 @@ function( Zeega, _Layer, MediaPlayer ) {
         layerType: "Video",
 
         attr: {
-            "title": "Video Layer",
-            "url": "none",
-            "left": 0,
-            "top": 0,
-            "height": 100,
-            "width": 100,
-            "volume": 0.5,
-            "cue_in": 0,
-            "cue_out": null,
-            "fade_in": 0,
-            "fade_out": 0,
-            "dissolve": false,
-            "loop": false,
-            "opacity": 1,
-            "dimension": 1.5,
-            "citation": true
+            title: "Video Layer",
+            url: "none",
+            left: 0,
+            top: 0,
+            height: 100,
+            width: 100,
+            volume: 0.5,
+            cue_in: 0,
+            cue_out: null,
+            fade_in: 0,
+            fade_out: 0,
+            dissolve: false,
+            loop: false,
+            opacity: 1,
+            dimension: 1.5,
+            citation: true
         }
     });
 
@@ -39724,19 +39726,19 @@ function( Zeega, _Layer, VideoLayer ){
         layerType: "Audio",
 
         attr: {
-            "title": "Audio Layer",
-            "url": "none",
-            "left": 0,
-            "top": 0,
-            "height": 0,
-            "width": 0,
-            "volume": 0.5,
-            "cue_in": 0,
-            "cue_out": null,
-            "fade_in": 0,
-            "fade_out": 0,
-            "opacity": 0,
-            "citation": true
+            title: "Audio Layer",
+            url: "none",
+            left: 0,
+            top: 0,
+            height: 0,
+            width: 0,
+            volume: 0.5,
+            cue_in: 0,
+            cue_out: null,
+            fade_in: 0,
+            fade_out: 0,
+            opacity: 0,
+            citation: true
         }
     });
 
@@ -39761,16 +39763,16 @@ function( Zeega, _Layer ) {
         layerType: "Rectangle",
 
         attr: {
-            "citation": false,
-            "default_controls": false,
-            "height": 50,
-            "left": 25,
-            "linkable": false,
-            "opacity": 1,
-            "opacity_hover": 1,
-            "title": "Rectangle Layer",
-            "top": 25,
-            "width": 50
+            citation: false,
+            default_controls: false,
+            height: 50,
+            left: 25,
+            linkable: false,
+            opacity: 1,
+            opacity_hover: 1,
+            title: "Rectangle Layer",
+            top: 25,
+            width: 50
         }
     });
 
@@ -39813,13 +39815,13 @@ function( Zeega, _Layer ) {
         layerType: "Text",
 
         attr: {
-            "citation": false,
-            "default_controls": true,
-            "left": 30,
-            "opacity": 1,
-            "title": "Text Layer",
-            "top": 40,
-            "width": 25
+            citation: false,
+            default_controls: true,
+            left: 30,
+            opacity: 1,
+            title: "Text Layer",
+            top: 40,
+            width: 25
         }
     });
 
@@ -39992,7 +39994,7 @@ function( Zeega, _Layer ){
             streetZoom: 1,
             heading: -235,
             pitch: 17.79,
-            mapType: 'satellite'
+            mapType: "satellite"
         },
 
         controls: []
@@ -40443,6 +40445,7 @@ function( Zeega, SequenceCollection ) {
 
                         frame.put({
                             _next: frames.at( j + 1 ) ? frames.at( j + 1 ).id : null,
+                            _last: frames.at( j - 1 ) ? frames.at( j - 1 ).id : null,
                             _prev: animationStart && lastStart === null && frames.at( j - 1 ) ? frames.at( j - 1 ).id :
                                 animationStart ? animationStart :
                                 animationStart === null && lastStart !== null ? lastStart :
@@ -40555,7 +40558,7 @@ function( Zeega, SequenceCollection ) {
             this.sequences.each(function( sequence ) {
                 sequence.frames.each(function( frame ) {
                     var commonLayers = {},
-                        linkedFrames = [ "_prev", "_next", "linksTo", "linksFrom" ].map(function( value ) {
+                        linkedFrames = [ "_prev", "_last", "_next", "linksTo", "linksFrom" ].map(function( value ) {
                         return frame.get( value );
                     });
 
@@ -40712,10 +40715,63 @@ function() {
     return Parser;
 });
 
-zeega.define('zeega_parser/data-parsers/zeega-collection',[
+/*
+
+    generates a valid slideshow layer from a set of images
+
+    pass in an array of image layers and it outputs a valid layer object
+
+*/
+zeega.define('zeega_parser/plugins/layers/slideshow/parser',[
     "lodash"
 ],
-function() {
+
+function( _ ) {
+
+    var Slideshow = {};
+
+    Slideshow.parse = function( layers, options ) {
+        var defaults, slides;
+
+        defaults = {
+            keyboard: false,
+            width: 100,
+            top: 0,
+            left: 0
+        };
+        
+        slides = _.filter( layers, function( layer ) {
+            if ( layer.layer_type == "Image" ) {
+                _.extend( layer, {
+                    attr: layer,
+                    type: layer.layer_type,
+                    id: layer.id
+                });
+                return true;
+            }
+            return false;
+        });
+
+        return {
+            attr: _.defaults({ slides: slides }, defaults ),
+            start_slide: parseInt( options.slideshow.start, 10 ) || 0,
+            start_slide_id: parseInt( options.slideshow.start_id, 10 ) || null,
+            slides_bleed: options.slideshow.bleed,
+            transition: options.slideshow.transition,
+            speed: options.slideshow.speed,
+            type: "SlideShow",
+            id: 1
+        };
+    };
+
+    return Slideshow;
+});
+
+zeega.define('zeega_parser/data-parsers/zeega-collection',[
+    "lodash",
+    "zeega_parser/plugins/layers/slideshow/parser"
+],
+function( _, Slideshow ) {
     var type = "zeega-collection",
         Parser = {};
 
@@ -40730,20 +40786,20 @@ function() {
     };
 
     Parser[ type ].parse = function( response, opts ) {
-        var project = {};
         if ( opts.layerOptions && opts.layerOptions.slideshow && opts.layerOptions.slideshow.display && response.items.length > 0 ) {
-            project = parseSlideshowCollection( response, opts );
+            return parseSlideshowCollection( response, opts );
         } else {
-            project = parseStandardCollection( response, opts );
+            return parseStandardCollection( response, opts );
         }
-        return project;
     };
 
-    var parseStandardCollection = function( response, opts ) {
+    function parseStandardCollection( response, opts ) {
+        var sequence, frames, layers;
+
         // layers from timebased items
-        var layers = generateLayerArrayFromItems( response.items ),
-            frames = generateFrameArrayFromItems( response.items ),
-            sequence = {
+        layers = generateLayerArrayFromItems( response.items );
+        frames = generateFrameArrayFromItems( response.items );
+        sequence = {
                 id: 0,
                 title: "collection",
                 persistent_layers: [],
@@ -40757,26 +40813,19 @@ function() {
                 frames: frames,
                 layers: layers
             });
-    };
+    }
 
     function parseSlideshowCollection( response, opts ) {
-        var frames,slideshowLayer,
-            imageLayers = [],
-            timebasedLayers = [];
+        var sequence, frames, layers, slideshowLayer, timebasedLayers;
 
-        _.each( response.items, function( item ) {
-            if ( item.layer_type == "Image" ) {
-                imageLayers.push(item);
-            } else if ( item.layer_type == "Audio" || item.media_type == "Video" ) {
-                timebasedLayers.push(item);
-            }
+        timebasedLayers = _.filter( response.items, function( item ) {
+            return item.layer_type == "Audio" || item.media_type == "Video";
         });
-        // slideshow layer from image items
-        if ( imageLayers.length ) {
-            slideshowLayer = generateSlideshowLayer( imageLayers, opts.layerOptions );
-        }
+
+        slideshowLayer = Slideshow.parse( response.items, opts.layerOptions );
         // layers from timebased items
-        var layers = generateLayerArrayFromItems( timebasedLayers );
+        layers = generateLayerArrayFromItems( timebasedLayers );
+        
         if ( slideshowLayer ) {
             layers.push( slideshowLayer );
         }
@@ -40792,7 +40841,7 @@ function() {
             }];
         }
 
-        var sequence = {
+        sequence = {
             id: 0,
             title: "collection",
             persistent_layers: slideshowLayer ? [ slideshowLayer.id ] : [],
@@ -40837,33 +40886,6 @@ function() {
                 attr: { advance : 0 }
             };
         });
-    }
-
-    function generateSlideshowLayer( imageLayerArray, layerOptions ) {
-        var layerDefaults = {
-                keyboard: false,
-                width: 100,
-                top: 0,
-                left: 0
-            },
-            slides = _.map( imageLayerArray, function( item ) {
-                return {
-                    attr: item,
-                    type: item.layer_type,
-                    id: item.id
-                };
-            });
-
-        return {
-            attr: _.defaults({ slides: slides }, layerDefaults ),
-            start_slide: parseInt( layerOptions.slideshow.start, 10 ) || 0,
-            start_slide_id: parseInt( layerOptions.slideshow.start_id, 10 ) || null,
-            slides_bleed: layerOptions.slideshow.bleed,
-            transition: layerOptions.slideshow.transition,
-            speed: layerOptions.slideshow.speed,
-            type: "SlideShow",
-            id: 1
-        };
     }
 
     return Parser;
@@ -41689,6 +41711,7 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
 
         _load: function( attributes ) {
             var rawDataModel = new Zeega.Backbone.Model(); // throw away model. may contain extraneous data
+console.log(attributes.url);
 
             if ( attributes.url ) {
                 rawDataModel.url = attributes.url;
