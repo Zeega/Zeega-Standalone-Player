@@ -401,7 +401,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( title )+
 '</span><span class="sequence-description"></span><span class="sequence-author"> by <a href="http://alpha.zeega.org/user/'+
 ( user_id )+
-'">'+
+'" target="blank" data-bypass="true">'+
 ( authors )+
 '</a></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
 ( item_id )+
