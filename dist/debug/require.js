@@ -58496,7 +58496,8 @@ function( app, Controller ) {
 
         routes: {
             "": "base",
-            "f/:frameID": 'goToFrame'
+            "f/:frameID": "goToFrame",
+            "frame/:frameID": "goToFrame"
         },
 
         /*
