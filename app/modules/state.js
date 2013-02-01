@@ -16,7 +16,7 @@ function( app, Backbone ) {
             firstVisit: true,
             fullscreen: false,
             initialized: false,
-            projectID: 74886,
+            projectID: null,
             frameID: null
         }
     });

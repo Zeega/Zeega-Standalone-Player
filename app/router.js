@@ -11,7 +11,8 @@ function( app, Controller ) {
 
         routes: {
             "": "base",
-            "f/:frameID": 'goToFrame'
+            "f/:frameID": 'goToFrame',
+            "*path": "base"
         },
 
         /*

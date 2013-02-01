@@ -29,17 +29,16 @@ function(app, Backbone, UI) {
         initPlayer: function() {
             app.player = new Zeega.player({
                 // debugEvents: true,
-                // window_fit: false,
+                // cover: false,
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                // url: "http://staging.zeega.org/api/projects/2707",
-                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
+                url: window.projectJSON ? null :
+                    app.state.get("projectID") !== null ? app.api + "/items/" + app.state.get("projectID") :
+                    "testproject.json",
                 startFrame: app.state.get("frameID")
             });
-            // outputs player events to the console
-            // player.on('all', function(e, obj) { if(e!='media_timeupdate') console.log('    player event:',e,obj);});
-            // listen for frame events to update the router
+
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
