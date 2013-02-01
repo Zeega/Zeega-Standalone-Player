@@ -1,3 +1,15 @@
+.play-zcon,
+.pause-zcon {
+  background-image: url('../img/playpause.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+}
+.pause-zcon {
+  background-position: -25px 0px;
+}
 [class^="zsocial-"] {
   background-image: url('../img/social-sprites-20px.png');
   background-position: 0px 0px;
@@ -1409,19 +1421,6 @@ a:active {
   width: 100%;
   position: absolute;
   z-index: 10;
-}
-.pause-overlay .ZEEGA-pause-inner {
-  padding: 100px 20px 0 20px;
-}
-.pause-overlay .ZEEGA-pause-inner h1 {
-  font-size: 4em;
-  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
-}
-.pause-overlay .ZEEGA-pause-inner h2 {
-  font-size: 1em;
-  opacity: 0.7;
-  margin-top: 20px;
-  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
 }
 .pause-overlay .play {
   position: absolute;

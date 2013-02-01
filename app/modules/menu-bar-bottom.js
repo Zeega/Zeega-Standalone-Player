@@ -35,11 +35,11 @@ function(app, Backbone) {
         },
 
         onPlay: function() {
-            this.$("#project-play-pause i").addClass("icon-pause").removeClass("icon-play");
+            this.$("#project-play-pause i").addClass("pause-zcon").removeClass("play-zcon");
         },
 
         onPause: function() {
-            this.$("#project-play-pause i").addClass("icon-play").removeClass("icon-pause");
+            this.$("#project-play-pause i").addClass("play-zcon").removeClass("pause-zcon");
             this.fadeIn();
         },
 

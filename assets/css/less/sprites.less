@@ -1,5 +1,19 @@
 @image-folder: '../img';
 
+.play-zcon,
+.pause-zcon {
+  background-image: url('@{image-folder}/playpause.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 25px;
+  width: 25px; 
+}
+.pause-zcon {
+  background-position: -25px 0px;
+}
+
+
 [class^="zsocial-"] {
   
   background-image: url('@{image-folder}/social-sprites-20px.png');
