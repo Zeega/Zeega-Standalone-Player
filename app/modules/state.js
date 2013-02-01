@@ -6,11 +6,8 @@ define([
 
 function( app, Backbone ) {
 
-    // Create a new module
-    var State = {};
-
     // This will fetch the tutorial template and render it.
-    State = Backbone.Model.extend({
+    return Backbone.Model.extend({
         defaults: {
             baseRendered: false,
             firstVisit: true,
@@ -21,6 +18,4 @@ function( app, Backbone ) {
         }
     });
 
-    // Required, return the module for AMD compliance
-    return State;
 });
