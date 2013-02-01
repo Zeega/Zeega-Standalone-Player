@@ -28,6 +28,7 @@ function(app, Backbone) {
         initialize: function() {
             this.model.on("data_loaded", this.render, this);
             this.model.on("sequence_enter", this.onEnterSequence, this );
+            this.model.on("pause", this.fadeIn, this );
         },
 
         onEnterSequence: function( info ) {
@@ -93,7 +94,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function() {
-            if( this.visible && !this.hover && app.player.status != "paused") {
+            if( this.visible && !this.hover && app.player.state != "paused") {
                 this.visible = false;
                 this.$el.fadeOut();
             }

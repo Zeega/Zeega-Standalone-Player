@@ -64,7 +64,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function() {
-            if(this.visible && !this.hover && app.player.status != "paused" ) {
+            if(this.visible && !this.hover && app.player.state != "paused" ) {
                 this.visible = false;
                 this.$el.fadeOut();
             }

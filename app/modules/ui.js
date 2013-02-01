@@ -15,10 +15,11 @@ define([
     "modules/loader",
     "modules/controls",
     "modules/menu-bar-bottom",
-    "modules/menu-bar-top"
+    "modules/menu-bar-top",
+    "modules/pause"
 ],
 
-function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView ) {
 
     // Create a new module
     var UI = {};
@@ -31,6 +32,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
         el: "#main",
 
         initialize: function() {
+
+            app.player.on("pause", this.onPause, this );
+            app.player.on("play", this.onPlay, this );
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
@@ -63,6 +67,18 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
                 this.citations.fadeOut();
                 this.menuBar.fadeOut();
             }.bind( this ), FADE_OUT_DELAY);
+        },
+
+        onPause: function() {
+            this.pause = new PauseView({ model: app.player });
+            this.$("#overlays").prepend( this.pause.el );
+            this.pause.render();
+        },
+
+        onPlay: function() {
+            if ( this.pause ) {
+                this.pause.remove();
+            }
         }
 
     });
