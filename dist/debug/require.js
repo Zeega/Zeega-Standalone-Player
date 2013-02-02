@@ -389,7 +389,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="icon-pause icon-white"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
 }
 return __p;
 };
@@ -397,13 +397,13 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title"><span class="project-title">'+
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
-'</span><span class="sequence-description"></span><span class="sequence-author"> by <a href="http://alpha.zeega.org/user/'+
+'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http://alpha.zeega.org/user/'+
 ( user_id )+
-'">'+
+'" data-bypass="true" >'+
 ( authors )+
-'</a></span></li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
+'</a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://alpha.zeega.org/'+
 ( item_id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -414,6 +414,14 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 '" target="blank"><i class="zsocial-facebook"></i></a>\n        <a href="http://www.tumblr.com/share" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a href="mailto:friend@example.com?subject=Check out this Zeega!&body=http://alpha.zeega.org/'+
 ( item_id )+
 '"><i class="zsocial-email"></i></a>\n    </li>\n    <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
+}
+return __p;
+};
+
+this["JST"]["app/templates/pause.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<a class="play" href="#"><img src="assets/img/start-button.png"/></a>';
 }
 return __p;
 };;
@@ -57015,23 +57023,18 @@ define('modules/state',[
 
 function( app, Backbone ) {
 
-    // Create a new module
-    var State = {};
-
     // This will fetch the tutorial template and render it.
-    State = Backbone.Model.extend({
+    return Backbone.Model.extend({
         defaults: {
             baseRendered: false,
             firstVisit: true,
             fullscreen: false,
             initialized: false,
-            projectID: 74886,
+            projectID: null,
             frameID: null
         }
     });
 
-    // Required, return the module for AMD compliance
-    return State;
 });
 /*!
  * backbone.layoutmanager.js v0.6.5
@@ -58137,11 +58140,11 @@ function(app, Backbone) {
         },
 
         onPlay: function() {
-            this.$("#project-play-pause i").addClass("icon-pause").removeClass("icon-play");
+            this.$("#project-play-pause i").addClass("pause-zcon").removeClass("play-zcon");
         },
 
         onPause: function() {
-            this.$("#project-play-pause i").addClass("icon-play").removeClass("icon-pause");
+            this.$("#project-play-pause i").addClass("play-zcon").removeClass("pause-zcon");
             this.fadeIn();
         },
 
@@ -58166,7 +58169,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function() {
-            if(this.visible && !this.hover && app.player.status != "paused" ) {
+            if(this.visible && !this.hover && app.player.state != "paused" ) {
                 this.visible = false;
                 this.$el.fadeOut();
             }
@@ -58247,6 +58250,7 @@ function(app, Backbone) {
         initialize: function() {
             this.model.on("data_loaded", this.render, this);
             this.model.on("sequence_enter", this.onEnterSequence, this );
+            this.model.on("pause", this.fadeIn, this );
         },
 
         onEnterSequence: function( info ) {
@@ -58312,7 +58316,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function() {
-            if( this.visible && !this.hover && app.player.status != "paused") {
+            if( this.visible && !this.hover && app.player.state != "paused") {
                 this.visible = false;
                 this.$el.fadeOut();
             }
@@ -58337,6 +58341,33 @@ function(app, Backbone) {
 
     return MenuBar;
 });
+define('modules/pause',[
+    "app",
+    // Libs
+    "backbone"
+],
+
+function(app, Backbone) {
+
+    return Backbone.View.extend({
+        
+        className: "pause-overlay",
+        template: "pause",
+        
+        serialize: function() {
+            return this.model.project.toJSON();
+        },
+
+        events: {
+            "click .play": "play"
+        },
+
+        play: function() {
+            this.model.play();
+        }
+    });
+
+});
 /*
 
   ui.js
@@ -58354,10 +58385,11 @@ define('modules/ui',[
     "modules/loader",
     "modules/controls",
     "modules/menu-bar-bottom",
-    "modules/menu-bar-top"
+    "modules/menu-bar-top",
+    "modules/pause"
 ],
 
-function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView ) {
 
     // Create a new module
     var UI = {};
@@ -58370,6 +58402,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
         el: "#main",
 
         initialize: function() {
+
+            app.player.on("pause", this.onPause, this );
+            app.player.on("play", this.onPlay, this );
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
@@ -58402,6 +58437,18 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop ) {
                 this.citations.fadeOut();
                 this.menuBar.fadeOut();
             }.bind( this ), FADE_OUT_DELAY);
+        },
+
+        onPause: function() {
+            this.pause = new PauseView({ model: app.player });
+            this.$("#overlays").prepend( this.pause.el );
+            this.pause.render();
+        },
+
+        onPlay: function() {
+            if ( this.pause ) {
+                this.pause.remove();
+            }
         }
 
     });
@@ -58440,17 +58487,16 @@ function(app, Backbone, UI) {
         initPlayer: function() {
             app.player = new Zeega.player({
                 // debugEvents: true,
-                // window_fit: false,
+                // cover: false,
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
-                // url: "http://staging.zeega.org/api/projects/2707",
-                url: window.projectJSON ? null : app.api + "/items/" + app.state.get("projectID"),
+                url: window.projectJSON ? null :
+                    app.state.get("projectID") !== null ? app.api + "/items/" + app.state.get("projectID") :
+                    "testproject.json",
                 startFrame: app.state.get("frameID")
             });
-            // outputs player events to the console
-            // player.on('all', function(e, obj) { if(e!='media_timeupdate') console.log('    player event:',e,obj);});
-            // listen for frame events to update the router
+
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
@@ -58496,7 +58542,8 @@ function( app, Controller ) {
 
         routes: {
             "": "base",
-            "f/:frameID": 'goToFrame'
+            "f/:frameID": 'goToFrame',
+            "*path": "base"
         },
 
         /*
