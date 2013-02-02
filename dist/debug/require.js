@@ -58543,6 +58543,7 @@ function( app, Controller ) {
         routes: {
             "": "base",
             "f/:frameID": 'goToFrame',
+            "frame/:frameID": "goToFrame",
             "*path": "base"
         },
 
