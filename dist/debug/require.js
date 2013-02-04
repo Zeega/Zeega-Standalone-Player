@@ -421,7 +421,7 @@ return __p;
 this["JST"]["app/templates/pause.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a class="play" href="#"><img src="assets/img/start-button.png"/></a>';
+__p+='<a class="play" href="#"></a>';
 }
 return __p;
 };;
