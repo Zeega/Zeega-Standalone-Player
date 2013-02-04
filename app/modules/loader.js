@@ -22,7 +22,7 @@ function( app, Backbone ) {
 
         initialize: function() {
             this.model.on("layer_loading", this.onLayerLoading, this );
-            this.model.on("layer_ready", this.onLayerReady, this );
+            this.model.on("layer_preloaded", this.onLayerReady, this );
         },
 
         serialize: function() {
