@@ -1431,7 +1431,9 @@ a:active {
   margin: auto;
   width: 25%;
   height: 25%;
-}
-.pause-overlay .play img {
-  width: 100%;
+  background: url(../img/start-button.png) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
 }
