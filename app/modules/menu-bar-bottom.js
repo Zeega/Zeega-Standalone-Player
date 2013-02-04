@@ -12,7 +12,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     Citations.View = Backbone.View.extend({
         
-        visible : true,
+        visible : false,
         hover: false,
         playing: false,
 
@@ -48,10 +48,10 @@ function(app, Backbone) {
                 if( layer.attr.citation && layer.attr.archive ) return layer;
                 return false;
             });
-
             this.$(".ZEEGA-citations-primary").empty();
             _.each( _.compact( layersToCite ), function(layer){
                 var citation = new CitationView({ model: new Backbone.Model(layer) });
+
                 this.$(".ZEEGA-citations-primary").append(citation.el);
                 citation.render();
             }.bind( this ));

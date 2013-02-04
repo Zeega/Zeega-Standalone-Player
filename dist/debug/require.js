@@ -58115,7 +58115,8 @@ function( app, Backbone ) {
                 this.$el.fadeOut(function(){
                     this.remove();
                 }.bind( this ));
-                app.layout.renderMenus();
+                app.layout.hasStarted = true;
+                app.layout.resetFadeOutTimer();
                 this.model.play();
             }.bind( this ), this.DELAY );
         }
@@ -58210,7 +58211,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     Citations.View = Backbone.View.extend({
         
-        visible : true,
+        visible : false,
         hover: false,
         playing: false,
 
@@ -58246,10 +58247,10 @@ function(app, Backbone) {
                 if( layer.attr.citation && layer.attr.archive ) return layer;
                 return false;
             });
-
             this.$(".ZEEGA-citations-primary").empty();
             _.each( _.compact( layersToCite ), function(layer){
                 var citation = new CitationView({ model: new Backbone.Model(layer) });
+
                 this.$(".ZEEGA-citations-primary").append(citation.el);
                 citation.render();
             }.bind( this ));
@@ -58327,7 +58328,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
-        visible: true,
+        visible: false,
         hover: false,
 
         template: "menu-bar-top",
@@ -58492,6 +58493,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
     // This will fetch the tutorial template and render it.
     UI.Layout = Backbone.Layout.extend({
         
+        hasStarted: false,
         el: "#main",
 
         initialize: function() {
@@ -58507,18 +58509,10 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
 
-            //this.insertView("#overlays", this.citations );
-            //this.insertView("#overlays", this.menuBar );
+            this.insertView("#overlays", this.citations );
+            this.insertView("#overlays", this.menuBar );
             
             this.render();
-        },
-
-        renderMenus: function() {
-            this.resetFadeOutTimer();
-            this.$("#overlays").append( this.citations.el );
-            this.$("#overlays").append( this.menuBar.el );
-            this.citations.render();
-            this.menuBar.render();
         },
 
         afterRender: function() {
@@ -58531,15 +58525,17 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
         },
 
         resetFadeOutTimer: function() {
-            this.citations.fadeIn();
-            this.menuBar.fadeIn();
-            if ( this.timer ) {
-                clearTimeout( this.timer );
+            if ( this.hasStarted ) {
+                this.citations.fadeIn();
+                this.menuBar.fadeIn();
+                if ( this.timer ) {
+                    clearTimeout( this.timer );
+                }
+                this.timer = setTimeout(function(){
+                    this.citations.fadeOut();
+                    this.menuBar.fadeOut();
+                }.bind( this ), FADE_OUT_DELAY);
             }
-            this.timer = setTimeout(function(){
-                this.citations.fadeOut();
-                this.menuBar.fadeOut();
-            }.bind( this ), FADE_OUT_DELAY);
         },
 
         onPause: function() {

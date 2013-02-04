@@ -1301,6 +1301,7 @@ a:active {
 
 }
 .ZEEGA-player-citations {
+  display: none;
   bottom: 0;
   padding: 10px 0;
   pointer-events: auto;
@@ -1411,6 +1412,7 @@ a:active {
 }
 .ZEEGA-player-menu-bar {
   background: rgba(0, 0, 0, 0.5);
+  display: none;
   pointer-events: auto;
   position: absolute;
   width: 100%;

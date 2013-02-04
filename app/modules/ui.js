@@ -29,6 +29,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
     // This will fetch the tutorial template and render it.
     UI.Layout = Backbone.Layout.extend({
         
+        hasStarted: false,
         el: "#main",
 
         initialize: function() {
@@ -44,18 +45,10 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
 
-            //this.insertView("#overlays", this.citations );
-            //this.insertView("#overlays", this.menuBar );
+            this.insertView("#overlays", this.citations );
+            this.insertView("#overlays", this.menuBar );
             
             this.render();
-        },
-
-        renderMenus: function() {
-            this.resetFadeOutTimer();
-            this.$("#overlays").append( this.citations.el );
-            this.$("#overlays").append( this.menuBar.el );
-            this.citations.render();
-            this.menuBar.render();
         },
 
         afterRender: function() {
@@ -68,15 +61,17 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
         },
 
         resetFadeOutTimer: function() {
-            this.citations.fadeIn();
-            this.menuBar.fadeIn();
-            if ( this.timer ) {
-                clearTimeout( this.timer );
+            if ( this.hasStarted ) {
+                this.citations.fadeIn();
+                this.menuBar.fadeIn();
+                if ( this.timer ) {
+                    clearTimeout( this.timer );
+                }
+                this.timer = setTimeout(function(){
+                    this.citations.fadeOut();
+                    this.menuBar.fadeOut();
+                }.bind( this ), FADE_OUT_DELAY);
             }
-            this.timer = setTimeout(function(){
-                this.citations.fadeOut();
-                this.menuBar.fadeOut();
-            }.bind( this ), FADE_OUT_DELAY);
         },
 
         onPause: function() {

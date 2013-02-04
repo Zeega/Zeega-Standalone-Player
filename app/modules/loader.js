@@ -82,7 +82,8 @@ function( app, Backbone ) {
                 this.$el.fadeOut(function(){
                     this.remove();
                 }.bind( this ));
-                app.layout.renderMenus();
+                app.layout.hasStarted = true;
+                app.layout.resetFadeOutTimer();
                 this.model.play();
             }.bind( this ), this.DELAY );
         }
