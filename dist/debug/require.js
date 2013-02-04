@@ -58115,6 +58115,7 @@ function( app, Backbone ) {
                 this.$el.fadeOut(function(){
                     this.remove();
                 }.bind( this ));
+                app.layout.renderMenus();
                 this.model.play();
             }.bind( this ), this.DELAY );
         }
@@ -58146,7 +58147,7 @@ function(app, Backbone) {
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_rendered", this.updateArrowState, this);
+            this.model.on("frame_play", this.updateArrowState, this);
         },
 
         events: {
@@ -58225,7 +58226,7 @@ function(app, Backbone) {
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_rendered", this.updateCitations, this);
+            this.model.on("frame_play", this.updateCitations, this);
             this.model.on("data_loaded", this.render, this);
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );
@@ -58505,9 +58506,19 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
-            this.insertView("#overlays", this.citations );
-            this.insertView("#overlays", this.menuBar );
+
+            //this.insertView("#overlays", this.citations );
+            //this.insertView("#overlays", this.menuBar );
+            
             this.render();
+        },
+
+        renderMenus: function() {
+            this.resetFadeOutTimer();
+            this.$("#overlays").append( this.citations.el );
+            this.$("#overlays").append( this.menuBar.el );
+            this.citations.render();
+            this.menuBar.render();
         },
 
         afterRender: function() {
@@ -58594,7 +58605,7 @@ function(app, Backbone, UI) {
             } else {
                 app.player.on('data_loaded', this.onDataLoaded, this);
             }
-            app.player.on('frame_rendered', this.onFrameRender, this);
+            app.player.on('frame_play', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
         },
 

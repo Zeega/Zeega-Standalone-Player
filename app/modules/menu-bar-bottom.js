@@ -28,7 +28,7 @@ function(app, Backbone) {
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_rendered", this.updateCitations, this);
+            this.model.on("frame_play", this.updateCitations, this);
             this.model.on("data_loaded", this.render, this);
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );

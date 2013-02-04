@@ -43,9 +43,19 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
-            this.insertView("#overlays", this.citations );
-            this.insertView("#overlays", this.menuBar );
+
+            //this.insertView("#overlays", this.citations );
+            //this.insertView("#overlays", this.menuBar );
+            
             this.render();
+        },
+
+        renderMenus: function() {
+            this.resetFadeOutTimer();
+            this.$("#overlays").append( this.citations.el );
+            this.$("#overlays").append( this.menuBar.el );
+            this.citations.render();
+            this.menuBar.render();
         },
 
         afterRender: function() {

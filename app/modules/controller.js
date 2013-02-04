@@ -44,7 +44,7 @@ function(app, Backbone, UI) {
             } else {
                 app.player.on('data_loaded', this.onDataLoaded, this);
             }
-            app.player.on('frame_rendered', this.onFrameRender, this);
+            app.player.on('frame_play', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
         },
 
