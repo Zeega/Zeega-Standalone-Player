@@ -11,8 +11,10 @@
 	<base href="/">
 
 	<script>
-		localStorage.api = 'http://alpha.zeega.org/api';
-		if (!window.console) console = {log: function() {}};
+		sessionStorage.setItem("directory", "joseph/web/");
+		sessionStorage.setItem("hostname", "//dev.zeega.org/");
+
+		if (!window.console) console = { log: function() {}};
 	</script>
 
 	<!-- Application styles. -->

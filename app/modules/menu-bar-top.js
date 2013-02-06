@@ -21,7 +21,12 @@ function(app, Backbone) {
 
         serialize: function() {
             if ( this.model.project ) {
-                return this.model.project.toJSON();
+                return _.extend({
+                        directory: sessionStorage.getItem("directory"),
+                        hostname: sessionStorage.getItem("hostname")
+                    },
+                    this.model.project.toJSON()
+                    );
             }
         },
 

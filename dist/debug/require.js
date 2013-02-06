@@ -399,7 +399,11 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
-'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http://alpha.zeega.org/user/'+
+'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http:'+
+( hostname )+
+''+
+( directory )+
+'user/'+
 ( user_id )+
 '" data-bypass="true" >'+
 ( authors )+
@@ -58337,7 +58341,12 @@ function(app, Backbone) {
 
         serialize: function() {
             if ( this.model.project ) {
-                return this.model.project.toJSON();
+                return _.extend({
+                        directory: sessionStorage.getItem("directory"),
+                        hostname: sessionStorage.getItem("hostname")
+                    },
+                    this.model.project.toJSON()
+                    );
             }
         },
 
