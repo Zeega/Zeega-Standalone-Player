@@ -39993,7 +39993,7 @@ function( Zeega, _Layer, MediaPlayer ) {
                 this.popup.render();
                 this.model.on("popup_remove", this.popupClosed, this );
                 // pause the player
-                this.model.status.get("project").pause();
+                this.model.status.get("project").suspend();
             }
         },
 
@@ -41953,7 +41953,7 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
                 isCurrentNull, isStartNull;
             if ( !this.ready ) {
                 this.render(); // render the player first!
-            } else if ( this.state == "paused" ) {
+            } else if ( this.state == "paused" || this.state == "suspended" ) {
                 this._fadeIn();
                 if ( currentFrame ) {
                     this.state = "playing";
@@ -41990,8 +41990,18 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
             }
         },
 
+        suspend: function() {
+            if ( this.state == "playing" ) {
+                this.state ="suspended";
+                // pause each frame - layer
+                this.status.get("current_frame_model").pause();
+                // pause auto advance
+                this.status.emit("suspend");
+            }
+        },
+
         playPause: function() {
-            if ( this.state == "paused" ) this.play();
+            if ( this.state == "paused" || this.state == "suspended" ) this.play();
             else this.pause();
         },
 
@@ -42041,6 +42051,8 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
             this.relay.put( "current_frame", id );
             // render current frame // should trigger a frame rendered event when successful
             this.status.get("current_frame_model").render( oldID );
+
+            console.log("       render frame", this.status.get("current_frame_model") );
             if ( this.state !== "playing" ) {
                 this.state = "playing";
                 this.status.emit( "play", this );
@@ -57951,7 +57963,7 @@ function( $, _, Backbone, State ) {
         root: "/",
         // the path of the zeega api
         // only required for dynamically loaded zeegas
-        api: localStorage.getItem("api") || "http://dev.zeega.org/joseph/web/api/projects/",
+        api: "http:" + sessionStorage.getItem("hostname") + sessionStorage.getItem("directory") + "api/",
 
       /*
         app.state stores information on the current state of the application
