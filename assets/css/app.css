@@ -1257,7 +1257,7 @@ a:active {
   display: none;
   bottom: 0;
   padding: 10px 0;
-  pointer-events: auto;
+  pointer-events: none;
   position: absolute;
   width: 100%;
   z-index: 11;
@@ -1266,6 +1266,7 @@ a:active {
   padding: 0 10px;
 }
 .ZEEGA-player-citations ul.ZEEGA-citations-primary {
+  pointer-events: auto;
   margin: 0;
   padding: 0;
   float: right;
@@ -1278,6 +1279,7 @@ a:active {
   display: block;
 }
 .ZEEGA-player-citations ul.ZEEGA-standalone-controls {
+  pointer-events: auto;
   position: absolute;
   bottom: 10px;
 }
