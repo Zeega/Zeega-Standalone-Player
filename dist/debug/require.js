@@ -438,6 +438,26 @@ ZEEGA LICENSE INFO HERE
 */
 this["JST"] = this["JST"] || {};
 
+this["JST"]["app/templates/controls.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='';
+ if ( false ) { 
+;__p+='\n    <a href="#" class="ZEEGA-close">&times;</a>\n';
+ } 
+;__p+='\n';
+ if ( false ) { 
+;__p+='\n    <a href="#" class="ZEEGA-prev controls-arrow arrow-left disabled"></a>\n    <a href="#" class="ZEEGA-next controls-arrow arrow-right disabled"></a>\n';
+ } 
+;__p+='\n';
+ if ( false ) { 
+;__p+='\n    <a href="#" class="ZEEGA-playpause pause-zcon"></a>\n';
+ } 
+;__p+='';
+}
+return __p;
+};
+
 this["JST"]["app/templates/layouts/player-layout.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -39072,7 +39092,7 @@ function(Zeega) {
             // pause if player gets to the cue out point
 
             if ( cueOut === 0 ) {
-                this.settings.cue_out = cueOut = his.getDuration();
+                this.settings.cue_out = cueOut = this.getDuration();
             }
 
             if ( cueOut !== null && this.popcorn.currentTime() >= cueOut ) {
@@ -39993,7 +40013,7 @@ function( Zeega, _Layer, MediaPlayer ) {
                 this.popup.render();
                 this.model.on("popup_remove", this.popupClosed, this );
                 // pause the player
-                this.model.status.get("project").suspend();
+                this.model.status.get("project").pause();
             }
         },
 
@@ -40759,7 +40779,7 @@ function() {
 
     // no op. projects are already formatted
     Parser[type].parse = function( response, opts ) {
-        return response.items[0].text;
+        return response.items[0].text.project || response.items[0].text;
     };
 
     return Parser;
@@ -41215,6 +41235,7 @@ function( Zeega, _, ProjectModel, DataParser ) {
 
                 // parse the data
                 parsed = p.parse( data, options );
+
                 return false;
             }
         }, this );
@@ -41391,10 +41412,123 @@ function( Zeega ) {
     return Status;
 });
 
-zeega.define('modules/player-layout',[
+zeega.define('modules/controls-view',[
     "zeega"
 ],
 function( Zeega ) {
+
+    return Zeega.Backbone.LayoutView.extend({
+
+        template: "controls",
+        className: "ZEEGA-basic-controls",
+
+        initialize: function( args, options ) {
+            this.model.on("frame_play", this.onFramePlay, this );
+            this.model.on("play", this.onPlay, this );
+            this.model.on("pause", this.onPause, this );
+        },
+
+        serialize: function() {
+console.log( this.options )
+            return _.defaults( this.options.settings, {
+                arrows: true,
+                close: true,
+                playpause: true
+            });
+        },
+
+        events: {
+            "click .ZEEGA-close": "close",
+            "click .ZEEGA-prev": "prev",
+            "click .ZEEGA-next": "next",
+            "click .ZEEGA-playpause": "playpause"
+        },
+
+        close: function() {
+            this.model.destroy();
+        },
+
+        prev: function() {
+            this.model.cuePrev();
+        },
+
+        next: function() {
+            this.model.cueNext();
+        },
+
+        onFramePlay: function( info ) {
+            switch(info._connections) {
+                case "l":
+                    this.activateArrow("ZEEGA-prev");
+                    this.disableArrow("ZEEGA-next");
+                    break;
+                case "r":
+                    this.disableArrow("ZEEGA-prev");
+                    this.activateArrow("ZEEGA-next");
+                    break;
+                case "lr":
+                    this.activateArrow("ZEEGA-prev");
+                    this.activateArrow("ZEEGA-next");
+                    break;
+                default:
+                    this.disableArrow("ZEEGA-prev");
+                    this.disableArrow("ZEEGA-next");
+            }
+        },
+
+        onPlay: function() {
+            this.$(".ZEEGA-playpause")
+                .addClass("pause-zcon")
+                .removeClass("play-zcon");
+        },
+        
+        onPause: function() {
+            this.$(".ZEEGA-playpause")
+                .addClass("play-zcon")
+                .removeClass("pause-zcon");
+        },
+
+        playpause: function() {
+            this.model.playPause();
+        },
+
+        activateArrow: function(className) {
+            this.$("."+ className +".disabled").removeClass("disabled");
+        },
+
+        disableArrow: function(className) {
+            this.$("."+ className).addClass("disabled");
+        },
+
+        fetch: function( path ) {
+            // Initialize done for use in async-mode
+            var done;
+
+            // Concatenate the file extension.
+            path = "app/templates/"+ path + ".html";
+
+            // If cached, use the compiled template.
+            if ( JST[ path ] ) {
+                return JST[ path ];
+            } else {
+                // Put fetch into `async-mode`.
+                done = this.async();
+
+                // Seek out the template asynchronously.
+                return Zeega.$.ajax({ url: Zeega.root + path }).then(function(contents) {
+                    done( JST[path] = _.template(contents) );
+                });
+            }
+        }
+    });
+
+});
+
+zeega.define('modules/player-layout',[
+    "zeega",
+    "modules/controls-view"
+],
+function( Zeega, ControlsView ) {
     /*
         the player layout
 
@@ -41448,10 +41582,12 @@ function( Zeega ) {
         afterRender: function() {
             // correctly size the player window
             this.$(".ZEEGA-player-window").css( this.getWindowSize() );
-            this.setControls();
+            this.setPrevNext();
+
+            this.renderControls();
         },
 
-        setControls: function() {
+        setPrevNext: function() {
             // TODO: Investigate whether or not this-alias can be safely
             // replaced by bind(this)
             var next = this.model.get("next"),
@@ -41469,6 +41605,26 @@ function( Zeega ) {
                     _this.model.cuePrev();
                     return false;
                 });
+            }
+        },
+
+        renderControls: function() {
+            var controlSettings = this.model.get("controls");
+
+            if ( _.isObject( controlSettings ) || controlSettings === true ) {
+
+                if ( controlSettings === true ) {
+                    controlSettings = {
+                        close: true,
+                        arrows: true,
+                        playpause: true
+                    };
+                }
+
+                this.controls = new ControlsView({ model: this.model, settings: controlSettings });
+
+                this.$el.prepend( this.controls.el );
+                this.controls.render();
             }
         },
 
@@ -41589,19 +41745,25 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
         relay: null,
         status: null,
         gmapAPI: "waiting",
-
         Layout: null,
 
         // default settings -  can be overridden by project data
         defaults: {
-            
+
+             /**
+            sets the default visual controls. "none" or object with desired controls { arrows: true, close: false }
+            @property controls
+            @type Mixed
+            @default "none"
+            **/
+            controls: true,
+
             /**
             Tells the player how to handle extra space around the player. Can be true, false, "horizontal", or "vertical"
             @property cover
             @type mixed
             @default false
             **/
-
             cover: false,
 
             /**
@@ -42052,7 +42214,6 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
             // render current frame // should trigger a frame rendered event when successful
             this.status.get("current_frame_model").render( oldID );
 
-            console.log("       render frame", this.status.get("current_frame_model") );
             if ( this.state !== "playing" ) {
                 this.state = "playing";
                 this.status.emit( "play", this );
@@ -42131,15 +42292,20 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
 
         // completely obliterate the player. triggers event
         destroy: function() {
-            // TODO: Investigate whether or not this-alias can be safely
-            // replaced by bind(this)
-            var _this = this;
 
             this.Layout.$el.fadeOut( this.get("fadeOut"), function() {
                 // destroy all layers before calling player_destroyed
-                _this.get("frames").each(function(frame) { frame.destroy(); });
-                _this.status.emit("player_destroyed");
-            });
+                this.project.sequences.each(function( sequence ) {
+                    sequence.frames.each(function( frame ) {
+                        frame.destroy();
+                        frame.layers.each(function( layer ) {
+                            layer.destroy();
+                        });
+                    });
+                });
+                this.Layout.remove();
+                this.status.emit("player_destroyed");
+            }.bind( this ));
         },
 
         /**
@@ -58608,6 +58774,7 @@ function(app, Backbone, UI) {
             app.player = new Zeega.player({
                 // debugEvents: true,
                 // cover: false,
+                controls: false,
                 autoplay: false,
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
