@@ -44,10 +44,16 @@ function(app, Backbone) {
         },
 
         updateCitations: function( info ) {
-            var layersToCite = _.map( info.layers, function(layer){
-                if( layer.attr.citation && layer.attr.archive ) return layer;
+            var layersToCite = _.map( info.layers, function( layer ){
+                // if( layer.attr.citation && layer.attr.archive ) return layer;
+
+                // this is janky . fix!
+                if( _.contains(["Audio", "Image", "Video"], layer.type), layer.attr.archive ) {
+                    return layer;
+                }
                 return false;
             });
+
             this.$(".ZEEGA-citations-primary").empty();
             _.each( _.compact( layersToCite ), function(layer){
                 var citation = new CitationView({ model: new Backbone.Model(layer) });

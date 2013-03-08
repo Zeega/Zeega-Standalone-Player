@@ -55,7 +55,8 @@ function( app, Backbone ) {
 
         onLayerLoading: function( layer ) {
             this.layerCount++;
-            if( layer.attr.citation ) {
+
+            if( _.contains(["Audio", "Image", "Video"], layer.type) ) {
                 var item, itemType;
 
                 itemType = layer.attr.archive || layer.type;
