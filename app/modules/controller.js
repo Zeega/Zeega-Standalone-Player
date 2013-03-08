@@ -58,7 +58,7 @@ function(app, Backbone, UI) {
         },
 
         onFrameRender: function( info ) {
-            app.router.navigate( 'f/'+ info.id );
+            // app.router.navigate( 'f/'+ info.id );
         },
 
         updateWindowTitle: function( info ) {
