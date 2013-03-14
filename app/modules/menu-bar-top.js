@@ -52,7 +52,8 @@ function(app, Backbone) {
             "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
-            "mouseleave": "onMouseleave"
+            "mouseleave": "onMouseleave",
+            ".project-title": "home"
         },
 
         share: function() {
@@ -118,6 +119,12 @@ function(app, Backbone) {
 
         onMouseleave: function() {
             this.hover = false;
+        },
+
+        home: function() {
+            this.model.cueFrame( this.model.get("startFrame") );
+            
+            return false;
         }
 
     });

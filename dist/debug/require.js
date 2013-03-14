@@ -338,30 +338,10 @@ var requirejs, require, define;
 }());
 ;this["JST"] = this["JST"] || {};
 
-this["JST"]["app/templates/citation.html"] = function(obj){
+this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<i class="zitem-'+
-( attr.archive.toLowerCase() )+
-' zitem-30"></i>\n<div class="player-citation-bubble clearfix">\n  <div class="player-citation-content">\n    <h3>'+
-( attr.title )+
-'</h3>\n    <div class="content">\n      <span class="citation-subhead">DESCRIPTION:</span> '+
-( attr.description )+
-'\n    </div>\n    <div class="creator"><span class="citation-subhead">\n      CREATED BY:</span> '+
-( attr.media_creator_realname )+
-'\n    </div>\n\n  ';
- if( !_.isNull( attr.media_geo_longitude ) ) { 
-;__p+='\n    <div class="location-created">\n      <span class="citation-subhead">LOCATION:</span> '+
-( attr.media_geo_longitude )+
-', '+
-( attr.media_geo_latitude )+
-'\n    </div>\n  ';
- } 
-;__p+='\n    <div class="trackback">\n      <a href="'+
-( attr.attribution_uri )+
-'" target="blank">view original</a>\n    </div>\n  </div>\n  <div class="player-citation-thumb"><img src="'+
-( attr.thumbnail_url )+
-'" height="100px" width="100px"/></div>\n</div>';
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
 }
 return __p;
 };
@@ -374,30 +354,10 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
-this["JST"]["app/templates/loader.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="ZEEGA-loader-inner">\n    <h1>'+
-( title )+
-'</h1>\n    <h2>by '+
-( authors )+
-'</h2>\n    <div class="ZEEGA-loading-bar-wrapper">\n        <div class="ZEEGA-loading-bar"></div>\n    </div>\n    <ul class="ZEEGA-loading-layers"></ul>\n</div>\n<span class="ZEEGA-loader-bg"></span>';
-}
-return __p;
-};
-
-this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
-}
-return __p;
-};
-
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
 '</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http:'+
 ( hostname )+
@@ -426,6 +386,46 @@ this["JST"]["app/templates/pause.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<a class="play" href="#"></a>';
+}
+return __p;
+};
+
+this["JST"]["app/templates/citation.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<i class="zitem-'+
+( attr.archive.toLowerCase() )+
+' zitem-30"></i>\n<div class="player-citation-bubble clearfix">\n  <div class="player-citation-content">\n    <h3>'+
+( attr.title )+
+'</h3>\n    <div class="content">\n      <span class="citation-subhead">DESCRIPTION:</span> '+
+( attr.description )+
+'\n    </div>\n    <div class="creator"><span class="citation-subhead">\n      CREATED BY:</span> '+
+( attr.media_creator_realname )+
+'\n    </div>\n\n  ';
+ if( !_.isNull( attr.media_geo_longitude ) ) { 
+;__p+='\n    <div class="location-created">\n      <span class="citation-subhead">LOCATION:</span> '+
+( attr.media_geo_longitude )+
+', '+
+( attr.media_geo_latitude )+
+'\n    </div>\n  ';
+ } 
+;__p+='\n    <div class="trackback">\n      <a href="'+
+( attr.attribution_uri )+
+'" target="blank">view original</a>\n    </div>\n  </div>\n  <div class="player-citation-thumb"><img src="'+
+( attr.thumbnail_url )+
+'" height="100px" width="100px"/></div>\n</div>';
+}
+return __p;
+};
+
+this["JST"]["app/templates/loader.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="ZEEGA-loader-inner">\n    <h1>'+
+( title )+
+'</h1>\n    <h2>by '+
+( authors )+
+'</h2>\n    <div class="ZEEGA-loading-bar-wrapper">\n        <div class="ZEEGA-loading-bar"></div>\n    </div>\n    <ul class="ZEEGA-loading-layers"></ul>\n</div>\n<span class="ZEEGA-loader-bg"></span>';
 }
 return __p;
 };;
@@ -66419,7 +66419,8 @@ function(app, Backbone) {
         events: {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
-            "click #project-play-pause": "playpause"
+            "click #project-play-pause": "playpause",
+            "click #project-home": "home"
         },
 
         fadeOut: function() {
@@ -66450,6 +66451,13 @@ function(app, Backbone) {
             } else {
                 this.model.pause();
             }
+            return false;
+        },
+
+        home: function() {
+            
+            this.model.cueFrame( this.model.get("startFrame") );
+            
             return false;
         }
     });
@@ -66528,7 +66536,8 @@ function(app, Backbone) {
             "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
-            "mouseleave": "onMouseleave"
+            "mouseleave": "onMouseleave",
+            ".project-title": "home"
         },
 
         share: function() {
@@ -66594,6 +66603,12 @@ function(app, Backbone) {
 
         onMouseleave: function() {
             this.hover = false;
+        },
+
+        home: function() {
+            this.model.cueFrame( this.model.get("startFrame") );
+            
+            return false;
         }
 
     });
