@@ -66520,6 +66520,13 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
         },
 
+        afterRender: function() {
+            //check if embed
+            if (window!=window.top) {
+                this.$el.find(".menu-bar-left a").attr("target","_blank");
+            }
+        },
+
         onEnterSequence: function( info ) {
             this.updateDescription( info );
         },
