@@ -10,6 +10,14 @@
 .pause-zcon {
   background-position: -25px 0px;
 }
+.home-zcon {
+  background-image: url('../img/home.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+}
 [class^="zsocial-"] {
   background-image: url('../img/social-sprites-20px.png');
   background-position: 0px 0px;
@@ -1283,6 +1291,10 @@ a:active {
   position: absolute;
   bottom: 10px;
 }
+.ZEEGA-player-citations ul.ZEEGA-standalone-controls li {
+  float: left;
+  padding-right: 5px;
+}
 .ZEEGA-player-citations .player-citation-bubble {
   background: rgba(0, 0, 0, 0.75);
   border-radius: 5px;
@@ -1389,6 +1401,9 @@ a:active {
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title {
   padding: 10px;
   color: white;
+}
+.ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title .project-title {
+  cursor: pointer;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar .sequence-description {
   opacity: 0.5;

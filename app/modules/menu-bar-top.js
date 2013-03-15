@@ -53,7 +53,7 @@ function(app, Backbone) {
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
-            ".project-title": "home"
+            "click .project-title": "home"
         },
 
         share: function() {
