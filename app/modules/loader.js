@@ -74,20 +74,20 @@ function( app, Backbone ) {
                 width: (this.layersReady/this.layerCount*100) +"%"
             });
             if (this.layersReady == this.layerCount) {
-                this.onCanPlay();
+                _.delay(function(){
+                    this.onCanPlay();
+                }.bind( this ), this.DELAY );
             }
         },
 
-        onCanPlay: function() {
-            _.delay(function(){
-                this.$el.fadeOut(function(){
-                    this.remove();
-                }.bind( this ));
-                app.layout.hasStarted = true;
-                app.layout.resetFadeOutTimer();
-                this.model.play();
-            }.bind( this ), this.DELAY );
-        }
+        onCanPlay: _.once(function() {
+            this.$el.fadeOut(function() {
+                this.remove();
+            }.bind( this ));
+            app.layout.hasPlayed = true;
+            app.layout.resetFadeOutTimer();
+            this.model.play();
+        })
 
   });
 

@@ -29,7 +29,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
     // This will fetch the tutorial template and render it.
     UI.Layout = Backbone.Layout.extend({
         
-        hasStarted: false,
+        hasPlayed: false,
         el: "#main",
 
         initialize: function() {
@@ -61,7 +61,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
         },
 
         resetFadeOutTimer: function() {
-            if ( this.hasStarted ) {
+            if ( this.hasPlayed ) {
                 this.citations.fadeIn();
                 this.menuBar.fadeIn();
                 if ( this.timer ) {
