@@ -48,7 +48,8 @@ function(app, Backbone) {
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
-                if( _.contains(["Audio", "Image", "Video"], layer.type) && layer.attr.archive ) {
+                if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+
                     return layer;
                 }
                 return false;
