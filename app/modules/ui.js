@@ -28,11 +28,12 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
     // This will fetch the tutorial template and render it.
     UI.Layout = Backbone.Layout.extend({
-        
+
         hasPlayed: false,
         el: "#main",
 
         initialize: function() {
+            this.setWindowSize();
 
             app.player.on("pause", this.onPause, this );
             app.player.on("play", this.onPlay, this );
@@ -49,30 +50,52 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
             this.insertView("#overlays", this.menuBar );
             
             this.render();
+
+            $( window ).resize(function() {
+                this.onResize();
+            }.bind(this));
         },
 
         afterRender: function() {
             app.state.set("baseRendered", true );
-            this.resetFadeOutTimer();
+            // this.resetFadeOutTimer();
+        },
+
+        // sets the window size lazily so we don't have to do it elsewhere
+        setWindowSize: function() {
+            app.state.set("windowWidth", window.innerWidth );
+            app.state.set("windowHeight", window.innerHeight );
         },
 
         events : {
-            "mousemove": "resetFadeOutTimer"
+            "mousemove": "onMouseMove",
+            "resize": "onResize"
         },
 
-        resetFadeOutTimer: function() {
+        onResize: _.debounce( function() {
+            this.setWindowSize();
+        }, 500 ),
+
+        onMouseMove: function( e ) {
             if ( this.hasPlayed ) {
-                this.citations.fadeIn();
-                this.menuBar.fadeIn();
-                if ( this.timer ) {
-                    clearTimeout( this.timer );
+                var pageX = e.pageX,
+                    pageY = e.pageY;
+
+                if ( pageY < 100 ) {
+                    this.showMenubar();
+                } else if ( pageY > app.state.get("windowHeight") - 100 ) {
+                    this.showCitationbar();
                 }
-                this.timer = setTimeout(function(){
-                    this.citations.fadeOut();
-                    this.menuBar.fadeOut();
-                }.bind( this ), FADE_OUT_DELAY);
             }
         },
+
+        showMenubar: _.debounce(function() {
+            this.menuBar.fadeIn();
+        }, 500, true ),
+
+        showCitationbar: _.debounce(function() {
+            this.citations.fadeIn();
+        }, 500, true ),
 
         onPause: function() {
             this.pause = new PauseView({ model: app.player });
@@ -81,6 +104,8 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
         },
 
         onPlay: function() {
+            this.menuBar.fadeOut();
+            this.citations.fadeOut();
             if ( this.pause ) {
                 this.pause.remove();
             }

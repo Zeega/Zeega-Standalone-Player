@@ -12,7 +12,8 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     Citations.View = Backbone.View.extend({
         
-        visible : false,
+        timer: null,
+        visible: false,
         hover: false,
         playing: false,
 
@@ -70,17 +71,28 @@ function(app, Backbone) {
             "click #project-play-pause": "playpause"
         },
 
-        fadeOut: function() {
-            if(this.visible && !this.hover && app.player.state != "paused" ) {
-                this.visible = false;
-                this.$el.fadeOut();
+        fadeOut: function( stay ) {
+            if( this.visible ) {
+                var fadeOutAfter = stay || 2000;
+
+                if ( this.timer ) {
+                    clearTimeout( this.timer );
+                }
+                this.timer = setTimeout(function(){
+                    if ( !this.hover && app.player.state != "paused" ) {
+                        this.visible = false;
+                        this.$el.fadeOut();
+                    }
+                }.bind( this ), fadeOutAfter);
+                
             }
         },
-     
-        fadeIn: function() {
-            if(!this.visible) {
+
+        fadeIn: function( stay ) {
+            if( !this.visible ) {
                 this.visible = true;
                 this.$el.fadeIn();
+                this.fadeOut( stay );
             }
         },
 
@@ -90,6 +102,7 @@ function(app, Backbone) {
 
         onMouseleave: function() {
             this.hover = false;
+            this.fadeOut();
         },
 
         playpause: function() {

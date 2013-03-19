@@ -85,7 +85,8 @@ function( app, Backbone ) {
                 this.remove();
             }.bind( this ));
             app.layout.hasPlayed = true;
-            app.layout.resetFadeOutTimer();
+            app.layout.showMenubar();
+            app.layout.showCitationbar();;
             this.model.play();
         })
 

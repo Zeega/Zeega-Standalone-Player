@@ -6,7 +6,6 @@ define([
 
 function( app, Backbone ) {
 
-    // This will fetch the tutorial template and render it.
     return Backbone.Model.extend({
         defaults: {
             baseRendered: false,
@@ -14,7 +13,9 @@ function( app, Backbone ) {
             fullscreen: false,
             initialized: false,
             projectID: null,
-            frameID: null
+            frameID: null,
+            windowWidth: 0,
+            windowHeight: 0
         }
     });
 
