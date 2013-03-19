@@ -68,7 +68,8 @@ function(app, Backbone) {
         events: {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
-            "click #project-play-pause": "playpause"
+            "click #project-play-pause": "playpause",
+            "click #project-home": "home"
         },
 
         fadeOut: function( stay ) {
@@ -111,6 +112,13 @@ function(app, Backbone) {
             } else {
                 this.model.pause();
             }
+            return false;
+        },
+
+        home: function() {
+            
+            this.model.cueFrame( this.model.get("startFrame") );
+            
             return false;
         }
     });

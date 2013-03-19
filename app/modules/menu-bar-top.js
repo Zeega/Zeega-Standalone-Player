@@ -37,6 +37,13 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
         },
 
+        afterRender: function() {
+            //check if embed
+            if (window!=window.top) {
+                this.$el.find(".menu-bar-left a").attr("target","_blank");
+            }
+        },
+
         onEnterSequence: function( info ) {
             this.updateDescription( info );
         },
@@ -53,7 +60,8 @@ function(app, Backbone) {
             "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
-            "mouseleave": "onMouseleave"
+            "mouseleave": "onMouseleave",
+            "click .project-title": "home"
         },
 
         share: function() {
@@ -131,6 +139,12 @@ function(app, Backbone) {
         onMouseleave: function() {
             this.hover = false;
             this.fadeOut();
+        },
+
+        home: function() {
+            this.model.cueFrame( this.model.get("startFrame") );
+            
+            return false;
         }
 
     });

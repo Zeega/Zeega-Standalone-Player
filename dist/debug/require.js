@@ -389,7 +389,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
 }
 return __p;
 };
@@ -397,7 +397,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" target="blank" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
 '</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http:'+
 ( hostname )+
@@ -66423,7 +66423,8 @@ function(app, Backbone) {
         events: {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
-            "click #project-play-pause": "playpause"
+            "click #project-play-pause": "playpause",
+            "click #project-home": "home"
         },
 
         fadeOut: function( stay ) {
@@ -66466,6 +66467,13 @@ function(app, Backbone) {
             } else {
                 this.model.pause();
             }
+            return false;
+        },
+
+        home: function() {
+            
+            this.model.cueFrame( this.model.get("startFrame") );
+            
             return false;
         }
     });
@@ -66529,6 +66537,13 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
         },
 
+        afterRender: function() {
+            //check if embed
+            if (window!=window.top) {
+                this.$el.find(".menu-bar-left a").attr("target","_blank");
+            }
+        },
+
         onEnterSequence: function( info ) {
             this.updateDescription( info );
         },
@@ -66545,7 +66560,8 @@ function(app, Backbone) {
             "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
-            "mouseleave": "onMouseleave"
+            "mouseleave": "onMouseleave",
+            "click .project-title": "home"
         },
 
         share: function() {
@@ -66623,6 +66639,12 @@ function(app, Backbone) {
         onMouseleave: function() {
             this.hover = false;
             this.fadeOut();
+        },
+
+        home: function() {
+            this.model.cueFrame( this.model.get("startFrame") );
+            
+            return false;
         }
 
     });
