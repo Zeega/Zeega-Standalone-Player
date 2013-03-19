@@ -86,7 +86,7 @@ function( app, Backbone ) {
             }.bind( this ));
             app.layout.hasPlayed = true;
             app.layout.showMenubar();
-            app.layout.showCitationbar();;
+            app.layout.showCitationbar();
             this.model.play();
         })
 

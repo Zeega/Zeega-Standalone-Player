@@ -65268,7 +65268,6 @@ define('modules/state',[
 
 function( app, Backbone ) {
 
-    // This will fetch the tutorial template and render it.
     return Backbone.Model.extend({
         defaults: {
             baseRendered: false,
@@ -65276,7 +65275,9 @@ function( app, Backbone ) {
             fullscreen: false,
             initialized: false,
             projectID: null,
-            frameID: null
+            frameID: null,
+            windowWidth: 0,
+            windowHeight: 0
         }
     });
 
@@ -66260,20 +66261,21 @@ function( app, Backbone ) {
                 width: (this.layersReady/this.layerCount*100) +"%"
             });
             if (this.layersReady == this.layerCount) {
-                this.onCanPlay();
+                _.delay(function(){
+                    this.onCanPlay();
+                }.bind( this ), this.DELAY );
             }
         },
 
-        onCanPlay: function() {
-            _.delay(function(){
-                this.$el.fadeOut(function(){
-                    this.remove();
-                }.bind( this ));
-                app.layout.hasStarted = true;
-                app.layout.resetFadeOutTimer();
-                this.model.play();
-            }.bind( this ), this.DELAY );
-        }
+        onCanPlay: _.once(function() {
+            this.$el.fadeOut(function() {
+                this.remove();
+            }.bind( this ));
+            app.layout.hasPlayed = true;
+            app.layout.showMenubar();
+            app.layout.showCitationbar();
+            this.model.play();
+        })
 
   });
 
@@ -66365,7 +66367,8 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     Citations.View = Backbone.View.extend({
         
-        visible : false,
+        timer: null,
+        visible: false,
         hover: false,
         playing: false,
 
@@ -66401,7 +66404,8 @@ function(app, Backbone) {
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
-                if( _.contains(["Audio", "Image", "Video"], layer.type) && layer.attr.archive ) {
+                if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+
                     return layer;
                 }
                 return false;
@@ -66422,17 +66426,28 @@ function(app, Backbone) {
             "click #project-play-pause": "playpause"
         },
 
-        fadeOut: function() {
-            if(this.visible && !this.hover && app.player.state != "paused" ) {
-                this.visible = false;
-                this.$el.fadeOut();
+        fadeOut: function( stay ) {
+            if( this.visible ) {
+                var fadeOutAfter = stay || 2000;
+
+                if ( this.timer ) {
+                    clearTimeout( this.timer );
+                }
+                this.timer = setTimeout(function(){
+                    if ( !this.hover && app.player.state != "paused" ) {
+                        this.visible = false;
+                        this.$el.fadeOut();
+                    }
+                }.bind( this ), fadeOutAfter);
+                
             }
         },
-     
-        fadeIn: function() {
-            if(!this.visible) {
+
+        fadeIn: function( stay ) {
+            if( !this.visible ) {
                 this.visible = true;
                 this.$el.fadeIn();
+                this.fadeOut( stay );
             }
         },
 
@@ -66442,6 +66457,7 @@ function(app, Backbone) {
 
         onMouseleave: function() {
             this.hover = false;
+            this.fadeOut();
         },
 
         playpause: function() {
@@ -66488,6 +66504,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
+        timer: null,
         visible: false,
         hover: false,
 
@@ -66574,17 +66591,28 @@ function(app, Backbone) {
                 .removeClass("icon-resize-small");
         },
 
-        fadeOut: function() {
-            if( this.visible && !this.hover && app.player.state != "paused") {
-                this.visible = false;
-                this.$el.fadeOut();
+        fadeOut: function( stay ) {
+            if( this.visible ) {
+                var fadeOutAfter = stay || 2000;
+
+                if ( this.timer ) {
+                    clearTimeout( this.timer );
+                }
+                this.timer = setTimeout(function(){
+                    if ( !this.hover && app.player.state != "paused" ) {
+                        this.visible = false;
+                        this.$el.fadeOut();
+                    }
+                }.bind( this ), fadeOutAfter);
+                
             }
         },
      
-        fadeIn: function() {
-            if ( !this.visible ) {
+        fadeIn: function( stay ) {
+            if( !this.visible ) {
                 this.visible = true;
                 this.$el.fadeIn();
+                this.fadeOut( stay );
             }
         },
 
@@ -66594,6 +66622,7 @@ function(app, Backbone) {
 
         onMouseleave: function() {
             this.hover = false;
+            this.fadeOut();
         }
 
     });
@@ -66657,11 +66686,12 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
     // This will fetch the tutorial template and render it.
     UI.Layout = Backbone.Layout.extend({
-        
-        hasStarted: false,
+
+        hasPlayed: false,
         el: "#main",
 
         initialize: function() {
+            this.setWindowSize();
 
             app.player.on("pause", this.onPause, this );
             app.player.on("play", this.onPlay, this );
@@ -66678,30 +66708,52 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
             this.insertView("#overlays", this.menuBar );
             
             this.render();
+
+            $( window ).resize(function() {
+                this.onResize();
+            }.bind(this));
         },
 
         afterRender: function() {
             app.state.set("baseRendered", true );
-            this.resetFadeOutTimer();
+            // this.resetFadeOutTimer();
+        },
+
+        // sets the window size lazily so we don't have to do it elsewhere
+        setWindowSize: function() {
+            app.state.set("windowWidth", window.innerWidth );
+            app.state.set("windowHeight", window.innerHeight );
         },
 
         events : {
-            "mousemove": "resetFadeOutTimer"
+            "mousemove": "onMouseMove",
+            "resize": "onResize"
         },
 
-        resetFadeOutTimer: function() {
-            if ( this.hasStarted ) {
-                this.citations.fadeIn();
-                this.menuBar.fadeIn();
-                if ( this.timer ) {
-                    clearTimeout( this.timer );
+        onResize: _.debounce( function() {
+            this.setWindowSize();
+        }, 500 ),
+
+        onMouseMove: function( e ) {
+            if ( this.hasPlayed ) {
+                var pageX = e.pageX,
+                    pageY = e.pageY;
+
+                if ( pageY < 100 ) {
+                    this.showMenubar();
+                } else if ( pageY > app.state.get("windowHeight") - 100 ) {
+                    this.showCitationbar();
                 }
-                this.timer = setTimeout(function(){
-                    this.citations.fadeOut();
-                    this.menuBar.fadeOut();
-                }.bind( this ), FADE_OUT_DELAY);
             }
         },
+
+        showMenubar: _.debounce(function() {
+            this.menuBar.fadeIn();
+        }, 500, true ),
+
+        showCitationbar: _.debounce(function() {
+            this.citations.fadeIn();
+        }, 500, true ),
 
         onPause: function() {
             this.pause = new PauseView({ model: app.player });
@@ -66710,6 +66762,8 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
         },
 
         onPlay: function() {
+            this.menuBar.fadeOut();
+            this.citations.fadeOut();
             if ( this.pause ) {
                 this.pause.remove();
             }
