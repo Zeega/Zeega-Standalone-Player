@@ -41361,6 +41361,7 @@ zeega.define("libs/modernizr", function(){});
     }
 
     function onPlayerStateChange( event ) {
+console.log("STATE CHANGE:", event)
       switch( event.data ) {
 
         // unstarted
@@ -41630,7 +41631,7 @@ zeega.define("libs/modernizr", function(){});
         addPlayerReadyCallback( function() { self.pause(); } );
         return;
       }
-      player.pauseVideo();
+      player.stopVideo();
     };
 
     function onEnded() {
@@ -46744,12 +46745,14 @@ Popcorn.player( "flashvideo", {
     container.id = media.id + Popcorn.guid();
     youtubeId = Popcorn.guid();
 
+
      var guid = '';
     _.each(Popcorn.guid().toString().split(''), function(num){
       guid += 'abcdefghijklmnopqrstuvwxyz'[num];
     });
     media.youtubeId = guid;//Math.floor( Math.random()*1000).toString(16);
   
+  console.log("guid", guid)
     media.appendChild( container );
     media.canPlay=0;
     var youtubeInit = function()
@@ -46762,17 +46765,19 @@ Popcorn.player( "flashvideo", {
           height,
           query;
           canPlay = 0;
-    
+    console.log("container", container.id)
       // expose a callback to this scope, that is called from the global callback youtube calls
       onYouTubePlayerReady[ container.id ] = function()
       {
+console.log("youtube ready!!!")
         media.youtubeObject = document.getElementById( container.id );
         // more youtube callback nonsense
          stateChangeEventHandler[media.youtubeId] = function( state )
          {
-
+console.log('state', state)
           if ( state === 1&&media.canPlay===0)
           {
+            console.log("case 1")
             media.canPlay=1;
             media.pause();
             media.readyState = 4;
@@ -46785,12 +46790,14 @@ Popcorn.player( "flashvideo", {
           }
           else if(state===1)
           {
+            console.log('case 2')
             media.paused && media.play();
             // youtube fires paused events while seeking
             // this is the only way to get seeking events
           }
           else if ( state === 2 )
           {
+            console.log('case 3')
             // silly logic forced on me by the youtube API
             // calling youtube.seekTo triggers multiple events
             // with the second events getCurrentTime being the old time
@@ -46817,9 +46824,13 @@ Popcorn.player( "flashvideo", {
             }
             else
             {
+              console.log("sohould")
               currentTime = media.youtubeObject.getCurrentTime();
               media.dispatchEvent( "timeupdate" );
-              !media.paused && media.pause();
+              // !media.paused && media.pause();
+              media.youtubeObject.stopVideo();
+              window.YOU = media.youtubeObject;
+              console.log("media", media.youtubeObject)
               if(options.volume>1) media.youtubeObject.setVolume(options.volume);
             }
         
@@ -46887,7 +46898,7 @@ Popcorn.player( "flashvideo", {
           {
             media.paused = true;
             media.dispatchEvent( "pause" );
-            media.youtubeObject.pauseVideo();
+            media.youtubeObject.stopVideo();
           }
         };
 
