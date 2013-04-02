@@ -33,6 +33,7 @@ function(app, Backbone) {
             this.model.on("data_loaded", this.render, this);
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );
+            this.model.on("frame_play", this.onFramePlay, this );
         },
 
         onPlay: function() {
@@ -42,6 +43,14 @@ function(app, Backbone) {
         onPause: function() {
             this.$("#project-play-pause i").addClass("play-zcon").removeClass("pause-zcon");
             this.fadeIn();
+        },
+
+        onFramePlay: function(){
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.$(".history-nav").show();
+            } else {
+                this.$(".history-nav").hide();
+            }
         },
 
         updateCitations: function( info ) {
@@ -69,7 +78,8 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click #project-home": "home"
+            "click #project-home": "home",
+            "click #project-back": "back"
         },
 
         fadeOut: function( stay ) {
@@ -117,8 +127,14 @@ function(app, Backbone) {
 
         home: function() {
             
+            this.model.status.set("frameHistory",[]);
             this.model.cueFrame( this.model.get("startFrame") );
             
+            return false;
+        },
+
+        back: function() {
+            this.model.cueBack();
             return false;
         }
     });
