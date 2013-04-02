@@ -63,7 +63,15 @@ table {
   background-repeat: no-repeat;
   display: inline-block;
   height: 25px;
-  width: 25px;
+  width: 32px;
+}
+.back-zcon {
+  background-image: url('../img/back.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 25px;
+  width: 17px;
 }
 [class^="zsocial-"] {
   background-image: url('../img/social-sprites-20px.png');
@@ -1340,7 +1348,7 @@ a:active {
 }
 .ZEEGA-player-citations ul.ZEEGA-standalone-controls li {
   float: left;
-  padding-right: 5px;
+  padding-right: 10px;
 }
 .ZEEGA-player-citations .player-citation-bubble {
   background: rgba(0, 0, 0, 0.75);

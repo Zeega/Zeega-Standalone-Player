@@ -369,7 +369,7 @@ return __p;
 this["JST"]["app/templates/controls.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class="arrow arrow-right next disabled"></a>';
+__p+='<a href="#" class="arrow arrow-right next disabled"></a>';
 }
 return __p;
 };
@@ -389,7 +389,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a class="history-nav" id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a class="history-nav" id="project-back" href="#" ><i class="back-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
 }
 return __p;
 };
@@ -16562,7 +16562,7 @@ zeega.define("backbone", ["lodash","jquery"], (function (global) {
   })()
 
   if (typeof define == 'function' && define.amd)
-    zeega.define('spin',[],function() { return Spinner })
+    zeega.define('../assets/js/libs/spin',[],function() { return Spinner })
   else
     window.Spinner = Spinner
 
@@ -32302,9 +32302,9 @@ zeega.define("plugins/backbone.layoutmanager", function(){});
 zeega.define('zeega',[
     "backbone",
     "jquery",
-    "spin",
+    "../assets/js/libs/spin",
     "jqueryUI",
-    "plugins/backbone.layoutmanager",
+    "plugins/backbone.layoutmanager"
 ],
 
 function( Backbone, jquery, Spinner ) {
@@ -49640,7 +49640,11 @@ function( Zeega ) {
             sequence = frame.collection.sequence;
 
             fHist = this.get("frameHistory");
-            fHist.push( frame.id );
+            if ( fHist.length === 0 || fHist[ fHist.length - 1 ] != frame.id ){
+                fHist.push( frame.id );
+            }
+            
+
             this.put({
                 current_frame_model: frame,
                 frameHistory: fHist
@@ -49666,6 +49670,19 @@ function( Zeega ) {
                     _.extend({}, this.get("current_sequence_model").toJSON() )
                 );
             }
+        },
+
+        onBack: function() {
+
+            fHist = this.get("frameHistory");
+            
+            if( fHist.length > 1 && fHist[ fHist.length - 1 ] == this.get("current_frame")){
+                fHist.pop();
+                this.put({
+                    frameHistory: fHist
+                }); 
+            }
+            
         },
 
         /*
@@ -50488,6 +50505,17 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
         // goes to the prev frame after n ms
         cuePrev: function( ms ) {
             this.cueFrame( this.status.get("current_frame_model").get("_prev"), ms );
+        },
+
+        // goes to previous frame in history
+        cueBack: function() {
+
+            this.status.onBack();
+            var history = this.status.get("frameHistory");
+            if( history.length > 0 ){
+                this.cueFrame( history [ history.length - 1 ] );
+            }
+
         },
 
         // goes to specified frame after n ms
@@ -66730,6 +66758,7 @@ function(app, Backbone) {
             this.model.on("data_loaded", this.render, this);
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );
+            this.model.on("frame_play", this.onFramePlay, this );
         },
 
         onPlay: function() {
@@ -66739,6 +66768,14 @@ function(app, Backbone) {
         onPause: function() {
             this.$("#project-play-pause i").addClass("play-zcon").removeClass("pause-zcon");
             this.fadeIn();
+        },
+
+        onFramePlay: function(){
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.$(".history-nav").show();
+            } else {
+                this.$(".history-nav").hide();
+            }
         },
 
         updateCitations: function( info ) {
@@ -66766,7 +66803,8 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click #project-home": "home"
+            "click #project-home": "home",
+            "click #project-back": "back"
         },
 
         fadeOut: function( stay ) {
@@ -66814,8 +66852,14 @@ function(app, Backbone) {
 
         home: function() {
             
+            this.model.status.set("frameHistory",[]);
             this.model.cueFrame( this.model.get("startFrame") );
             
+            return false;
+        },
+
+        back: function() {
+            this.model.cueBack();
             return false;
         }
     });

@@ -18,8 +18,8 @@
   height: 25px;
   width: 32px;
 }
-.back-zcon {
-  background-image: url('../img/back.png');
+.previous-zcon {
+  background-image: url('../img/previous.png');
   background-position: 0px 0px;
   background-repeat: no-repeat;
   display: inline-block;
@@ -1293,6 +1293,9 @@ a:active {
 }
 .ZEEGA-player-citations ul.ZEEGA-citations-primary > li:hover .player-citation-bubble {
   display: block;
+}
+.ZEEGA-player-citations ul.ZEEGA-citations-primary .history-nav {
+  display: none;
 }
 .ZEEGA-player-citations ul.ZEEGA-standalone-controls {
   pointer-events: auto;
