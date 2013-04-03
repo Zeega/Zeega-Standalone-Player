@@ -369,7 +369,7 @@ return __p;
 this["JST"]["app/templates/controls.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="#" class="arrow arrow-right next disabled"></a>';
+__p+='';
 }
 return __p;
 };
@@ -389,7 +389,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a class="history-nav" id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a class="history-nav" id="project-back" href="#" ><i class="back-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+__p+='\n<div class= "controls-wrapper left">\n    <ul class="ZEEGA-standalone-controls">\n        <li><a class="history-nav" id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    </ul>\n</div>\n<div class= "controls-wrapper">\n    <ul class="ZEEGA-standalone-controls">\n        <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n        <li><a class="history-nav" id="project-back" href="#" ><i class="back-zcon"></i></a></li>\n    </ul>\n</div>\n<div class= "controls-wrapper">\n    <ul class="ZEEGA-standalone-controls right">\n        <li><a id="project-next" href="#" ><i class="next-zcon"></i></a></li>\n    </ul>\n</div>\n<ul class="ZEEGA-citations-primary"></ul>\n';
 }
 return __p;
 };
@@ -425,7 +425,7 @@ return __p;
 this["JST"]["app/templates/pause.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a class="play" href="#"></a>';
+__p+='';
 }
 return __p;
 };;
@@ -66770,12 +66770,19 @@ function(app, Backbone) {
             this.fadeIn();
         },
 
-        onFramePlay: function(){
+        onFramePlay: function( info ){
             if( this.model.status.get("frameHistory").length > 1 ){
-                this.$(".history-nav").show();
+                this.$(".history-nav").fadeIn( 100 );
             } else {
-                this.$(".history-nav").hide();
+                this.$(".history-nav").fadeOut( 100 );
             }
+
+            if( info._connections == "r" || info._connections == "lr" ){
+               this.$("#project-next").fadeIn( 100 );
+            } else {
+                this.$("#project-next").fadeOut( 100 );
+            }
+
         },
 
         updateCitations: function( info ) {
@@ -66783,7 +66790,8 @@ function(app, Backbone) {
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
-                if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+                // if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+                    if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive ) {
 
                     return layer;
                 }
@@ -66804,7 +66812,8 @@ function(app, Backbone) {
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
             "click #project-home": "home",
-            "click #project-back": "back"
+            "click #project-back": "back",
+            "click #project-next": "next"
         },
 
         fadeOut: function( stay ) {
@@ -66860,6 +66869,10 @@ function(app, Backbone) {
 
         back: function() {
             this.model.cueBack();
+            return false;
+        },
+        next: function() {
+            this.model.cueNext();
             return false;
         }
     });
@@ -67149,9 +67162,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
                 if ( pageY < 100 ) {
                     this.showMenubar();
-                } else if ( pageY > app.state.get("windowHeight") - 100 ) {
-                    this.showCitationbar();
                 }
+                
+                this.showCitationbar();
             }
         },
 

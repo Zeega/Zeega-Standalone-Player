@@ -45,12 +45,19 @@ function(app, Backbone) {
             this.fadeIn();
         },
 
-        onFramePlay: function(){
+        onFramePlay: function( info ){
             if( this.model.status.get("frameHistory").length > 1 ){
-                this.$(".history-nav").show();
+                this.$(".history-nav").fadeIn( 100 );
             } else {
-                this.$(".history-nav").hide();
+                this.$(".history-nav").fadeOut( 100 );
             }
+
+            if( info._connections == "r" || info._connections == "lr" ){
+               this.$("#project-next").fadeIn( 100 );
+            } else {
+                this.$("#project-next").fadeOut( 100 );
+            }
+
         },
 
         updateCitations: function( info ) {
@@ -58,7 +65,8 @@ function(app, Backbone) {
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
-                if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+                // if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+                    if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive ) {
 
                     return layer;
                 }
@@ -79,7 +87,8 @@ function(app, Backbone) {
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
             "click #project-home": "home",
-            "click #project-back": "back"
+            "click #project-back": "back",
+            "click #project-next": "next"
         },
 
         fadeOut: function( stay ) {
@@ -135,6 +144,10 @@ function(app, Backbone) {
 
         back: function() {
             this.model.cueBack();
+            return false;
+        },
+        next: function() {
+            this.model.cueNext();
             return false;
         }
     });

@@ -31,7 +31,7 @@ return __p;
 this["JST"]["app/templates/controls.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="#" class="arrow arrow-right next disabled"></a>';
+__p+='';
 }
 return __p;
 };
@@ -51,7 +51,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a class="history-nav" id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a class="history-nav" id="project-back" href="#" ><i class="back-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+__p+='\n<div class= "controls-wrapper left">\n    <ul class="ZEEGA-standalone-controls">\n        <li><a class="history-nav" id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    </ul>\n</div>\n<div class= "controls-wrapper">\n    <ul class="ZEEGA-standalone-controls">\n        <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n        <li><a class="history-nav" id="project-back" href="#" ><i class="back-zcon"></i></a></li>\n    </ul>\n</div>\n<div class= "controls-wrapper">\n    <ul class="ZEEGA-standalone-controls right">\n        <li><a id="project-next" href="#" ><i class="next-zcon"></i></a></li>\n    </ul>\n</div>\n<ul class="ZEEGA-citations-primary"></ul>\n';
 }
 return __p;
 };
@@ -87,7 +87,7 @@ return __p;
 this["JST"]["app/templates/pause.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a class="play" href="#"></a>';
+__p+='';
 }
 return __p;
 };
