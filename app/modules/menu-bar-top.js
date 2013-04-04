@@ -20,10 +20,14 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
+            var meta = $("meta[name=zeega]"),
+                views = meta.data("views") == 1 ? meta.data("views") + " view" : meta.data("views") + " views";
             if ( this.model.project ) {
                 return _.extend({
-                        directory: sessionStorage.getItem("directory"),
-                        hostname: sessionStorage.getItem("hostname")
+                        directory: meta.data("userId") || null,
+                        hostname: meta.data("userId") || null,
+                        user_thumbnail: meta.data("userThumbnail") || null,
+                        views: views
                     },
                     this.model.project.toJSON()
                     );
@@ -35,6 +39,7 @@ function(app, Backbone) {
             this.model.on("sequence_enter", this.onEnterSequence, this );
             this.model.on("pause", this.fadeIn, this );
         },
+
 
         onEnterSequence: function( info ) {
             this.updateDescription( info );

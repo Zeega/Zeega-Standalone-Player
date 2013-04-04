@@ -7,6 +7,11 @@
 	<link rel="icon" type="image/png" href="favicon.ico">
 	<title>Zeega</title>
 
+	<meta name="zeega" content="zeega-player"
+    data-user-thumbnail="image.png"
+    data-views="125"
+	 />
+
 	<!-- Application root. -->
 	<base href="/">
 

@@ -73,7 +73,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( authors )+
 ' </span>\n            </a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li class="project-views">'+
 ( views )+
-' views</li>\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
+'</li>\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
