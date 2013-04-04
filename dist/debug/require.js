@@ -66904,9 +66904,9 @@ function(app, Backbone) {
                 views = meta.data("views") == 1 ? meta.data("views") + " view" : meta.data("views") + " views";
             if ( this.model.project ) {
                 return _.extend({
-                        directory: meta.data("userId") || null,
-                        hostname: meta.data("userId") || null,
-                        user_thumbnail: meta.data("userThumbnail") || null,
+                        directory: meta.data("userDirectory") || "",
+                        hostname: meta.data("userHostname") || "",
+                        user_thumbnail: meta.data("userThumbnail") || "",
                         views: views
                     },
                     this.model.project.toJSON()
