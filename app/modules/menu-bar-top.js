@@ -12,7 +12,6 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
-        timer: null,
         visible: false,
         hover: false,
 
@@ -35,13 +34,6 @@ function(app, Backbone) {
             this.model.on("data_loaded", this.render, this);
             this.model.on("sequence_enter", this.onEnterSequence, this );
             this.model.on("pause", this.fadeIn, this );
-        },
-
-        afterRender: function() {
-            //check if embed
-            if (window!=window.top) {
-                this.$el.find(".menu-bar-left a").attr("target","_blank");
-            }
         },
 
         onEnterSequence: function( info ) {
@@ -107,7 +99,7 @@ function(app, Backbone) {
                 .removeClass("icon-resize-small");
         },
 
-        fadeOut: function( stay ) {
+         fadeOut: function( stay ) {
             if( this.visible ) {
                 var fadeOutAfter = stay || 2000;
 
@@ -123,7 +115,7 @@ function(app, Backbone) {
                 
             }
         },
-     
+
         fadeIn: function( stay ) {
             if( !this.visible ) {
                 this.visible = true;

@@ -47,17 +47,10 @@ function(app, Backbone) {
 
         onFramePlay: function( info ){
             if( this.model.status.get("frameHistory").length > 1 ){
-                this.$(".history-nav").fadeIn( 100 );
+                this.$("#project-home").fadeIn( 100 );
             } else {
-                this.$(".history-nav").fadeOut( 100 );
+                this.$("#project-home").fadeOut( 100 );
             }
-
-            if( info._connections == "r" || info._connections == "lr" ){
-               this.$("#project-next").fadeIn( 100 );
-            } else {
-                this.$("#project-next").fadeOut( 100 );
-            }
-
         },
 
         updateCitations: function( info ) {
@@ -65,9 +58,8 @@ function(app, Backbone) {
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
-                // if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
-                    if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive ) {
-
+                if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+               
                     return layer;
                 }
                 return false;
@@ -86,9 +78,7 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click #project-home": "home",
-            "click #project-back": "back",
-            "click #project-next": "next"
+            "click #project-home": "home"
         },
 
         fadeOut: function( stay ) {
@@ -139,15 +129,6 @@ function(app, Backbone) {
             this.model.status.set("frameHistory",[]);
             this.model.cueFrame( this.model.get("startFrame") );
             
-            return false;
-        },
-
-        back: function() {
-            this.model.cueBack();
-            return false;
-        },
-        next: function() {
-            this.model.cueNext();
             return false;
         }
     });

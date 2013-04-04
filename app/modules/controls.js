@@ -32,27 +32,23 @@ function(app, Backbone) {
         },
 
         prev: function() {
-            this.model.cuePrev();
+            this.model.cueBack();
             return false;
         },
 
         updateArrowState: function( info ) {
-            switch(info._connections) {
-                case "l":
-                    this.activateArrow("prev");
-                    this.disableArrow("next");
-                    break;
-                case "r":
-                    this.disableArrow("prev");
-                    this.activateArrow("next");
-                    break;
-                case "lr":
-                    this.activateArrow("prev");
-                    this.activateArrow("next");
-                    break;
-                default:
-                    this.disableArrow("prev");
-                    this.disableArrow("next");
+
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.activateArrow("prev");
+            } else {
+                this.disableArrow("prev");
+            }
+
+
+            if( info._connections == "r" || info._connections == "lr" ){
+                this.activateArrow("next");
+            } else {
+                this.disableArrow("next");
             }
         },
 

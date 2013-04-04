@@ -84,8 +84,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
                 if ( pageY < 100 ) {
                     this.showMenubar();
                 }
-                
-                this.showCitationbar();
+                else if ( pageY > app.state.get("windowHeight") - 100 ) {
+                    this.showCitationbar();
+                }
             }
         },
 
