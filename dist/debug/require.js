@@ -369,7 +369,7 @@ return __p;
 this["JST"]["app/templates/controls.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='';
+__p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class="arrow arrow-right next disabled"></a>';
 }
 return __p;
 };
@@ -389,7 +389,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='\n<div class= "controls-wrapper left">\n    <ul class="ZEEGA-standalone-controls">\n        <li><a class="history-nav" id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    </ul>\n</div>\n<div class= "controls-wrapper">\n    <ul class="ZEEGA-standalone-controls">\n        <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n        <li><a class="history-nav" id="project-back" href="#" ><i class="back-zcon"></i></a></li>\n    </ul>\n</div>\n<div class= "controls-wrapper">\n    <ul class="ZEEGA-standalone-controls right">\n        <li><a id="project-next" href="#" ><i class="next-zcon"></i></a></li>\n    </ul>\n</div>\n<ul class="ZEEGA-citations-primary"></ul>\n';
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
 }
 return __p;
 };
@@ -399,15 +399,19 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
-'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http:'+
+'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            <a href="http:'+
 ( hostname )+
 ''+
 ( directory )+
 'user/'+
 ( user_id )+
-'" data-bypass="true" >'+
+'" data-bypass="true" >\n            <img class = "profile-thumb" src="'+
+( user_thumbnail )+
+'" />\n                <span class="username"> '+
 ( authors )+
-'</a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
+' </span>\n            </a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li class="project-views">'+
+( views )+
+' views</li>\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -66688,27 +66692,23 @@ function(app, Backbone) {
         },
 
         prev: function() {
-            this.model.cuePrev();
+            this.model.cueBack();
             return false;
         },
 
         updateArrowState: function( info ) {
-            switch(info._connections) {
-                case "l":
-                    this.activateArrow("prev");
-                    this.disableArrow("next");
-                    break;
-                case "r":
-                    this.disableArrow("prev");
-                    this.activateArrow("next");
-                    break;
-                case "lr":
-                    this.activateArrow("prev");
-                    this.activateArrow("next");
-                    break;
-                default:
-                    this.disableArrow("prev");
-                    this.disableArrow("next");
+
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.activateArrow("prev");
+            } else {
+                this.disableArrow("prev");
+            }
+
+
+            if( info._connections == "r" || info._connections == "lr" ){
+                this.activateArrow("next");
+            } else {
+                this.disableArrow("next");
             }
         },
 
@@ -66772,17 +66772,10 @@ function(app, Backbone) {
 
         onFramePlay: function( info ){
             if( this.model.status.get("frameHistory").length > 1 ){
-                this.$(".history-nav").fadeIn( 100 );
+                this.$("#project-home").fadeIn( 100 );
             } else {
-                this.$(".history-nav").fadeOut( 100 );
+                this.$("#project-home").fadeOut( 100 );
             }
-
-            if( info._connections == "r" || info._connections == "lr" ){
-               this.$("#project-next").fadeIn( 100 );
-            } else {
-                this.$("#project-next").fadeOut( 100 );
-            }
-
         },
 
         updateCitations: function( info ) {
@@ -66790,9 +66783,8 @@ function(app, Backbone) {
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
-                // if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
-                    if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive ) {
-
+                if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
+               
                     return layer;
                 }
                 return false;
@@ -66811,9 +66803,7 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click #project-home": "home",
-            "click #project-back": "back",
-            "click #project-next": "next"
+            "click #project-home": "home"
         },
 
         fadeOut: function( stay ) {
@@ -66865,15 +66855,6 @@ function(app, Backbone) {
             this.model.cueFrame( this.model.get("startFrame") );
             
             return false;
-        },
-
-        back: function() {
-            this.model.cueBack();
-            return false;
-        },
-        next: function() {
-            this.model.cueNext();
-            return false;
         }
     });
 
@@ -66911,7 +66892,6 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
-        timer: null,
         visible: false,
         hover: false,
 
@@ -66934,13 +66914,6 @@ function(app, Backbone) {
             this.model.on("data_loaded", this.render, this);
             this.model.on("sequence_enter", this.onEnterSequence, this );
             this.model.on("pause", this.fadeIn, this );
-        },
-
-        afterRender: function() {
-            //check if embed
-            if (window!=window.top) {
-                this.$el.find(".menu-bar-left a").attr("target","_blank");
-            }
         },
 
         onEnterSequence: function( info ) {
@@ -67006,7 +66979,7 @@ function(app, Backbone) {
                 .removeClass("icon-resize-small");
         },
 
-        fadeOut: function( stay ) {
+         fadeOut: function( stay ) {
             if( this.visible ) {
                 var fadeOutAfter = stay || 2000;
 
@@ -67022,7 +66995,7 @@ function(app, Backbone) {
                 
             }
         },
-     
+
         fadeIn: function( stay ) {
             if( !this.visible ) {
                 this.visible = true;
@@ -67163,8 +67136,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
                 if ( pageY < 100 ) {
                     this.showMenubar();
                 }
-                
-                this.showCitationbar();
+                else if ( pageY > app.state.get("windowHeight") - 100 ) {
+                    this.showCitationbar();
+                }
             }
         },
 
