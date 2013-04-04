@@ -19,13 +19,15 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-menu-bar",
 
+
+        //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
             var meta = $("meta[name=zeega]"),
                 views = meta.data("views") == 1 ? meta.data("views") + " view" : meta.data("views") + " views";
             if ( this.model.project ) {
                 return _.extend({
-                        directory: meta.data("userDirectory") || "",
-                        hostname: meta.data("userHostname") || "",
+                        directory: meta.data("directory") || "",
+                        hostname: meta.data("hostname") || "",
                         user_thumbnail: meta.data("userThumbnail") || "",
                         views: views
                     },

@@ -66468,6 +66468,8 @@ define('app',[
 ],
 
 function( $, _, Backbone, State ) {
+    
+    var meta = $("meta[name=zeega]");
     // Provide a global location to place configuration settings and module
     // creation.
     var app = {
@@ -66475,7 +66477,7 @@ function( $, _, Backbone, State ) {
         root: "/",
         // the path of the zeega api
         // only required for dynamically loaded zeegas
-        api: "http:" + sessionStorage.getItem("hostname") + sessionStorage.getItem("directory") + "api/",
+        api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",
 
       /*
         app.state stores information on the current state of the application
@@ -66899,13 +66901,15 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-menu-bar",
 
+
+        //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
             var meta = $("meta[name=zeega]"),
                 views = meta.data("views") == 1 ? meta.data("views") + " view" : meta.data("views") + " views";
             if ( this.model.project ) {
                 return _.extend({
-                        directory: meta.data("userDirectory") || "",
-                        hostname: meta.data("userHostname") || "",
+                        directory: meta.data("directory") || "",
+                        hostname: meta.data("hostname") || "",
                         user_thumbnail: meta.data("userThumbnail") || "",
                         views: views
                     },
