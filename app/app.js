@@ -20,7 +20,10 @@ function( $, _, Backbone, State ) {
         // the path of the zeega api
         // only required for dynamically loaded zeegas
         api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",
-
+        hostname: meta.data("hostname") || "",
+        directory: meta.data("directory") || "",
+        userThumbnail: meta.data("userThumbnail"),
+        views: meta.data("views"),
       /*
         app.state stores information on the current state of the application
       */

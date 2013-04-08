@@ -65,7 +65,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( hostname )+
 ''+
 ( directory )+
-'user/'+
+'profile/'+
 ( user_id )+
 '" data-bypass="true" >\n            <img class = "profile-thumb" src="'+
 ( user_thumbnail )+

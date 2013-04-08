@@ -403,7 +403,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( hostname )+
 ''+
 ( directory )+
-'user/'+
+'profile/'+
 ( user_id )+
 '" data-bypass="true" >\n            <img class = "profile-thumb" src="'+
 ( user_thumbnail )+
@@ -66478,7 +66478,10 @@ function( $, _, Backbone, State ) {
         // the path of the zeega api
         // only required for dynamically loaded zeegas
         api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",
-
+        hostname: meta.data("hostname") || "",
+        directory: meta.data("directory") || "",
+        userThumbnail: meta.data("userThumbnail"),
+        views: meta.data("views"),
       /*
         app.state stores information on the current state of the application
       */
@@ -66904,13 +66907,12 @@ function(app, Backbone) {
 
         //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
-            var meta = $("meta[name=zeega]"),
-                views = meta.data("views") == 1 ? meta.data("views") + " view" : meta.data("views") + " views";
+            var views = app.views == 1 ? app.views + " view" : app.views + " views";
             if ( this.model.project ) {
                 return _.extend({
-                        directory: meta.data("directory") || "",
-                        hostname: meta.data("hostname") || "",
-                        user_thumbnail: meta.data("userThumbnail") || "",
+                        directory: app.directory,
+                        hostname: app.hostname,
+                        user_thumbnail: app.userThumbnail,
                         views: views
                     },
                     this.model.project.toJSON()
