@@ -61,15 +61,19 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
-'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http:'+
+'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            <a href="http:'+
 ( hostname )+
 ''+
 ( directory )+
-'user/'+
+'profile/'+
 ( user_id )+
-'" data-bypass="true" >'+
+'" data-bypass="true" >\n            <img class = "profile-thumb" src="'+
+( user_thumbnail )+
+'" />\n                <span class="username"> '+
 ( authors )+
-'</a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
+' </span>\n            </a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li class="project-views">'+
+( views )+
+'</li>\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -87,7 +91,7 @@ return __p;
 this["JST"]["app/templates/pause.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a class="play" href="#"></a>';
+__p+='';
 }
 return __p;
 };

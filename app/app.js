@@ -10,6 +10,8 @@ define([
 ],
 
 function( $, _, Backbone, State ) {
+    
+    var meta = $("meta[name=zeega]");
     // Provide a global location to place configuration settings and module
     // creation.
     var app = {
@@ -17,8 +19,11 @@ function( $, _, Backbone, State ) {
         root: "/",
         // the path of the zeega api
         // only required for dynamically loaded zeegas
-        api: "http:" + sessionStorage.getItem("hostname") + sessionStorage.getItem("directory") + "api/",
-
+        api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",
+        hostname: meta.data("hostname") || "",
+        directory: meta.data("directory") || "",
+        userThumbnail: meta.data("userThumbnail"),
+        views: meta.data("views"),
       /*
         app.state stores information on the current state of the application
       */

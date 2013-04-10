@@ -399,15 +399,19 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
-'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            by <a href="http:'+
+'</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            <a href="http:'+
 ( hostname )+
 ''+
 ( directory )+
-'user/'+
+'profile/'+
 ( user_id )+
-'" data-bypass="true" >'+
+'" data-bypass="true" >\n            <img class = "profile-thumb" src="'+
+( user_thumbnail )+
+'" />\n                <span class="username"> '+
 ( authors )+
-'</a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
+' </span>\n            </a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li class="project-views">'+
+( views )+
+'</li>\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
@@ -425,7 +429,7 @@ return __p;
 this["JST"]["app/templates/pause.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a class="play" href="#"></a>';
+__p+='';
 }
 return __p;
 };;
@@ -16562,7 +16566,7 @@ zeega.define("backbone", ["lodash","jquery"], (function (global) {
   })()
 
   if (typeof define == 'function' && define.amd)
-    zeega.define('spin',[],function() { return Spinner })
+    zeega.define('../assets/js/libs/spin',[],function() { return Spinner })
   else
     window.Spinner = Spinner
 
@@ -32302,9 +32306,9 @@ zeega.define("plugins/backbone.layoutmanager", function(){});
 zeega.define('zeega',[
     "backbone",
     "jquery",
-    "spin",
+    "../assets/js/libs/spin",
     "jqueryUI",
-    "plugins/backbone.layoutmanager",
+    "plugins/backbone.layoutmanager"
 ],
 
 function( Backbone, jquery, Spinner ) {
@@ -49640,7 +49644,11 @@ function( Zeega ) {
             sequence = frame.collection.sequence;
 
             fHist = this.get("frameHistory");
-            fHist.push( frame.id );
+            if ( fHist.length === 0 || fHist[ fHist.length - 1 ] != frame.id ){
+                fHist.push( frame.id );
+            }
+            
+
             this.put({
                 current_frame_model: frame,
                 frameHistory: fHist
@@ -49666,6 +49674,19 @@ function( Zeega ) {
                     _.extend({}, this.get("current_sequence_model").toJSON() )
                 );
             }
+        },
+
+        onBack: function() {
+
+            fHist = this.get("frameHistory");
+            
+            if( fHist.length > 1 && fHist[ fHist.length - 1 ] == this.get("current_frame")){
+                fHist.pop();
+                this.put({
+                    frameHistory: fHist
+                }); 
+            }
+            
         },
 
         /*
@@ -50488,6 +50509,17 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
         // goes to the prev frame after n ms
         cuePrev: function( ms ) {
             this.cueFrame( this.status.get("current_frame_model").get("_prev"), ms );
+        },
+
+        // goes to previous frame in history
+        cueBack: function() {
+
+            this.status.onBack();
+            var history = this.status.get("frameHistory");
+            if( history.length > 0 ){
+                this.cueFrame( history [ history.length - 1 ] );
+            }
+
         },
 
         // goes to specified frame after n ms
@@ -66436,6 +66468,8 @@ define('app',[
 ],
 
 function( $, _, Backbone, State ) {
+    
+    var meta = $("meta[name=zeega]");
     // Provide a global location to place configuration settings and module
     // creation.
     var app = {
@@ -66443,8 +66477,11 @@ function( $, _, Backbone, State ) {
         root: "/",
         // the path of the zeega api
         // only required for dynamically loaded zeegas
-        api: "http:" + sessionStorage.getItem("hostname") + sessionStorage.getItem("directory") + "api/",
-
+        api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",
+        hostname: meta.data("hostname") || "",
+        directory: meta.data("directory") || "",
+        userThumbnail: meta.data("userThumbnail"),
+        views: meta.data("views"),
       /*
         app.state stores information on the current state of the application
       */
@@ -66660,27 +66697,23 @@ function(app, Backbone) {
         },
 
         prev: function() {
-            this.model.cuePrev();
+            this.model.cueBack();
             return false;
         },
 
         updateArrowState: function( info ) {
-            switch(info._connections) {
-                case "l":
-                    this.activateArrow("prev");
-                    this.disableArrow("next");
-                    break;
-                case "r":
-                    this.disableArrow("prev");
-                    this.activateArrow("next");
-                    break;
-                case "lr":
-                    this.activateArrow("prev");
-                    this.activateArrow("next");
-                    break;
-                default:
-                    this.disableArrow("prev");
-                    this.disableArrow("next");
+
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.activateArrow("prev");
+            } else {
+                this.disableArrow("prev");
+            }
+
+
+            if( info._connections == "r" || info._connections == "lr" ){
+                this.activateArrow("next");
+            } else {
+                this.disableArrow("next");
             }
         },
 
@@ -66730,6 +66763,7 @@ function(app, Backbone) {
             this.model.on("data_loaded", this.render, this);
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );
+            this.model.on("frame_play", this.onFramePlay, this );
         },
 
         onPlay: function() {
@@ -66741,13 +66775,21 @@ function(app, Backbone) {
             this.fadeIn();
         },
 
+        onFramePlay: function( info ){
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.$("#project-home").fadeIn( 100 );
+            } else {
+                this.$("#project-home").fadeOut( 100 );
+            }
+        },
+
         updateCitations: function( info ) {
             var layersToCite = _.map( info.layers, function( layer ){
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
                 if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
-
+               
                     return layer;
                 }
                 return false;
@@ -66814,6 +66856,7 @@ function(app, Backbone) {
 
         home: function() {
             
+            this.model.status.set("frameHistory",[]);
             this.model.cueFrame( this.model.get("startFrame") );
             
             return false;
@@ -66854,7 +66897,6 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
-        timer: null,
         visible: false,
         hover: false,
 
@@ -66862,11 +66904,16 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-menu-bar",
 
+
+        //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
+            var views = app.views == 1 ? app.views + " view" : app.views + " views";
             if ( this.model.project ) {
                 return _.extend({
-                        directory: sessionStorage.getItem("directory"),
-                        hostname: sessionStorage.getItem("hostname")
+                        directory: app.directory,
+                        hostname: app.hostname,
+                        user_thumbnail: app.userThumbnail,
+                        views: views
                     },
                     this.model.project.toJSON()
                     );
@@ -66879,12 +66926,6 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
         },
 
-        afterRender: function() {
-            //check if embed
-            if (window!=window.top) {
-                this.$el.find(".menu-bar-left a").attr("target","_blank");
-            }
-        },
 
         onEnterSequence: function( info ) {
             this.updateDescription( info );
@@ -66949,7 +66990,7 @@ function(app, Backbone) {
                 .removeClass("icon-resize-small");
         },
 
-        fadeOut: function( stay ) {
+         fadeOut: function( stay ) {
             if( this.visible ) {
                 var fadeOutAfter = stay || 2000;
 
@@ -66965,7 +67006,7 @@ function(app, Backbone) {
                 
             }
         },
-     
+
         fadeIn: function( stay ) {
             if( !this.visible ) {
                 this.visible = true;
@@ -67105,7 +67146,8 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
                 if ( pageY < 100 ) {
                     this.showMenubar();
-                } else if ( pageY > app.state.get("windowHeight") - 100 ) {
+                }
+                else if ( pageY > app.state.get("windowHeight") - 100 ) {
                     this.showCitationbar();
                 }
             }

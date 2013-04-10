@@ -6,11 +6,15 @@
         <span class="project-title"><%= title %></span>
         <span class="sequence-description"></span>
         <span class="sequence-author">
-            by <a href="http:<%= hostname %><%= directory %>user/<%= user_id %>" data-bypass="true" ><%= authors %></a>
+            <a href="http:<%= hostname %><%= directory %>profile/<%= user_id %>" data-bypass="true" >
+            <img class = "profile-thumb" src="<%= user_thumbnail %>" />
+                <span class="username"> <%= authors %> </span>
+            </a>
         </span>
     </li>
 </ul>
 <ul class="ZEEGA-menu-bar menu-bar-right">
+    <li class="project-views"><%= views %></li>
     <li><a id="project-share" href="#">share</a></li>
     <li class="slide-menu">
         <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/<%= item_id %>&text=Zeega%20Project%3A%20<%= title %> &url=http://www.zeega.com/<%= item_id %>" target="blank"><i class="zsocial-twitter"></i></a>

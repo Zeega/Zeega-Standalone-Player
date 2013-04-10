@@ -63,7 +63,36 @@ table {
   background-repeat: no-repeat;
   display: inline-block;
   height: 25px;
-  width: 25px;
+  width: 32px;
+}
+.back-zcon {
+  background-image: url('../img/back.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 25px;
+  width: 17px;
+}
+.next-zcon {
+  background-image: url('../img/back.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 25px;
+  width: 17px;
+  transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  /* IE 9 */
+
+  -moz-transform: rotate(180deg);
+  /* Firefox */
+
+  -webkit-transform: rotate(180deg);
+  /* Safari and Chrome */
+
+  -o-transform: rotate(180deg);
+  /* Opera */
+
 }
 [class^="zsocial-"] {
   background-image: url('../img/social-sprites-20px.png');
@@ -1445,18 +1474,31 @@ a:active {
 .ZEEGA-player-menu-bar .menu-bar-right {
   float: right;
 }
+.ZEEGA-player-menu-bar .menu-bar-right .project-views {
+  color: white;
+  padding: 10px 0 0 0;
+  opacity: 0.5;
+}
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title {
-  padding: 10px;
+  padding: 8px;
   color: white;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title .project-title {
   cursor: pointer;
+  padding-right: 5px;
+}
+.ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title .username {
+  opacity: 0.5;
+}
+.ZEEGA-player-menu-bar .ZEEGA-menu-bar .profile-thumb {
+  width: 20px;
+  height: 20px;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar .sequence-description {
   opacity: 0.5;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar .sequence-author {
-  opacity: 0.5;
+  color: grey;
 }
 .ZEEGA-player-menu-bar .ZEEGA-menu-bar > li {
   float: left;

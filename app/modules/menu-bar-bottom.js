@@ -33,6 +33,7 @@ function(app, Backbone) {
             this.model.on("data_loaded", this.render, this);
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );
+            this.model.on("frame_play", this.onFramePlay, this );
         },
 
         onPlay: function() {
@@ -44,13 +45,21 @@ function(app, Backbone) {
             this.fadeIn();
         },
 
+        onFramePlay: function( info ){
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.$("#project-home").fadeIn( 100 );
+            } else {
+                this.$("#project-home").fadeOut( 100 );
+            }
+        },
+
         updateCitations: function( info ) {
             var layersToCite = _.map( info.layers, function( layer ){
                 // if( layer.attr.citation && layer.attr.archive ) return layer;
 
                 // this is janky . fix!
                 if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
-
+               
                     return layer;
                 }
                 return false;
@@ -117,6 +126,7 @@ function(app, Backbone) {
 
         home: function() {
             
+            this.model.status.set("frameHistory",[]);
             this.model.cueFrame( this.model.get("startFrame") );
             
             return false;

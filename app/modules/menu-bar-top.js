@@ -12,7 +12,6 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
-        timer: null,
         visible: false,
         hover: false,
 
@@ -20,11 +19,16 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-menu-bar",
 
+
+        //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
+            var views = app.views == 1 ? app.views + " view" : app.views + " views";
             if ( this.model.project ) {
                 return _.extend({
-                        directory: sessionStorage.getItem("directory"),
-                        hostname: sessionStorage.getItem("hostname")
+                        directory: app.directory,
+                        hostname: app.hostname,
+                        user_thumbnail: app.userThumbnail,
+                        views: views
                     },
                     this.model.project.toJSON()
                     );
@@ -37,12 +41,6 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
         },
 
-        afterRender: function() {
-            //check if embed
-            if (window!=window.top) {
-                this.$el.find(".menu-bar-left a").attr("target","_blank");
-            }
-        },
 
         onEnterSequence: function( info ) {
             this.updateDescription( info );
@@ -107,7 +105,7 @@ function(app, Backbone) {
                 .removeClass("icon-resize-small");
         },
 
-        fadeOut: function( stay ) {
+         fadeOut: function( stay ) {
             if( this.visible ) {
                 var fadeOutAfter = stay || 2000;
 
@@ -123,7 +121,7 @@ function(app, Backbone) {
                 
             }
         },
-     
+
         fadeIn: function( stay ) {
             if( !this.visible ) {
                 this.visible = true;
