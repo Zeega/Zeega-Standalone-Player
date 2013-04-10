@@ -66881,11 +66881,12 @@ function(app, Backbone) {
         serialize: function() {
 
             var tumblr_share,
+                tumblr_caption,
                 views;
 
             tumblr_caption = "<p><a href='" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='" +
-                            app.hostname + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+                            app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
