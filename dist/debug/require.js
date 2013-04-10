@@ -16566,7 +16566,7 @@ zeega.define("backbone", ["lodash","jquery"], (function (global) {
   })()
 
   if (typeof define == 'function' && define.amd)
-    zeega.define('../assets/js/libs/spin',[],function() { return Spinner })
+    zeega.define('spin',[],function() { return Spinner })
   else
     window.Spinner = Spinner
 
@@ -32306,9 +32306,9 @@ zeega.define("plugins/backbone.layoutmanager", function(){});
 zeega.define('zeega',[
     "backbone",
     "jquery",
-    "../assets/js/libs/spin",
+    "spin",
     "jqueryUI",
-    "plugins/backbone.layoutmanager"
+    "plugins/backbone.layoutmanager",
 ],
 
 function( Backbone, jquery, Spinner ) {
@@ -49644,11 +49644,7 @@ function( Zeega ) {
             sequence = frame.collection.sequence;
 
             fHist = this.get("frameHistory");
-            if ( fHist.length === 0 || fHist[ fHist.length - 1 ] != frame.id ){
-                fHist.push( frame.id );
-            }
-            
-
+            fHist.push( frame.id );
             this.put({
                 current_frame_model: frame,
                 frameHistory: fHist
@@ -49674,19 +49670,6 @@ function( Zeega ) {
                     _.extend({}, this.get("current_sequence_model").toJSON() )
                 );
             }
-        },
-
-        onBack: function() {
-
-            fHist = this.get("frameHistory");
-            
-            if( fHist.length > 1 && fHist[ fHist.length - 1 ] == this.get("current_frame")){
-                fHist.pop();
-                this.put({
-                    frameHistory: fHist
-                }); 
-            }
-            
         },
 
         /*
@@ -50509,17 +50492,6 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
         // goes to the prev frame after n ms
         cuePrev: function( ms ) {
             this.cueFrame( this.status.get("current_frame_model").get("_prev"), ms );
-        },
-
-        // goes to previous frame in history
-        cueBack: function() {
-
-            this.status.onBack();
-            var history = this.status.get("frameHistory");
-            if( history.length > 0 ){
-                this.cueFrame( history [ history.length - 1 ] );
-            }
-
         },
 
         // goes to specified frame after n ms
