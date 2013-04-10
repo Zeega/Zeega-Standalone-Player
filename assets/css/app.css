@@ -945,6 +945,7 @@ html {
   width: 100%;
   position: absolute;
   z-index: 10;
+  top: 0;
 }
 #main #overlays {
   background: none !important;
