@@ -7,27 +7,11 @@ __p+='<i class="zitem-'+
 ( attr.archive.toLowerCase() )+
 ' zitem-30"></i>\n<div class="player-citation-bubble clearfix">\n  <div class="player-citation-content">\n    <h3>'+
 ( attr.title )+
-'</h3>\n    <div class="content">\n      <span class="citation-subhead">DESCRIPTION:</span> '+
-( attr.description )+
-'\n    </div>\n    <div class="creator"><span class="citation-subhead">\n      CREATED BY:</span> '+
+'</h3>\n    <div class="creator">\n      Author: '+
 ( attr.media_creator_realname )+
-'\n    </div>\n\n  ';
- if( !_.isNull( attr.media_geo_longitude ) ) { 
-;__p+='\n    <div class="location-created">\n      <span class="citation-subhead">LOCATION:</span> '+
-( attr.media_geo_longitude )+
-', '+
-( attr.media_geo_latitude )+
-'\n    </div>\n  ';
- } 
-;__p+='\n    <div class="trackback">\n      <a href="'+
+'\n    </div>\n    <div class="trackback">\n      <a href="'+
 ( attr.attribution_uri )+
-'" target="blank">view original</a>\n    </div>\n  </div>\n  ';
- if( !_.isNull( attr.thumbnail_url ) ) { 
-;__p+='\n  <div class="player-citation-thumb"><img src="'+
-( attr.thumbnail_url )+
-'" height="100px" width="100px"/></div>\n  ';
- } 
-;__p+='\n</div>';
+'" target="blank">view original</a>\n    </div>\n  </div>\n</div>';
 }
 return __p;
 };

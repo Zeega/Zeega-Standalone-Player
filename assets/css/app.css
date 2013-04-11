@@ -1356,6 +1356,9 @@ a:active {
   font-weight: bold;
   color: #AAA;
 }
+.ZEEGA-player-citations .player-citation-bubble a {
+  text-decoration: underline;
+}
 .ZEEGA-loader-overlay {
   height: 100%;
   width: 100%;
