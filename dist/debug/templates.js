@@ -21,9 +21,13 @@ __p+='<i class="zitem-'+
  } 
 ;__p+='\n    <div class="trackback">\n      <a href="'+
 ( attr.attribution_uri )+
-'" target="blank">view original</a>\n    </div>\n  </div>\n  <div class="player-citation-thumb"><img src="'+
+'" target="blank">view original</a>\n    </div>\n  </div>\n  ';
+ if( !_.isNull( attr.thumbnail_url ) ) { 
+;__p+='\n  <div class="player-citation-thumb"><img src="'+
 ( attr.thumbnail_url )+
-'" height="100px" width="100px"/></div>\n</div>';
+'" height="100px" width="100px"/></div>\n  ';
+ } 
+;__p+='\n</div>';
 }
 return __p;
 };

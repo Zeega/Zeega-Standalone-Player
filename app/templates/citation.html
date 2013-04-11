@@ -18,5 +18,7 @@
       <a href="<%= attr.attribution_uri %>" target="blank">view original</a>
     </div>
   </div>
+  <% if( !_.isNull( attr.thumbnail_url ) ) { %>
   <div class="player-citation-thumb"><img src="<%= attr.thumbnail_url %>" height="100px" width="100px"/></div>
+  <% } %>
 </div>
