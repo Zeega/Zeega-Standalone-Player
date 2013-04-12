@@ -16566,7 +16566,7 @@ zeega.define("backbone", ["lodash","jquery"], (function (global) {
   })()
 
   if (typeof define == 'function' && define.amd)
-    zeega.define('spin',[],function() { return Spinner })
+    zeega.define('../assets/js/libs/spin',[],function() { return Spinner })
   else
     window.Spinner = Spinner
 
@@ -32306,9 +32306,9 @@ zeega.define("plugins/backbone.layoutmanager", function(){});
 zeega.define('zeega',[
     "backbone",
     "jquery",
-    "spin",
+    "../assets/js/libs/spin",
     "jqueryUI",
-    "plugins/backbone.layoutmanager",
+    "plugins/backbone.layoutmanager"
 ],
 
 function( Backbone, jquery, Spinner ) {
@@ -48213,12 +48213,17 @@ function( Zeega, _Layer ) {
 
         attr: {
             citation: false,
+            color: "#FFF",
+            content: "text",
+            fontSize: 200,
+            fontFamily: "Archivo Black",
             default_controls: true,
             left: 30,
             opacity: 1,
             title: "Text Layer",
             top: 40,
-            width: 25
+            width: 25,
+            dissolve: true
         }
     });
 
@@ -48241,7 +48246,8 @@ function( Zeega, _Layer ) {
             // using jquery because it provides a few vendor prefix styles
             this.$el.css({
                 color: this.model.get("attr").color,
-                fontSize: this.model.get("attr").fontSize + "%"
+                fontSize: this.model.get("attr").fontSize + "%",
+                fontFamily: this.model.get("attr").fontFamily
             });
         }
   });
@@ -48651,6 +48657,7 @@ function( Zeega, LayerPlugin ) {
         destroy: function() {
             // do not attempt to destroy if the layer is waiting or destroyed
             if ( this.state != "waiting" && this.state != "destroyed" ) {
+                this.exit();
                 this.state = "destroyed";
             }
         }
@@ -48925,6 +48932,7 @@ function( Zeega, SequenceCollection ) {
                     }
 
                     if( nextSequence ) {
+                        console.log(this, nextSequence );
                         preloadTargets.push( this.sequences.get( nextSequence ).get("frames")[0] );
                     }
 
@@ -49644,7 +49652,11 @@ function( Zeega ) {
             sequence = frame.collection.sequence;
 
             fHist = this.get("frameHistory");
-            fHist.push( frame.id );
+            if ( fHist.length === 0 || fHist[ fHist.length - 1 ] != frame.id ){
+                fHist.push( frame.id );
+            }
+            
+
             this.put({
                 current_frame_model: frame,
                 frameHistory: fHist
@@ -49670,6 +49682,19 @@ function( Zeega ) {
                     _.extend({}, this.get("current_sequence_model").toJSON() )
                 );
             }
+        },
+
+        onBack: function() {
+
+            fHist = this.get("frameHistory");
+            
+            if( fHist.length > 1 && fHist[ fHist.length - 1 ] == this.get("current_frame")){
+                fHist.pop();
+                this.put({
+                    frameHistory: fHist
+                }); 
+            }
+            
         },
 
         /*
@@ -49797,7 +49822,7 @@ function( Zeega, ArrowView, CloseView, PlayPauseView ) {
 
         prev: function( event ) {
             event.preventDefault();
-            this.model.cuePrev();
+            this.model.cueBack();
         },
 
         next: function( event ) {
@@ -49805,23 +49830,20 @@ function( Zeega, ArrowView, CloseView, PlayPauseView ) {
             this.model.cueNext();
         },
 
+       
         onFramePlay: function( info ) {
-            switch(info._connections) {
-                case "l":
-                    this.activateArrow("ZEEGA-prev");
-                    this.disableArrow("ZEEGA-next");
-                    break;
-                case "r":
-                    this.disableArrow("ZEEGA-prev");
-                    this.activateArrow("ZEEGA-next");
-                    break;
-                case "lr":
-                    this.activateArrow("ZEEGA-prev");
-                    this.activateArrow("ZEEGA-next");
-                    break;
-                default:
-                    this.disableArrow("ZEEGA-prev");
-                    this.disableArrow("ZEEGA-next");
+
+            if( this.model.status.get("frameHistory").length > 1 ){
+                this.activateArrow("ZEEGA-prev");
+            } else {
+                this.disableArrow("ZEEGA-prev");
+            }
+
+
+            if( info._connections == "r" || info._connections == "lr" ){
+                this.activateArrow("ZEEGA-next");
+            } else {
+                this.disableArrow("ZEEGA-next");
             }
         },
 
@@ -50492,6 +50514,17 @@ function( Zeega, ZeegaParser, Relay, Status, PlayerLayout ) {
         // goes to the prev frame after n ms
         cuePrev: function( ms ) {
             this.cueFrame( this.status.get("current_frame_model").get("_prev"), ms );
+        },
+
+        // goes to previous frame in history
+        cueBack: function() {
+
+            this.status.onBack();
+            var history = this.status.get("frameHistory");
+            if( history.length > 0 ){
+                this.cueFrame( history [ history.length - 1 ] );
+            }
+
         },
 
         // goes to specified frame after n ms
