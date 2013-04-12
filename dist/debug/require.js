@@ -345,23 +345,11 @@ __p+='<i class="zitem-'+
 ( attr.archive.toLowerCase() )+
 ' zitem-30"></i>\n<div class="player-citation-bubble clearfix">\n  <div class="player-citation-content">\n    <h3>'+
 ( attr.title )+
-'</h3>\n    <div class="content">\n      <span class="citation-subhead">DESCRIPTION:</span> '+
-( attr.description )+
-'\n    </div>\n    <div class="creator"><span class="citation-subhead">\n      CREATED BY:</span> '+
+'</h3>\n    <div class="creator">\n      Author: '+
 ( attr.media_creator_realname )+
-'\n    </div>\n\n  ';
- if( !_.isNull( attr.media_geo_longitude ) ) { 
-;__p+='\n    <div class="location-created">\n      <span class="citation-subhead">LOCATION:</span> '+
-( attr.media_geo_longitude )+
-', '+
-( attr.media_geo_latitude )+
-'\n    </div>\n  ';
- } 
-;__p+='\n    <div class="trackback">\n      <a href="'+
+'\n    </div>\n    <div class="trackback">\n      <a href="'+
 ( attr.attribution_uri )+
-'" target="blank">view original</a>\n    </div>\n  </div>\n  <div class="player-citation-thumb"><img src="'+
-( attr.thumbnail_url )+
-'" height="100px" width="100px"/></div>\n</div>';
+'" target="blank">view original</a>\n    </div>\n  </div>\n</div>';
 }
 return __p;
 };
@@ -419,9 +407,9 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( item_id )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        <a href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/'+
 ( item_id )+
-'" target="blank"><i class="zsocial-facebook"></i></a>\n        <a href="http://www.tumblr.com/share" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a href="mailto:friend@example.com?subject=Check out this Zeega!&body=http://www.zeega.com/'+
-( item_id )+
-'"><i class="zsocial-email"></i></a>\n    </li>\n    <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
+'" target="blank"><i class="zsocial-facebook"></i></a>\n        <a href="http://www.tumblr.com/share/photo?'+
+( tumblr_share )+
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n    </li>\n    <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
 }
 return __p;
 };
@@ -66912,13 +66900,32 @@ function(app, Backbone) {
 
         //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
-            var views = app.views == 1 ? app.views + " view" : app.views + " views";
+
+            var tumblr_share,
+                tumblr_caption,
+                views;
+
+            tumblr_caption = "<p><a href='" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='" +
+                            app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+
+
+            tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
+                            "&caption=" + encodeURIComponent( tumblr_caption ) +
+                            "&click_thru="+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
+
+
+
+
+            views = app.views == 1 ? app.views + " view" : app.views + " views";
+            
             if ( this.model.project ) {
                 return _.extend({
                         directory: app.directory,
                         hostname: app.hostname,
                         user_thumbnail: app.userThumbnail,
-                        views: views
+                        views: views,
+                        tumblr_share: tumblr_share
                     },
                     this.model.project.toJSON()
                     );
