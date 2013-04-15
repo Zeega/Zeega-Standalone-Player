@@ -48201,17 +48201,12 @@ function( Zeega, _Layer ) {
 
         attr: {
             citation: false,
-            color: "#FFF",
-            content: "text",
-            fontSize: 200,
-            fontFamily: "Archivo Black",
             default_controls: true,
             left: 30,
             opacity: 1,
             title: "Text Layer",
             top: 40,
-            width: 25,
-            dissolve: true
+            width: 25
         }
     });
 
@@ -48234,8 +48229,7 @@ function( Zeega, _Layer ) {
             // using jquery because it provides a few vendor prefix styles
             this.$el.css({
                 color: this.model.get("attr").color,
-                fontSize: this.model.get("attr").fontSize + "%",
-                fontFamily: this.model.get("attr").fontFamily
+                fontSize: this.model.get("attr").fontSize + "%"
             });
         }
   });
@@ -66905,14 +66899,14 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
-                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='" +
+            tumblr_caption = "<p><a href='http:" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http:" +
                             app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru="+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
+                            "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
 
 
 
