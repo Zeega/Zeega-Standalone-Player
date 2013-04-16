@@ -514,6 +514,24 @@
 .zitem-instagram.zitem-30.error {
   background-position: -60px -690px;
 }
+.zitem-giphy {
+  background-position: -50px -1200px;
+}
+.zitem-giphy.loaded {
+  background-position: 0 -1200px;
+}
+.zitem-giphy.loaded {
+  background-position: -100px -1200px;
+}
+.zitem-giphy.zitem-30 {
+  background-position: -30px -720px;
+}
+.zitem-giphy.zitem-30.loaded {
+  background-position: 0 -720px;
+}
+.zitem-giphy.zitem-30.error {
+  background-position: -60px -720px;
+}
 [class^="icon-"],
 [class*=" icon-"] {
   display: inline-block;
