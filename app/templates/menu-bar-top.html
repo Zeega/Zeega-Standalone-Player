@@ -1,12 +1,12 @@
 <ul class="ZEEGA-menu-bar menu-bar-left">
     <li>
-        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;"></a>
+        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;" <% if (window!=window.top)  {  %> target="blank" <% } %> ></a>
     </li>
     <li class="menu-bar-title">
         <span class="project-title"><%= title %></span>
         <span class="sequence-description"></span>
         <span class="sequence-author">
-            <a href="http:<%= hostname %><%= directory %>profile/<%= user_id %>" data-bypass="true" >
+            <a href="http:<%= hostname %><%= directory %>profile/<%= user_id %>" data-bypass="true" <% if (window!=window.top)  {  %>target="blank" <% } %> >
             <img class = "profile-thumb" src="<%= user_thumbnail %>" />
                 <span class="username"> <%= authors %> </span>
             </a>

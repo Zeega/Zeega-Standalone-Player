@@ -47,7 +47,11 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;"></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
+__p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http://www.zeega.com/" class="ZEEGA-standalone-logo" style="padding:7px;" ';
+ if (window!=window.top)  {  
+;__p+=' target="blank" ';
+ } 
+;__p+=' ></a>\n    </li>\n    <li class="menu-bar-title">\n        <span class="project-title">'+
 ( title )+
 '</span>\n        <span class="sequence-description"></span>\n        <span class="sequence-author">\n            <a href="http:'+
 ( hostname )+
@@ -55,7 +59,11 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ( directory )+
 'profile/'+
 ( user_id )+
-'" data-bypass="true" >\n            <img class = "profile-thumb" src="'+
+'" data-bypass="true" ';
+ if (window!=window.top)  {  
+;__p+='target="blank" ';
+ } 
+;__p+=' >\n            <img class = "profile-thumb" src="'+
 ( user_thumbnail )+
 '" />\n                <span class="username"> '+
 ( authors )+
