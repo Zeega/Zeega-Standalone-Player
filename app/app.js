@@ -17,6 +17,9 @@ function( $, _, Backbone, State ) {
     var app = {
         // The root path to run the application.
         root: "/",
+
+        parserPath: "app/zeega-parser2/",
+
         // the path of the zeega api
         // only required for dynamically loaded zeegas
         api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",
