@@ -32283,6 +32283,7 @@ function( Backbone, jquery, Spinner ) {
     // Provide a global location to place configuration settings and module
     // creation.
     var app = {
+        mode: "player",
         // The root path to run the application.
         root: "/",
 
@@ -33796,6 +33797,11 @@ function( app, Controls ) {
             // do not attempt to destroy if the layer is waiting or destroyed
             if ( this.state != "waiting" && this.state != "destroyed" ) {
                 this.state = "destroyed";
+
+                if ( this.visual.destroy ) {
+                    this.visual.destroy();
+                }
+
             }
         }
 
@@ -34541,6 +34547,11 @@ function( app, _Layer, Visual ){
             this.audio.pause();
         },
 
+        destroy: function() {
+            this.$("audio").attr("src", "");
+            this.audio = null;
+        },
+
         editor_onLayerEnter: function() {
             // this.render();
         },
@@ -34562,7 +34573,8 @@ function( app, _Layer, Visual ){
 
         setAudio: function() {
             if ( this.audio === null ) {
-                this.audio = document.getElementById("audio-el-" + this.model.id );
+                this.audio = this.$("#audio-el-" + this.model.id )[0];
+                // this.audio = document.getElementById("audio-el-" + this.model.id );
                 this.listen();
                 this.audio.load();
             }
@@ -34573,41 +34585,61 @@ function( app, _Layer, Visual ){
             return this.audio;
         },
 
-        listen: function() {
-            jQuery(this.audio).on("canplay", function() {
-                this.model.trigger( "visual_ready", this.model.id );
-                this.model.trigger( "canplay", this.model );
-                this.model.canplay = true;
-            }.bind( this ));
-
-            _.each( ["play", "pause", "timeupdate"], function( e ) {
-                jQuery(this.audio).on( e, function() {
-                    this.model.trigger( e, {
-                        layer: this.model,
-                        currentTime: this.audio.currentTime,
-                        duration: this.audio.duration
-                    });
-                }.bind( this ));
-            }, this );
-
-            // listen for volume changes
-            this.model.on("change:volume", this.onVolumeChange, this );
-        },
-
-        onVolumeChange: function( model, vol ) {
-            console.log('on vol change', vol );
-            if ( this.audio ) {
-                this.audio.volume = vol;
-            }
-        },
-
         verifyReady: function() {
-            this.setAudio();
-            this.$('audio').on("canplay", function() {
-                this.audio.pause();
-                this.model.trigger( "visual_ready", this.model.id );
+
+            this.audio = this.$("#audio-el-" + this.model.id )[0];
+
+            this.audio.load();
+            this.audio.addEventListener("canplaythrough", function() {
+                this.onCanPlay();
             }.bind( this ));
-        }
+        },
+
+        init: function() {
+            this.onCanPlay = _.once(function() {
+                this.audio.pause();
+                this.audio.currentTime = this.getAttr("cue_in");
+
+                if ( this.getAttr("cue_out") || this.getAttr("loop") ) {
+                    this.listen();
+                }
+                this.model.trigger( "visual_ready", this.model.id );
+            });
+        },
+
+        onCanPlay: function() {},
+
+        listen: _.once(function() {
+            // don't need to listen to audio time if there's no cue out!
+            if ( this.getAttr("cue_out") !== null ) {
+                this.audio.addEventListener("timeupdate", function(){
+                    var currentTime = this.audio.currentTime;
+
+                    if ( currentTime >= this.getAttr("cue_out" ) ) {
+                        if ( this.getAttr("loop") ) {
+                            this.audio.pause();
+                            this.audio.currentTime = this.getAttr("cue_in");
+                            this.audio.play();
+                        } else {
+                            this.audio.pause();
+                            this.audio.currentTime = this.getAttr("cue_in");
+                        }
+                    }
+                }.bind( this ));
+            }
+
+            this.audio.addEventListener("ended", function(){
+                if ( this.getAttr("loop") ) {
+                    this.audio.pause();
+                    this.audio.currentTime = this.getAttr("cue_in");
+                    this.audio.play();
+                } else {
+                    this.audio.pause();
+                    this.audio.currentTime = this.getAttr("cue_in");
+                }
+            }.bind( this ));
+        })
+
     });
 
     return Layer;
@@ -35803,8 +35835,10 @@ function( app, FrameModel, LayerCollection ) {
         model: FrameModel,
 
         initialize: function() {
-            this.on("add", this.onFrameAdd, this );
-            this.on("remove", this.onFrameRemove, this );
+            if ( app.mode != "player") {
+                this.on("add", this.onFrameAdd, this );
+                this.on("remove", this.onFrameRemove, this );
+            }
         },
 
         initLayers: function( layerCollection, options ) {
@@ -37894,10 +37928,12 @@ function( app, ZeegaParser, Relay, Status, PlayerLayout ) {
                 // destroy all layers before calling player_destroyed
                 this.project.sequences.each(function( sequence ) {
                     sequence.frames.each(function( frame ) {
-                        frame.destroy();
-                        frame.layers.each(function( layer ) {
-                            layer.destroy();
-                        });
+                        if ( frame ) {
+                            frame.destroy();
+                            frame.layers.each(function( layer ) {
+                                layer.destroy();
+                            });
+                        }
                     });
                 });
                 this.Layout.remove();
