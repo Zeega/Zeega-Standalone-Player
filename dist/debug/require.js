@@ -470,80 +470,18 @@ __p+='<div class=\'ZEEGA-player-window\'></div>';
 return __p;
 };
 
-this["JST"]["app/zeega-parser/plugins/controls/av/av.html"] = function(obj){
+this["JST"]["app/zeega-parser/plugins/layers/audio/audio-flash.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="control-name">media controls</div>\n<a href="#" class="playpause"><i class="icon-play icon-white"></i></a>\n<div class="av-slider"></div>\n';
-}
-return __p;
-};
-
-this["JST"]["app/zeega-parser/plugins/controls/checkbox/checkbox.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="control-name">'+
-( title )+
-'</div>\n<div class="roundedOne">\n    <input type="checkbox" value="None" id="roundedOne" name="check" />\n    <label for="roundedOne"></label>\n</div>';
-}
-return __p;
-};
-
-this["JST"]["app/zeega-parser/plugins/controls/color/color.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="control-name">'+
-( _title )+
-'</div>\n<div class="color-selector">\n    <input class="simple_color" value="'+
-( attr[ _propertyName ] )+
-'"/>\n</div>';
-}
-return __p;
-};
-
-this["JST"]["app/zeega-parser/plugins/controls/linkimage/linkimage.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="control-name">type</div>\n<select class="link-image-select">\n    <option value="arrow_up">Up Arrow</option>\n    <option value="arrow_down">Down Arrow</option>\n    <option value="arrow_left">Left Arrow</option>\n    <option value="arrow_right">Right Arrow</option>\n    <option value="default">Glowing Rectangle</option>\n</select>';
-}
-return __p;
-};
-
-this["JST"]["app/zeega-parser/plugins/controls/linkto/linkto.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="control-name">link to</div>\n<div class="control-frame-thumb" style="\n    background: url('+
-( thumbnail_url )+
-') no-repeat center center; \n    -webkit-background-size: cover;\n    background-size: cover;\n">\n    <a href="#"></a>\n</div>';
-}
-return __p;
-};
-
-this["JST"]["app/zeega-parser/plugins/controls/opacity/opacity.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="hover-icon">\n    <i class="icon-eye-open id-icon icon-white"></i>\n    <input type="text" class="text-input" value="'+
-( Math.floor( attr.opacity * 100 ) )+
-'">\n    <div class="hidden-controls">\n        <div class="opacity-slider"></div>\n    </div>\n</div>';
-}
-return __p;
-};
-
-this["JST"]["app/zeega-parser/plugins/controls/slider/slider.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="hover-icon">\n    <div class="control-name">'+
-( title )+
-'</div>\n    <input type="text" class="text-input" value="'+
-( Math.floor( attr[ _propertyName ] * 100 ) )+
-'">\n    <div class="hidden-controls">\n        <div class="control-slider"></div>\n    </div>\n</div>';
-}
-return __p;
-};
-
-this["JST"]["app/zeega-parser/plugins/controls/textbar/textbar.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="control-name">text controls</div>\n\n<a data-action="bold" class="textbar-btn" href="#" >\n    <i class="icon-bold"></i>\n</a>\n<a data-action="italic" class="textbar-btn" href="#" >\n    <i class="icon-italic"></i>\n</a>\n<a data-action="clear" class="textbar-btn" href="#" >\n    <i class="icon-ban-circle"></i>\n</a>\n\n<div class="font-chooser control">\n    <select class="font-list" style=""></select>\n    <select class="size-list" style="">\n        <option value="100">8</option>\n        <option value="125">10</option>\n        <option value="150">12</option>\n        <option value="175">14</option>\n        <option value="200">18</option>\n        <option value="250">24</option>\n        <option value="375">36</option>\n        <option value="500">48</option>\n        <option value="800">72</option>\n        <option value="1600">144</option>\n        <option value="2400">200</option>\n        <option value="3600">300</option>\n    </select>\n</div>';
+__p+='<div id="audio-flash-'+
+( id )+
+'" data-src="'+
+( attr.uri )+
+'"  data-cue="'+
+( attr.cue_in )+
+'"  >\n    <div id="flash-'+
+( id )+
+'" %>" > \n    </div>\n</div>';
 }
 return __p;
 };
@@ -585,7 +523,7 @@ return __p;
 this["JST"]["app/zeega-parser/plugins/layers/link/link.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href=\'#\' class=\'ZEEGA-link-inner\'></a>';
+__p+='<div href=\'#\' class=\'ZEEGA-link-inner\'></div>';
 }
 return __p;
 };
@@ -625,9 +563,25 @@ __p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</
 ( attr.content )+
 '</textarea>\n\n        <div class="textarea-info">max 140 characters</div>\n\n        <div class="text-controls clearfix">\n            <div class="color-selector">\n                <input class="simple-color" value="'+
 ( attr.color )+
-'"/>\n            </div>\n            <a href="#" class="btnz btnz-light text-btn-bold"><i class="icon-bold"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-italic"><i class="icon-italic"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-align-left"><i class="icon-align-left"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-align-center"><i class="icon-align-center"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-align-right"><i class="icon-align-right"></i></a>\n\n            <select class="font-list" style=""></select>\n            <select class="size-list" style="">\n                <option value="100">8</option>\n                <option value="125">10</option>\n                <option value="150">12</option>\n                <option value="175">14</option>\n                <option value="200">18</option>\n                <option value="250">24</option>\n                <option value="375">36</option>\n                <option value="500">48</option>\n                <option value="800">72</option>\n                <option value="1600">144</option>\n                <option value="2400">200</option>\n                <option value="3600">300</option>\n            </select>\n            \n        </div>\n\n        <div class="sample-header">sample</div>\n        <div class="text-sample">'+
+'"/>\n            </div>\n            <a href="#" class="btnz btnz-light text-btn-bold"><i class="icon-bold"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-italic"><i class="icon-italic"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-align-left"><i class="icon-align-left"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-align-center"><i class="icon-align-center"></i></a>\n            <a href="#" class="btnz btnz-light text-btn-align-right"><i class="icon-align-right"></i></a>\n\n            <select class="font-list" style=""></select>\n\n            <div class="control-module">\n                <div class="control-title">font size</div>\n                <select class="size-list" style="">\n                    <option value="100">8</option>\n                    <option value="125">10</option>\n                    <option value="150">12</option>\n                    <option value="175">14</option>\n                    <option value="200">18</option>\n                    <option value="250">24</option>\n                    <option value="375">36</option>\n                    <option value="500">48</option>\n                    <option value="800">72</option>\n                    <option value="1600">144</option>\n                    <option value="2400">200</option>\n                    <option value="3600">300</option>\n                </select>\n            </div>\n\n            <div class="control-module">\n                <div class="control-title">line height</div>\n                <select class="line-height-list">\n                    <option value="1">1</option>\n                    <option value="1.25">1.25</option>\n                    <option value="1.5">1.5</option>\n                    <option value="1.75">1.75</option>\n                    <option value="2">2</option>\n                </select>\n            </div>\n\n            <div class="control-module">\n                <div class="control-title">text-position</div>\n                <select class="text-position-list">\n                    <option value="top">top</option>\n                    <option value="middle">middle</option>\n                    <option value="bottom">bottom</option>\n                </select>\n            </div>\n            \n        </div>\n\n        <div class="sample-header">sample</div>\n        <div class="text-sample">'+
 ( attr.content )+
 '</div>\n\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="submit btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
+}
+return __p;
+};
+
+this["JST"]["app/zeega-parser/plugins/layers/youtube/youtube.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div   class="youtube-player"  class="visual-target">\n    \n\n    <iframe id="yt-player-'+
+( id )+
+'" type="text/html" width="100%" height="100%"\n        src="http://www.youtube.com/embed/'+
+( attr.uri )+
+'?enablejsapi=1&iv_load_policy=3&showinfo=0';
+ if ( !/iPad/i.test(navigator.userAgent) ) { 
+;__p+='&controls=0';
+ } 
+;__p+='&modestbranding=1&disablekb=1&rel=0&wmode=opaque"\n        frameborder="0">\n    </iframe>\n</div>\n<div class="play-button"></div>\n<div class="ipad-cover"> pause video to return to Zeega </div>\n<div class="controls-inline"></div>\n\n';
 }
 return __p;
 };
@@ -32287,6 +32241,7 @@ function( Backbone, jquery, Spinner ) {
         // The root path to run the application.
         root: "/",
 
+        attributes: {},
         parserPath: "app/zeega-parser/",
 
         gmapAPI: "waiting",
@@ -33442,145 +33397,6 @@ function( app, ControlView ) {
 
 });
 
-zeega.define('zeega_parser/plugins/controls/textbar/textbar',[
-    "app",
-    "zeega_parser/modules/control.view"
-],
-
-function( Zeega, ControlView ) {
-
-    return {
-
-        textbar: ControlView.extend({
-
-            type: "textbar",
-            template: "textbar/textbar",
-            propertyName: "textbar",
-
-            fontList: [
-                "Allerta Stencil",
-                "Antic",
-                "Archivo Black",
-                "Arial",
-                "Bilbo Swash Caps",
-                "Cabin Sketch",
-                "Codystar",
-                "Cutive Mono",
-                "Dosis",
-                "Ewert",
-                "Fascinate",
-                "Faster One",
-                "Finger Paint",
-                "Georgia",
-                "Great Vibes",
-                "Londrina Outline",
-                "Londrina Sketch",
-                "Monofett",
-                "Montserrat",
-                "New Rocker",
-                "Nobile",
-                "Nova Mono",
-                "Orbitron",
-                "Sorts Mill Goudy",
-                "Poiret One",
-                "Pontano Sans",
-                "Trocchi",
-                "Ultra",
-                "Verdana",
-                "Wendy One",
-                "Yellowtail"
-            ],
-
-            create: function() {
-                this.loadFonts();
-                this.setFont();
-                this.setSize();
-            },
-
-            destroy: function() {
-                this.$visualContainer.resizable( "destroy" );
-            },
-
-            loadFonts: function() {
-                this.$(".font-list").empty();
-                _.each( this.fontList, function( fontName ) {
-                    this.$(".font-list").append("<option value='" + fontName + "'>" + fontName + "</option>");
-                }, this );
-            },
-
-            setFont: function() {
-                this.$(".font-list option[value='" + this.getAttr("fontFamily") + "']").prop("selected", true );
-            },
-
-            setSize: function() {
-                this.$(".size-list option[value='" + this.getAttr("fontSize") + "']").prop("selected", true );
-            },
-
-            events: {
-                "click .textbar-btn": "btnClick",
-                "change .font-list": "changeFont",
-                "change .size-list": "changeSize"
-            },
-
-            changeFont: function( e ) {
-                this.$visual.find('.style-font-family').contents().unwrap();
-                this.$visual.wrapInner('<span class="style-font-family" style="font-family:'+ $(e.target).val() +'"/>');
-                this.update({ fontFamily : $(e.target).val() });
-                this.saveContent();
-            },
-
-            changeSize: function( e ) {
-                this.model.visual.$el.css( 'fontSize', $(e.target).val() + '%' );
-                this.update({ fontSize : $(e.target).val() });
-            },
-
-            btnClick: function( e ) {
-                var action = $( e.target ).closest("a").data("action");
-
-                this[ action ]();
-            },
-
-            bold: function() {
-                if( this.$visual.find('.style-bold').length ) {
-                    this.$visual.find('.style-bold').contents().unwrap();
-                } else {
-                    this.$visual.wrapInner('<span class="style-bold" style="font-weight:bold"/>');
-                }
-
-                this.saveContent();
-            },
-
-            italic: function() {
-                if( this.$visual.find('.style-italic').length ) {
-                    this.$visual.find('.style-italic').contents().unwrap();
-                } else {
-                    this.$visual.wrapInner('<span class="style-italic" style="font-style:italic"/>');
-                }
-
-                this.saveContent();
-            },
-
-            clear: function() {
-                var clean = this.getAttr("content").replace(/(<([^>]+)>)/ig, "");
-
-                this.$visual.text( clean );
-                this.saveContent();
-            },
-
-            saveContent: function() {
-                this.lazyUpdate({ content: this.$visual.html() });
-            },
-
-            lazyUpdate: _.debounce(function( value ) {
-                this.update(value);
-            }, 500 )
-
-        }) // end control
-    
-    }; // end return
-
-});
-
 /*
 
 plugin/layer manifest file
@@ -33597,8 +33413,7 @@ zeega.define('zeega_parser/plugins/controls/_all-controls',[
     "zeega_parser/plugins/controls/color/color",
     "zeega_parser/plugins/controls/linkto/linkto",
     "zeega_parser/plugins/controls/linkimage/linkimage",
-    "zeega_parser/plugins/controls/av/av",
-    "zeega_parser/plugins/controls/textbar/textbar"
+    "zeega_parser/plugins/controls/av/av"
 ],
 function(
     Position,
@@ -33608,8 +33423,7 @@ function(
     Color,
     LinkTo,
     LinkImage,
-    AV,
-    TextBar
+    AV
 ) {
 
     return _.extend(
@@ -33620,8 +33434,7 @@ function(
         Color,
         LinkTo,
         LinkImage,
-        AV,
-        TextBar
+        AV
     );
 });
 
@@ -33946,7 +33759,7 @@ function( app, Controls ) {
         applyVisualProperties: function() {
             var mediaTargetCSS = {},
                 containerCSS = {};
-
+console.log("vp", this.model.get("type"), this.visualProperties)
             _.each( this.visualProperties, function( prop ) {
                 if ( _.contains( this.containerAttributes, prop ) ) {
                     containerCSS[ prop ] = this.getAttr( prop ) + ( this.units[ prop ] ? this.units[ prop ] : "" );
@@ -34446,7 +34259,7 @@ function( app, _Layer, Visual, FrameChooser ) {
     },
 
     events: {
-        "click a": "goClick",
+        "click": "goClick",
         "mouseover": "onMouseOver",
         "mouseout": "onMouseOut"
     },
@@ -34472,15 +34285,23 @@ function( app, _Layer, Visual, FrameChooser ) {
 
     return Layer;
 });
+/*  SWFObject v2.2 <http://code.google.com/p/swfobject/> 
+    is released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
+*/
+window.swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="ShockwaveFlash.ShockwaveFlash",q="application/x-shockwave-flash",R="SWFObjectExprInst",x="onreadystatechange",O=window,j=document,t=navigator,T=false,U=[h],o=[],N=[],I=[],l,Q,E,B,J=false,a=false,n,G,m=true,M=function(){var aa=typeof j.getElementById!=D&&typeof j.getElementsByTagName!=D&&typeof j.createElement!=D,ah=t.userAgent.toLowerCase(),Y=t.platform.toLowerCase(),ae=Y?/win/.test(Y):/win/.test(ah),ac=Y?/mac/.test(Y):/mac/.test(ah),af=/webkit/.test(ah)?parseFloat(ah.replace(/^.*webkit\/(\d+(\.\d+)?).*$/,"$1")):false,X=!+"\v1",ag=[0,0,0],ab=null;if(typeof t.plugins!=D&&typeof t.plugins[S]==r){ab=t.plugins[S].description;if(ab&&!(typeof t.mimeTypes!=D&&t.mimeTypes[q]&&!t.mimeTypes[q].enabledPlugin)){T=true;X=false;ab=ab.replace(/^.*\s+(\S+\s+\S+$)/,"$1");ag[0]=parseInt(ab.replace(/^(.*)\..*$/,"$1"),10);ag[1]=parseInt(ab.replace(/^.*\.(.*)\s.*$/,"$1"),10);ag[2]=/[a-zA-Z]/.test(ab)?parseInt(ab.replace(/^.*[a-zA-Z]+(.*)$/,"$1"),10):0}}else{if(typeof O.ActiveXObject!=D){try{var ad=new ActiveXObject(W);if(ad){ab=ad.GetVariable("$version");if(ab){X=true;ab=ab.split(" ")[1].split(",");ag=[parseInt(ab[0],10),parseInt(ab[1],10),parseInt(ab[2],10)]}}}catch(Z){}}}return{w3:aa,pv:ag,wk:af,ie:X,win:ae,mac:ac}}(),k=function(){if(!M.w3){return}if((typeof j.readyState!=D&&j.readyState=="complete")||(typeof j.readyState==D&&(j.getElementsByTagName("body")[0]||j.body))){f()}if(!J){if(typeof j.addEventListener!=D){j.addEventListener("DOMContentLoaded",f,false)}if(M.ie&&M.win){j.attachEvent(x,function(){if(j.readyState=="complete"){j.detachEvent(x,arguments.callee);f()}});if(O==top){(function(){if(J){return}try{j.documentElement.doScroll("left")}catch(X){setTimeout(arguments.callee,0);return}f()})()}}if(M.wk){(function(){if(J){return}if(!/loaded|complete/.test(j.readyState)){setTimeout(arguments.callee,0);return}f()})()}s(f)}}();function f(){if(J){return}try{var Z=j.getElementsByTagName("body")[0].appendChild(C("span"));Z.parentNode.removeChild(Z)}catch(aa){return}J=true;var X=U.length;for(var Y=0;Y<X;Y++){U[Y]()}}function K(X){if(J){X()}else{U[U.length]=X}}function s(Y){if(typeof O.addEventListener!=D){O.addEventListener("load",Y,false)}else{if(typeof j.addEventListener!=D){j.addEventListener("load",Y,false)}else{if(typeof O.attachEvent!=D){i(O,"onload",Y)}else{if(typeof O.onload=="function"){var X=O.onload;O.onload=function(){X();Y()}}else{O.onload=Y}}}}}function h(){if(T){V()}else{H()}}function V(){var X=j.getElementsByTagName("body")[0];var aa=C(r);aa.setAttribute("type",q);var Z=X.appendChild(aa);if(Z){var Y=0;(function(){if(typeof Z.GetVariable!=D){var ab=Z.GetVariable("$version");if(ab){ab=ab.split(" ")[1].split(",");M.pv=[parseInt(ab[0],10),parseInt(ab[1],10),parseInt(ab[2],10)]}}else{if(Y<10){Y++;setTimeout(arguments.callee,10);return}}X.removeChild(aa);Z=null;H()})()}else{H()}}function H(){var ag=o.length;if(ag>0){for(var af=0;af<ag;af++){var Y=o[af].id;var ab=o[af].callbackFn;var aa={success:false,id:Y};if(M.pv[0]>0){var ae=c(Y);if(ae){if(F(o[af].swfVersion)&&!(M.wk&&M.wk<312)){w(Y,true);if(ab){aa.success=true;aa.ref=z(Y);ab(aa)}}else{if(o[af].expressInstall&&A()){var ai={};ai.data=o[af].expressInstall;ai.width=ae.getAttribute("width")||"0";ai.height=ae.getAttribute("height")||"0";if(ae.getAttribute("class")){ai.styleclass=ae.getAttribute("class")}if(ae.getAttribute("align")){ai.align=ae.getAttribute("align")}var ah={};var X=ae.getElementsByTagName("param");var ac=X.length;for(var ad=0;ad<ac;ad++){if(X[ad].getAttribute("name").toLowerCase()!="movie"){ah[X[ad].getAttribute("name")]=X[ad].getAttribute("value")}}P(ai,ah,Y,ab)}else{p(ae);if(ab){ab(aa)}}}}}else{w(Y,true);if(ab){var Z=z(Y);if(Z&&typeof Z.SetVariable!=D){aa.success=true;aa.ref=Z}ab(aa)}}}}}function z(aa){var X=null;var Y=c(aa);if(Y&&Y.nodeName=="OBJECT"){if(typeof Y.SetVariable!=D){X=Y}else{var Z=Y.getElementsByTagName(r)[0];if(Z){X=Z}}}return X}function A(){return !a&&F("6.0.65")&&(M.win||M.mac)&&!(M.wk&&M.wk<312)}function P(aa,ab,X,Z){a=true;E=Z||null;B={success:false,id:X};var ae=c(X);if(ae){if(ae.nodeName=="OBJECT"){l=g(ae);Q=null}else{l=ae;Q=X}aa.id=R;if(typeof aa.width==D||(!/%$/.test(aa.width)&&parseInt(aa.width,10)<310)){aa.width="310"}if(typeof aa.height==D||(!/%$/.test(aa.height)&&parseInt(aa.height,10)<137)){aa.height="137"}j.title=j.title.slice(0,47)+" - Flash Player Installation";var ad=M.ie&&M.win?"ActiveX":"PlugIn",ac="MMredirectURL="+O.location.toString().replace(/&/g,"%26")+"&MMplayerType="+ad+"&MMdoctitle="+j.title;if(typeof ab.flashvars!=D){ab.flashvars+="&"+ac}else{ab.flashvars=ac}if(M.ie&&M.win&&ae.readyState!=4){var Y=C("div");X+="SWFObjectNew";Y.setAttribute("id",X);ae.parentNode.insertBefore(Y,ae);ae.style.display="none";(function(){if(ae.readyState==4){ae.parentNode.removeChild(ae)}else{setTimeout(arguments.callee,10)}})()}u(aa,ab,X)}}function p(Y){if(M.ie&&M.win&&Y.readyState!=4){var X=C("div");Y.parentNode.insertBefore(X,Y);X.parentNode.replaceChild(g(Y),X);Y.style.display="none";(function(){if(Y.readyState==4){Y.parentNode.removeChild(Y)}else{setTimeout(arguments.callee,10)}})()}else{Y.parentNode.replaceChild(g(Y),Y)}}function g(ab){var aa=C("div");if(M.win&&M.ie){aa.innerHTML=ab.innerHTML}else{var Y=ab.getElementsByTagName(r)[0];if(Y){var ad=Y.childNodes;if(ad){var X=ad.length;for(var Z=0;Z<X;Z++){if(!(ad[Z].nodeType==1&&ad[Z].nodeName=="PARAM")&&!(ad[Z].nodeType==8)){aa.appendChild(ad[Z].cloneNode(true))}}}}}return aa}function u(ai,ag,Y){var X,aa=c(Y);if(M.wk&&M.wk<312){return X}if(aa){if(typeof ai.id==D){ai.id=Y}if(M.ie&&M.win){var ah="";for(var ae in ai){if(ai[ae]!=Object.prototype[ae]){if(ae.toLowerCase()=="data"){ag.movie=ai[ae]}else{if(ae.toLowerCase()=="styleclass"){ah+=' class="'+ai[ae]+'"'}else{if(ae.toLowerCase()!="classid"){ah+=" "+ae+'="'+ai[ae]+'"'}}}}}var af="";for(var ad in ag){if(ag[ad]!=Object.prototype[ad]){af+='<param name="'+ad+'" value="'+ag[ad]+'" />'}}aa.outerHTML='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"'+ah+">"+af+"</object>";N[N.length]=ai.id;X=c(ai.id)}else{var Z=C(r);Z.setAttribute("type",q);for(var ac in ai){if(ai[ac]!=Object.prototype[ac]){if(ac.toLowerCase()=="styleclass"){Z.setAttribute("class",ai[ac])}else{if(ac.toLowerCase()!="classid"){Z.setAttribute(ac,ai[ac])}}}}for(var ab in ag){if(ag[ab]!=Object.prototype[ab]&&ab.toLowerCase()!="movie"){e(Z,ab,ag[ab])}}aa.parentNode.replaceChild(Z,aa);X=Z}}return X}function e(Z,X,Y){var aa=C("param");aa.setAttribute("name",X);aa.setAttribute("value",Y);Z.appendChild(aa)}function y(Y){var X=c(Y);if(X&&X.nodeName=="OBJECT"){if(M.ie&&M.win){X.style.display="none";(function(){if(X.readyState==4){b(Y)}else{setTimeout(arguments.callee,10)}})()}else{X.parentNode.removeChild(X)}}}function b(Z){var Y=c(Z);if(Y){for(var X in Y){if(typeof Y[X]=="function"){Y[X]=null}}Y.parentNode.removeChild(Y)}}function c(Z){var X=null;try{X=j.getElementById(Z)}catch(Y){}return X}function C(X){return j.createElement(X)}function i(Z,X,Y){Z.attachEvent(X,Y);I[I.length]=[Z,X,Y]}function F(Z){var Y=M.pv,X=Z.split(".");X[0]=parseInt(X[0],10);X[1]=parseInt(X[1],10)||0;X[2]=parseInt(X[2],10)||0;return(Y[0]>X[0]||(Y[0]==X[0]&&Y[1]>X[1])||(Y[0]==X[0]&&Y[1]==X[1]&&Y[2]>=X[2]))?true:false}function v(ac,Y,ad,ab){if(M.ie&&M.mac){return}var aa=j.getElementsByTagName("head")[0];if(!aa){return}var X=(ad&&typeof ad=="string")?ad:"screen";if(ab){n=null;G=null}if(!n||G!=X){var Z=C("style");Z.setAttribute("type","text/css");Z.setAttribute("media",X);n=aa.appendChild(Z);if(M.ie&&M.win&&typeof j.styleSheets!=D&&j.styleSheets.length>0){n=j.styleSheets[j.styleSheets.length-1]}G=X}if(M.ie&&M.win){if(n&&typeof n.addRule==r){n.addRule(ac,Y)}}else{if(n&&typeof j.createTextNode!=D){n.appendChild(j.createTextNode(ac+" {"+Y+"}"))}}}function w(Z,X){if(!m){return}var Y=X?"visible":"hidden";if(J&&c(Z)){c(Z).style.visibility=Y}else{v("#"+Z,"visibility:"+Y)}}function L(Y){var Z=/[\\\"<>\.;]/;var X=Z.exec(Y)!=null;return X&&typeof encodeURIComponent!=D?encodeURIComponent(Y):Y}var d=function(){if(M.ie&&M.win){window.attachEvent("onunload",function(){var ac=I.length;for(var ab=0;ab<ac;ab++){I[ab][0].detachEvent(I[ab][1],I[ab][2])}var Z=N.length;for(var aa=0;aa<Z;aa++){y(N[aa])}for(var Y in M){M[Y]=null}M=null;for(var X in swfobject){swfobject[X]=null}swfobject=null})}}();return{registerObject:function(ab,X,aa,Z){if(M.w3&&ab&&X){var Y={};Y.id=ab;Y.swfVersion=X;Y.expressInstall=aa;Y.callbackFn=Z;o[o.length]=Y;w(ab,false)}else{if(Z){Z({success:false,id:ab})}}},getObjectById:function(X){if(M.w3){return z(X)}},embedSWF:function(ab,ah,ae,ag,Y,aa,Z,ad,af,ac){var X={success:false,id:ah};if(M.w3&&!(M.wk&&M.wk<312)&&ab&&ah&&ae&&ag&&Y){w(ah,false);K(function(){ae+="";ag+="";var aj={};if(af&&typeof af===r){for(var al in af){aj[al]=af[al]}}aj.data=ab;aj.width=ae;aj.height=ag;var am={};if(ad&&typeof ad===r){for(var ak in ad){am[ak]=ad[ak]}}if(Z&&typeof Z===r){for(var ai in Z){if(typeof am.flashvars!=D){am.flashvars+="&"+ai+"="+Z[ai]}else{am.flashvars=ai+"="+Z[ai]}}}if(F(Y)){var an=u(aj,am,ah);if(aj.id==ah){w(ah,true)}X.success=true;X.ref=an}else{if(aa&&A()){aj.data=aa;P(aj,am,ah,ac);return}else{w(ah,true)}}if(ac){ac(X)}})}else{if(ac){ac(X)}}},switchOffAutoHideShow:function(){m=false},ua:M,getFlashPlayerVersion:function(){return{major:M.pv[0],minor:M.pv[1],release:M.pv[2]}},hasFlashPlayerVersion:F,createSWF:function(Z,Y,X){if(M.w3){return u(Z,Y,X)}else{return undefined}},showExpressInstall:function(Z,aa,X,Y){if(M.w3&&A()){P(Z,aa,X,Y)}},removeSWF:function(X){if(M.w3){y(X)}},createCSS:function(aa,Z,Y,X){if(M.w3){v(aa,Z,Y,X)}},addDomLoadEvent:K,addLoadEvent:s,getQueryParamValue:function(aa){var Z=j.location.search||j.location.hash;if(Z){if(/\?/.test(Z)){Z=Z.split("?")[1]}if(aa==null){return L(Z)}var Y=Z.split("&");for(var X=0;X<Y.length;X++){if(Y[X].substring(0,Y[X].indexOf("="))==aa){return L(Y[X].substring((Y[X].indexOf("=")+1)))}}}return""},expressInstallCallback:function(){if(a){var X=c(R);if(X&&l){X.parentNode.replaceChild(l,X);if(Q){w(Q,true);if(M.ie&&M.win){l.style.display="block"}}if(E){E(B)}}a=false}}}}();
+zeega.define("swfObject", function(){});
+
 zeega.define('zeega_parser/plugins/layers/audio/audio',[
     "app",
     "zeega_parser/modules/layer.model",
-    "zeega_parser/modules/layer.visual.view"
+    "zeega_parser/modules/layer.visual.view",
+    "swfObject"
 ],
 
 function( app, _Layer, Visual ){
 
-    var Layer = app.module();
+    var Layer = app.module(),
+        canPlayMpeg;
 
     Layer.Audio = _Layer.extend({
 
@@ -34519,128 +34340,321 @@ function( app, _Layer, Visual ){
         ]
     });
 
-    Layer.Audio.Visual = Visual.extend({
+    canPlayMpeg = function(){
+        var a = document.createElement('audio');
+        return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+    };
 
-        audio: null,
-        ended: false,
-        playbackCount: 0,
+    if( canPlayMpeg() ){
+        Layer.Audio.Visual = Visual.extend({
 
-        template: "audio/audio",
+            audio: null,
+            ended: false,
+            playbackCount: 0,
 
-        serialize: function() {
-            return this.model.toJSON();
-        },
+            template: "audio/audio",
 
-        onPlay: function() {
-            this.setAudio();
-            this.ended = false;
-            this.audio.play();
-        },
+            serialize: function() {
+                return this.model.toJSON();
+            },
 
-        onPause: function() {
-            this.setAudio();
-            this.audio.pause();
-        },
-
-        onExit: function() {
-            this.setAudio();
-            this.audio.pause();
-        },
-
-        destroy: function() {
-            this.$("audio").attr("src", "");
-            this.audio = null;
-        },
-
-        editor_onLayerEnter: function() {
-            // this.render();
-        },
-
-        editor_onLayerExit: function() {
-            this.$("audio").attr("src", "");
-            this.audio = null;
-            this.render();
-        },
-
-        playPause: function() {
-            this.setAudio();
-            if ( this.audio.paused ) {
+            onPlay: function() {
+                this.setAudio();
+                this.ended = false;
                 this.audio.play();
-            } else {
+            },
+
+            onPause: function() {
+                this.setAudio();
                 this.audio.pause();
-            }
-        },
+            },
 
-        setAudio: function() {
-            if ( this.audio === null ) {
-                this.audio = this.$("#audio-el-" + this.model.id )[0];
-                // this.audio = document.getElementById("audio-el-" + this.model.id );
-                this.listen();
-                this.audio.load();
-            }
-        },
-
-        getAudio: function() {
-            this.setAudio();
-            return this.audio;
-        },
-
-        verifyReady: function() {
-
-            this.audio = this.$("#audio-el-" + this.model.id )[0];
-
-            this.audio.load();
-            this.audio.addEventListener("canplaythrough", function() {
-                this.onCanPlay();
-            }.bind( this ));
-        },
-
-        init: function() {
-            this.onCanPlay = _.once(function() {
+            onExit: function() {
+                this.setAudio();
                 this.audio.pause();
-                this.audio.currentTime = this.getAttr("cue_in");
+            },
 
-                if ( this.getAttr("cue_out") || this.getAttr("loop") ) {
-                    this.listen();
-                }
-                this.model.trigger( "visual_ready", this.model.id );
-            });
-        },
+            destroy: function() {
+                this.$("audio").attr("src", "");
+                this.audio = null;
+            },
 
-        onCanPlay: function() {},
+            editor_onLayerEnter: function() {
+                // this.render();
+            },
 
-        listen: _.once(function() {
-            // don't need to listen to audio time if there's no cue out!
-            if ( this.getAttr("cue_out") !== null ) {
-                this.audio.addEventListener("timeupdate", function(){
-                    var currentTime = this.audio.currentTime;
+            editor_onLayerExit: function() {
+                this.$("audio").attr("src", "");
+                this.audio = null;
+                this.render();
+            },
 
-                    if ( currentTime >= this.getAttr("cue_out" ) ) {
-                        if ( this.getAttr("loop") ) {
-                            this.audio.pause();
-                            this.audio.currentTime = this.getAttr("cue_in");
-                            this.audio.play();
-                        } else {
-                            this.audio.pause();
-                            this.audio.currentTime = this.getAttr("cue_in");
-                        }
-                    }
-                }.bind( this ));
-            }
-
-            this.audio.addEventListener("ended", function(){
-                if ( this.getAttr("loop") ) {
-                    this.audio.pause();
-                    this.audio.currentTime = this.getAttr("cue_in");
+            playPause: function() {
+                this.setAudio();
+                if ( this.audio.paused ) {
                     this.audio.play();
                 } else {
                     this.audio.pause();
-                    this.audio.currentTime = this.getAttr("cue_in");
                 }
-            }.bind( this ));
-        })
+            },
 
-    });
+            setAudio: function() {
+                if ( this.audio === null ) {
+                    this.audio = this.$("#audio-el-" + this.model.id )[0];
+                    // this.audio = document.getElementById("audio-el-" + this.model.id );
+                    this.listen();
+                    this.audio.load();
+                }
+            },
+
+            getAudio: function() {
+                this.setAudio();
+                return this.audio;
+            },
+
+            verifyReady: function() {
+
+                this.audio = this.$("#audio-el-" + this.model.id )[0];
+
+                this.audio.load();
+                this.audio.addEventListener("canplaythrough", function() {
+                    this.onCanPlay();
+                }.bind( this ));
+            },
+
+            init: function() {
+                //console.log("initiing this shit", this.model.id)
+                this.onCanPlay = _.once(function() {
+                    this.audio.pause();
+                    this.audio.currentTime = this.getAttr("cue_in");
+
+                    if ( this.getAttr("cue_out") || this.getAttr("loop") ) {
+                        this.listen();
+                    }
+                    this.model.trigger( "visual_ready", this.model.id );
+                });
+            },
+
+            onCanPlay: function() {},
+
+            listen: _.once(function() {
+                // don't need to listen to audio time if there's no cue out!
+                if ( this.getAttr("cue_out") !== null ) {
+                    this.audio.addEventListener("timeupdate", function(){
+                        var currentTime = this.audio.currentTime;
+
+                        if ( currentTime >= this.getAttr("cue_out" ) ) {
+                            if ( this.getAttr("loop") ) {
+                                this.audio.pause();
+                                this.audio.currentTime = this.getAttr("cue_in");
+                                this.audio.play();
+                            } else {
+                                this.audio.pause();
+                                this.audio.currentTime = this.getAttr("cue_in");
+                            }
+                        }
+                    }.bind( this ));
+                }
+
+                this.audio.addEventListener("ended", function(){
+                    if ( this.getAttr("loop") ) {
+                        this.audio.pause();
+                        this.audio.currentTime = this.getAttr("cue_in");
+                        this.audio.play();
+                    } else {
+                        this.audio.pause();
+                        this.audio.currentTime = this.getAttr("cue_in");
+                    }
+                }.bind( this ));
+            })
+
+        });
+    } else {
+
+        
+        window.onPlayerLoaded = function( containerId ) {
+            onPlayerLoaded[ containerId ] && onPlayerLoaded[ containerId ]();
+        };
+
+        window.onLoading= function( containerId, value ) {
+            onLoading[ containerId ] && onLoading[ containerId ](value);
+        };
+
+        window.onStateChange= function( containerId, eventid, eventvalue ) {
+            onStateChange[ containerId ] && onStateChange[ containerId ](eventid, eventvalue);
+        };
+
+        window.onError= function( containerId, value ) {
+          onError[ containerId ] && onError[ containerId ](value);
+        };
+
+        Layer.Audio.Visual = Visual.extend({
+
+            audio: null,
+            ended: false,
+            playbackCount: 0,
+
+            template: "audio/audio-flash",
+
+            serialize: function() {
+                return this.model.toJSON();
+            },
+
+            init: function() {
+                this.paused = true;
+            },
+
+            afterRender: function(){
+                if ( window.swfobject ) {
+                    this.flashVideoInit();
+                }
+            },
+
+
+
+            onPlay: function() {
+                this.audio.sendToFlash('play', this.currentTime );
+                this.paused = false;
+            },
+
+            onPause: function() {
+                flashvideoObject.sendToFlash('pause','');
+                this.paused = true;
+            },
+
+            onExit: function() {
+                this.audio.pause();
+            },
+
+            destroy: function() {
+
+            },
+
+            editor_onLayerEnter: function() {
+
+            },
+
+            editor_onLayerExit: function() {
+
+            },
+
+            playPause: function() {
+                
+                if ( this.paused ) {
+                    this.audio.play();
+                } else {
+                    this.audio.pause();
+                }
+            },
+
+            flashVideoInit: function() {
+                var flashvars,
+                    params,
+                    attributes,
+                    containerId = "flash-" + this.model.id,
+                    _this = this;
+
+
+                jQuery("#audio-"+containerId).on("player-loaded", function(){
+                    _this.onPlayerLoaded();
+                }).on("loading", function( event, value ){
+                    _this.onLoading(value);
+                }).on("state-change", function( event, event_id, value ){
+                    _this.onStateChange(event_id,value);
+                });
+
+                // expose a callback to this scope, that is called from the global callback youtube calls
+                onPlayerLoaded[ containerId ] = function() {
+                    
+                    jQuery("#audio-"+containerId).trigger( "player-loaded" );
+
+                    var src = jQuery("#audio-"+containerId).data("src"),
+                        cue_in = jQuery("#audio-"+containerId).data("cue_in");
+
+                    flashvideoObject = document.getElementById (containerId);
+                    onLoading[ containerId ] = function (value){
+                        jQuery("#audio-"+containerId).trigger( "loading", [ value ] );
+                    };
+
+                    onStateChange[ containerId ] = function (event_id, value){
+                        jQuery("#audio-"+containerId).trigger( "state-change", [ event_id, value ] );
+                    };
+                    
+                    flashvideoObject.sendToFlash("load", src + ',' + cue_in );
+                };
+
+                flashvars = {
+                    vidId: containerId
+                };
+
+                params = {
+                    wmode: "transparent",
+                    allowScriptAccess: "always",
+                    allownetworking : "all",
+                    bgcolor : "#000000"
+                };
+
+                attributes = {
+                    id: containerId
+                };
+
+               
+                swfobject.embedSWF("assets/vendor/popcorn/MediaPlayer.swf", containerId, "100%", "100%", "9.0.0", false, flashvars, params, attributes);
+                    
+            },
+
+            onPlayerLoaded: function(){
+                this.audio = document.getElementById( "flash-" + this.model.id );
+            },
+
+            onLoading: function( value ){
+
+                if( value == 3 ) {
+                    this.model.trigger( "visual_ready", this.model.id );
+                }
+
+            },
+
+            onStateChange: function( event_id, value ){
+
+            },
+
+            onCanPlay: function() {}
+
+            // listen: _.once(function() {
+            //     // don't need to listen to audio time if there's no cue out!
+            //     if ( this.getAttr("cue_out") !== null ) {
+            //         this.audio.addEventListener("timeupdate", function(){
+            //             var currentTime = this.audio.currentTime;
+
+            //             if ( currentTime >= this.getAttr("cue_out" ) ) {
+            //                 if ( this.getAttr("loop") ) {
+            //                     this.audio.pause();
+            //                     this.audio.currentTime = this.getAttr("cue_in");
+            //                     this.audio.play();
+            //                 } else {
+            //                     this.audio.pause();
+            //                     this.audio.currentTime = this.getAttr("cue_in");
+            //                 }
+            //             }
+            //         }.bind( this ));
+            //     }
+
+            //     this.audio.addEventListener("ended", function(){
+            //         if ( this.getAttr("loop") ) {
+            //             this.audio.pause();
+            //             this.audio.currentTime = this.getAttr("cue_in");
+            //             this.audio.play();
+            //         } else {
+            //             this.audio.pause();
+            //             this.audio.currentTime = this.getAttr("cue_in");
+            //         }
+            //     }.bind( this ));
+            // })
+
+        });
+    }
+       
 
     return Layer;
 });
@@ -34940,6 +34954,8 @@ function( app ) {
             $("#main").addClass("modal");
             this.loadFonts();
             this.loadSize();
+            this.loadTextPosition();
+            this.loadLineHeight();
             this.setButtonStates();
 
             this.updateSample();
@@ -34954,6 +34970,8 @@ function( app ) {
             "keypress textarea": "onKeypress",
             "change .size-list": "onChangeSize",
             "change .font-list": "onChangeFont",
+            "change .line-height-list": "onLineHeight",
+            "change .text-position-list": "onTextPosition",
             "click .text-btn-align-left": "toggleAlignLeft",
             "click .text-btn-align-center": "toggleAlignCenter",
             "click .text-btn-align-right": "toggleAlignRight"
@@ -34966,12 +34984,21 @@ function( app ) {
 
         onChangeSize: function( e ) {
             this.model.setAttr({ fontSize: $( e.target ).val() });
-
             this.model.saveAttr({ fontSize: $( e.target ).val() });
         },
 
         onChangeFont: function( e ) {
             this.model.saveAttr({ fontFamily: $( e.target ).val() });
+            this.updateSample();
+        },
+
+        onTextPosition: function( e ) {
+            this.model.saveAttr({ mobileTextPosition: $( e.target ).val() });
+            this.updateSample();
+        },
+
+        onLineHeight: function( e ) {
+            this.model.saveAttr({ lineHeight: $( e.target ).val() });
             this.updateSample();
         },
 
@@ -35039,6 +35066,14 @@ function( app ) {
 
         loadSize: function() {
             this.$(".size-list").val( this.model.getAttr("fontSize") );
+        },
+
+        loadTextPosition: function() {
+            this.$(".text-position-list").val( this.model.getAttr("mobileTextPosition") );
+        },
+
+        loadLineHeight: function() {
+            this.$(".line-height-list").val( this.model.getAttr("lineHeight") );
         },
 
         setButtonStates: function() {
@@ -35112,19 +35147,21 @@ function( app, _Layer, Visual, TextModal ) {
             citation: false,
             color: "#FFF",
             content: "text",
-            fontSize: 200,
+            fontSize: 100,
             fontFamily: "Archivo Black",
             default_controls: true,
-            left: 30,
+            left: 12.5,
             opacity: 1,
             title: "Text Layer",
             top: 40,
-            width: 25,
+            width: 75,
             dissolve: true,
 
             bold: false,
             italic: false,
-            textAlign: "left"
+            textAlign: "left",
+            lineHeight: 1,
+            mobileTextPosition: "middle" // top, middle, bottom
         },
 
         controls: [
@@ -35190,11 +35227,21 @@ function( app, _Layer, Visual, TextModal ) {
 
         template: "text_v2/text-v2",
 
+        init: function() {
+            console.log("text", app.attributes)
+            // if ( app.attributes.mobile ) {
+            //     this.visualProperties = [
+            //         "opacity"
+            //     ]
+            // }
+        },
+
         visualProperties: [
             "top",
             "left",
             "width",
-            "opacity"
+            "opacity",
+            "lineHeight"
         ],
 
         serialize: function() {
@@ -35203,18 +35250,78 @@ function( app, _Layer, Visual, TextModal ) {
 
         saveContent: null,
 
-        updateStyle: function() {
-            this.$(".visual-target").text( this.model.getAttr("content") );
-            
-            this.$el.css({
+        applyStyles: function() {
+            if ( app.attributes.mobile ) {
+                this.$el.css({
+                    width: (window.innerWidth - 60 ) + "px",
+                    left: 0,
+                    right: 0,
+                    margin: "auto"
+                });
+            } else {
+                this.$el.css({
+                    left: this.getAttr("left") + "%",
+                    width: this.getAttr("width") + "%"
+                });
+            }
+        },
+
+        moveOnStage: function() {
+            var css = {};
+
+            if ( app.attributes.mobile ) {
+
+                css.position = "fixed";
+                if ( this.getAttr("mobileTextPosition") == "middle" ) {
+                   var heightPercent = this.$el.height() / window.innerHeight; // middle
+                   
+                   css.top = (50 - heightPercent * 100 / 2) + "%";
+
+                } else if ( this.getAttr("mobileTextPosition") == "top" ) {
+                    css.top = "30px"; // top
+                } else {
+                    // bottom
+                    css.top = "auto";
+                    css.bottom = "30px";
+                }
+
+                _.extend( css, {
+                    width: "90%",
+                    left: 0,
+                    right: 0,
+                    margin: "auto",
                     color: this.model.get("attr").color,
                     fontWeight: this.model.getAttr("bold") ? "bold" : "normal",
                     fontStyle: this.model.getAttr("italic") ? "italic" : "normal",
                     fontFamily: this.model.getAttr("fontFamily"),
                     fontSize: this.model.getAttr("fontSize") + "%",
-                    textAlign: this.model.getAttr("textAlign")
+                    textAlign: this.model.getAttr("textAlign"),
+                    lineHeight: this.model.getAttr("lineHeight") + "em"
                 });
-                
+
+                this.$el.css(css );
+            } else {
+                console.log("APPLY WRONG")
+                this.$el.css({
+                    top: this.getAttr("top") + "%",
+                    left: this.getAttr("left") + "%"
+                });
+            }
+
+        },
+
+        updateStyle: function() {
+            this.$(".visual-target").text( this.model.getAttr("content") );
+
+            this.$el.css({
+                color: this.model.get("attr").color,
+                fontWeight: this.model.getAttr("bold") ? "bold" : "normal",
+                fontStyle: this.model.getAttr("italic") ? "italic" : "normal",
+                fontFamily: this.model.getAttr("fontFamily"),
+                fontSize: this.model.getAttr("fontSize") + "%",
+                textAlign: this.model.getAttr("textAlign"),
+                lineHeight: this.model.getAttr("lineHeight") + "em"
+            });
         },
 
         afterEditorRender: function() {
@@ -35223,7 +35330,7 @@ function( app, _Layer, Visual, TextModal ) {
                 this.textModal = new TextModal({ model: this.model });
             }
 
-            this.$el.css({
+            this.$(".visual-target").css({
                 color: this.model.get("attr").color,
                 fontSize: this.model.get("attr").fontSize + "%",
                 fontFamily: this.model.get("attr").fontFamily
@@ -35267,6 +35374,141 @@ function( app, _Layer, Visual, TextModal ) {
   return Layer;
 });
 
+zeega.define('zeega_parser/plugins/layers/youtube/youtube',[
+    "app",
+    "zeega_parser/modules/layer.model",
+    "zeega_parser/modules/layer.visual.view"
+],
+
+function( Zeega, LayerModel, Visual ) {
+
+
+    window.onYouTubeIframeAPIReady = function() {
+        window.jQuery(".youtube-player").trigger("api-ready");
+    };
+
+    var Layer = Zeega.module();
+
+    Layer.Youtube = LayerModel.extend({
+
+        layerType: "Youtube",
+
+        attr: {
+            title: "Youtube Layer",
+            url: "none",
+            left: 0,
+            top: 0,
+            height: 100,
+            width: 100,
+            citation: true
+        },
+        controls: [
+        ]
+    });
+
+    Layer.Youtube.Visual = Visual.extend({
+
+        template: "youtube/youtube",
+        ignoreFirst: true,
+        afterRender: function(){
+            if( /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+                this.$(".youtube-player").addClass( "mobile" );
+            } else if( /iPad/i.test(navigator.userAgent) ) {
+                this.$(".youtube-player").addClass( "ipad" );
+            }
+
+            this.ytInit();
+        },
+        events: {
+            "click .play-button": "playVideo",
+            "tap .play-button": "playVideo"
+
+        },
+
+        ytInit: function(){
+            
+            window.jQuery(this.$(".youtube-player" )).on("api-ready", jQuery.proxy( this.onApiReady, this) );
+            if ( _.isUndefined( window.YT ) ){
+                var tag = document.createElement('script');
+                tag.src = "//www.youtube.com/iframe_api";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            } else {
+                this.onApiReady();
+            }
+
+            
+        },
+
+        onPlayerReady: function(e){
+            this.model.trigger( "visual_ready", this.model.id );
+        },
+
+        onStateChange: function(e){
+            if( /iPad/i.test(navigator.userAgent) && e.data ==2 && this.ignoreFirst ) {
+                this.ignoreFirst = false;
+                this.ytPlayer.playVideo();
+            }
+            else if(e.data == 2 || e.data == 5){
+                if( /iPad/i.test(navigator.userAgent) ) {
+                    this.$(".ipad-cover").removeClass("visible");
+                }
+                if( Zeega.mode == "player"){
+                    this.model.status.get("project").play();
+                }
+                this.$(".youtube-player").removeClass("active");
+                this.$(".play-button").fadeIn("fast");
+                
+            } else if (e.data == 1 ){
+                
+                this.$(".play-button").fadeOut("fast");
+                this.$(".youtube-player").addClass("active");
+               
+                if( /iPad/i.test(navigator.userAgent) ) {
+                    this.$(".ipad-cover").addClass("visible");
+                }
+            }
+        },
+
+        onApiReady: function(){
+
+
+
+            var onPlayerReady = jQuery.proxy( this.onPlayerReady, this),
+                onStateChange = jQuery.proxy( this.onStateChange, this);
+
+
+            this.$("#yt-player-" + this.model.id).attr("id", "yt-player-" + this.model.id + "-" + this.model.cid );
+
+            this.ytPlayer = new YT.Player("yt-player-" + this.model.id + "-" + this.model.cid, {
+                    events:{
+                        'onReady': onPlayerReady,
+                        'onStateChange': onStateChange
+                    }
+                });
+            
+            
+        },
+
+        playVideo: function(){
+            if( Zeega.mode == "player"){
+                this.model.status.get("project").suspend();
+            }
+
+            this.$(".play-button").fadeOut("fast");
+            this.$(".youtube-player").addClass("active");
+            this.ytPlayer.playVideo();
+            window.ytPlayer = this.ytPlayer;
+        },
+
+        onExit: function(){
+            this.ytPlayer.pauseVideo();
+        }
+
+    });
+
+    return Layer;
+});
 /*
 
 plugin/layer manifest file
@@ -35281,7 +35523,8 @@ zeega.define('zeega_parser/plugins/layers/_all',[
     "zeega_parser/plugins/layers/audio/audio",
     "zeega_parser/plugins/layers/rectangle/rectangle",
     "zeega_parser/plugins/layers/text/text",
-    "zeega_parser/plugins/layers/text_v2/text"
+    "zeega_parser/plugins/layers/text_v2/text",
+    "zeega_parser/plugins/layers/youtube/youtube"
 ],
 function(
     image,
@@ -35289,7 +35532,8 @@ function(
     audio,
     rectangle,
     text,
-    textV2
+    textV2,
+    youtube
 ) {
     var Plugins = {};
     // extend the plugin object with all the layers
@@ -35300,7 +35544,8 @@ function(
         audio,
         rectangle,
         text,
-        textV2
+        textV2,
+        youtube
     );
 });
 
@@ -35666,6 +35911,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
 
             } else {
                 this.renderOnReady = oldID;
+                app.spinner.spin( app.$(".ZEEGA-player")[0] );
             }
             /* determines the z-index of the layer in relation to other layers on the frame */
             _.each( this.get("layers"), function( layerID, i ) {
@@ -35690,6 +35936,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
             this.status.emit( "frame_ready", data );
             if ( !_.isNull( this.renderOnReady ) ) {
 
+                app.spinner.stop();
                 this.status.emit( "can_play", data );
                 this.render( this.renderOnReady );
                 this.renderOnReady = null;
@@ -35789,15 +36036,17 @@ function( app, Layers ) {
         },
 
         onAdd: function( layer ) {
-            if ( layer ) {
-                layer.addCollection( this );
-                layer.initVisual( Layers[ layer.get("type") ]);
-                app.trigger("layer_added", layer );
-            } else {
-                this.each(function( layer ){
+            if( app.mode != "player" ){
+               if ( layer ) {
                     layer.addCollection( this );
                     layer.initVisual( Layers[ layer.get("type") ]);
-                });
+                    app.trigger("layer_added", layer );
+                } else {
+                    this.each(function( layer ){
+                        layer.addCollection( this );
+                        layer.initVisual( Layers[ layer.get("type") ]);
+                    });
+                }
             }
         },
 
@@ -37435,6 +37684,16 @@ function( app, ZeegaParser, Relay, Status, PlayerLayout ) {
             layerOptions: {},
 
             /**
+            Sets the player to operate in a mobile browser environment
+
+            @property mobile
+            @type Boolean
+            @default false
+            **/
+
+            mobile: false,
+
+            /**
             number
 
             @property layers
@@ -37584,7 +37843,9 @@ function( app, ZeegaParser, Relay, Status, PlayerLayout ) {
 
         _mergeAttributes: function( attributes ) {
             var attr = _.pick( attributes, _.keys( this.defaults ) );
+
             this.set( attr, { silent: true });
+            app.attributes = this.toJSON();
         },
 
         _load: function( attributes ) {
@@ -37823,6 +38084,21 @@ function( app, ZeegaParser, Relay, Status, PlayerLayout ) {
             }
         },
 
+        // mobile only hack
+        mobileLoadAudioLayers: function() {
+            this.project.sequences.each(function( sequence ) {
+                sequence.frames.each(function( frame ) {
+                    frame.layers.each(function( layer ) {
+                        if ( layer.get("type") == "Audio") {
+                            var audio = document.getElementById("audio-el-" + layer.id );
+                            
+                            audio.load();
+                        }
+                    });
+                });
+            });
+        },
+
         // should this live in the cueFrame method so it"s not exposed?
         _goToFrame:function( id ) {
             var oldID ;
@@ -37886,22 +38162,36 @@ function( app, ZeegaParser, Relay, Status, PlayerLayout ) {
         // TODO: update this
         // returns project metadata
         getProjectData: function() {
-            var frames = [];
+            var frames = [],
+                layers = [];
 
             this.project.sequences.each(function( sequence ) {
                 sequence.frames.each(function( frame ) {
-                    var f = _.extend({},
+                    var l, f;
+
+                    l = frame.layers.toJSON();
+                    f = _.extend({},
                         frame.toJSON(),
-                        { layers: frame.layers.toJSON() }
+                        { layers: l }
                     );
 
+                    layers.push( l );
                     frames.push( f );
                 });
             });
 
+            layers = _.flatten( layers );
+            layers = _.uniq( layers, function( lay) {
+                return lay.id;
+            });
+
             return _.extend({},
                 this.toJSON(),
-                { frames: frames }
+                {
+                    sequences: this.project.sequences.toJSON(),
+                    frames: frames,
+                    layers: layers
+                }
             );
         },
 
