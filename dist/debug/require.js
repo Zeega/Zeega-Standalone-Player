@@ -377,7 +377,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
 }
 return __p;
 };
@@ -33759,7 +33759,6 @@ function( app, Controls ) {
         applyVisualProperties: function() {
             var mediaTargetCSS = {},
                 containerCSS = {};
-console.log("vp", this.model.get("type"), this.visualProperties)
             _.each( this.visualProperties, function( prop ) {
                 if ( _.contains( this.containerAttributes, prop ) ) {
                     containerCSS[ prop ] = this.getAttr( prop ) + ( this.units[ prop ] ? this.units[ prop ] : "" );
@@ -35403,15 +35402,16 @@ function( Zeega, LayerModel, Visual ) {
             citation: true
         },
         controls: [
+        
         ]
     });
 
     Layer.Youtube.Visual = Visual.extend({
 
         template: "youtube/youtube",
-        ignoreFirst: true,
+        //ignoreFirst: true,
         afterRender: function(){
-            if( /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+            if( /iPhone|iPod/i.test(navigator.userAgent) ) {
                 this.$(".youtube-player").addClass( "mobile" );
             } else if( /iPad/i.test(navigator.userAgent) ) {
                 this.$(".youtube-player").addClass( "ipad" );
@@ -35436,8 +35436,7 @@ function( Zeega, LayerModel, Visual ) {
             } else {
                 this.onApiReady();
             }
-
-            
+ 
         },
 
         onPlayerReady: function(e){
@@ -35445,11 +35444,13 @@ function( Zeega, LayerModel, Visual ) {
         },
 
         onStateChange: function(e){
-            if( /iPad/i.test(navigator.userAgent) && e.data ==2 && this.ignoreFirst ) {
-                this.ignoreFirst = false;
-                this.ytPlayer.playVideo();
-            }
-            else if(e.data == 2 || e.data == 5){
+            // if( /iPad/i.test(navigator.userAgent) && e.data ==2 && this.ignoreFirst ) {
+            //     this.ignoreFirst = false;
+            //     this.ytPlayer.playVideo();
+            // }
+            // else
+
+            if (e.data == 2 || e.data == 5){
                 if( /iPad/i.test(navigator.userAgent) ) {
                     this.$(".ipad-cover").removeClass("visible");
                 }
@@ -35806,12 +35807,28 @@ function( app, Backbone, Layers, ThumbWorker ) {
                 type: item.get("layer_type"),
                 attr: _.extend({}, item.toJSON() )
             });
+            var oldYoutube = this.layers.find(function(layer){ return layer.get("type") == "Youtube"; });
+                
 
-            newLayer.order[ this.id ] = this.layers.length;
+            if ( newLayer.get("type") == "Youtube" ){
+                if( oldYoutube ){
+                    oldYoutube.trigger("remove");
+                    this.layers.remove( oldYoutube, { silent: true } );
+                }
+                newLayer.order [ this.id ] = 100;
+                newLayer.status = this.status;
+            } else{
+                if( oldYoutube ){
+                    oldYoutube.order[ this.id ] = 100;
+                }
+                newLayer.order[ this.id ] = this.layers.length;
+            }
+            
             newLayer.save().success(function( response ) {
-                this.layers.add( newLayer );
-                app.status.setCurrentLayer( newLayer );
-            }.bind( this ));
+                    this.layers.add( newLayer );
+                    app.status.setCurrentLayer( newLayer );
+                }.bind( this ));
+            
         },
 
         pasteLayer: function( layer ) {
