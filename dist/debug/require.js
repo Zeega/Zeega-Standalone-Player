@@ -377,7 +377,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n    <li><a id="project-play-pause" href="#" ><i class="pause-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
+__p+='<ul class="ZEEGA-standalone-controls">\n    <li><a id="project-home" href="#" ><i class="home-zcon"></i></a></li>\n</ul>\n<ul class="ZEEGA-citations-primary"></ul>';
 }
 return __p;
 };
