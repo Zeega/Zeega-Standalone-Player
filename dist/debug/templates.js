@@ -41,7 +41,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( userThumbnail )+
 '"/>--></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( description )+
-'And their words to the root and the rock would echo down, down and the magic would hear and answer, faint as a falling butterfly.</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
+'</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
 ( userId )+
 '" data-bypass="true">\n                    '+
 ( authors )+
