@@ -378,14 +378,16 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ');\n                        background-size: cover;\n                    "\n\n                ><!--<img src="'+
 ( userThumbnail )+
 '"/>--></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
-( description )+
+( title )+
 '</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
 ( userId )+
 '" data-bypass="true">\n                    '+
 ( authors )+
-'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> '+
+'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
+ if ( !_.isNumber( views ) ) { views = 0 ;} 
+;__p+=' '+
 ( views )+
-'</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"><img src="assets/img/restart.png"/></a>\n    </div>\n</div>';
+'</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };

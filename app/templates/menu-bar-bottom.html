@@ -12,12 +12,12 @@
             </a>
         </div>
         <div class="right-col">
-            <div class="caption"><%= description %></div>
+            <div class="caption"><%= title %></div>
             <div class="username">
                 <a class="profile-name" href="http://zeega.com/user/<%= userId %>" data-bypass="true">
                     <%= authors %>
                 </a>
-                <span class="zeega-views"> <i class="icon-play icon-white"></i> <%= views %></span>
+                <span class="zeega-views"> <i class="icon-play icon-white"></i> <% if ( !_.isNumber( views ) ) { views = 0 ;} %> <%= views %></span>
             </div>
         </div>
 
@@ -27,6 +27,6 @@
                 <div class="citation-title"></div>
             </div>
         </div>
-        <a href="#" class="ZEEGA-home"><img src="assets/img/restart.png"/></a>
+        <a href="#" class="ZEEGA-home"></a>
     </div>
 </div>
