@@ -12,7 +12,10 @@
     z-index: 2;
     .transition( all, 0.5s );
 
-    img {
+    .ZTab-logo {
+        height: 30px;
+        width: 30px;
+        background-image: url(../img/zeega-logo-white-30.png);
         margin-top: 2px;
     }
 
@@ -24,12 +27,11 @@
 
 .profile-token {
     border-radius: 28px;
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
     overflow: hidden;
     float: left;
-    border: 3px solid 
-    orangered;
+    border: 2px solid orangered;
 
     img {
         width: 100%;
@@ -44,6 +46,10 @@
     background: rgba(0,0,0,0.5);
     z-index: 1;
     border-top: 1px solid #222;
+
+    a {
+        color: orangered;
+    }
     
     .meta-inner {
         padding: 10px 20px;
@@ -53,7 +59,7 @@
     .left-col {
         .clearfix;
         float:left;
-        margin-right: 10px
+        margin-right: 20px
     }
 
     .right-col {
@@ -62,7 +68,8 @@
 
         .username {
             font-size: 11px;
-            margin-bottom: 5px;
+            position: absolute;
+            bottom: 10px;
         }
         .caption {
             line-height: 1.1em;

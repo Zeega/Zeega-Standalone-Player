@@ -1459,7 +1459,10 @@ a:active {
   transition: all 0.5s;
   -webkit-transition: all 0.5s;
 }
-.ZEEGA-tab img {
+.ZEEGA-tab .ZTab-logo {
+  height: 30px;
+  width: 30px;
+  background-image: url(../img/zeega-logo-white-30.png);
   margin-top: 2px;
 }
 .ZEEGA-tab:hover {
@@ -1469,12 +1472,11 @@ a:active {
 }
 .profile-token {
   border-radius: 28px;
-  height: 50px;
-  width: 50px;
+  height: 40px;
+  width: 40px;
   overflow: hidden;
   float: left;
-  border: 3px solid 
-    orangered;
+  border: 2px solid orangered;
 }
 .profile-token img {
   width: 100%;
@@ -1488,6 +1490,9 @@ a:active {
   z-index: 1;
   border-top: 1px solid #222;
 }
+.ZEEGA-chrome-metablock a {
+  color: orangered;
+}
 .ZEEGA-chrome-metablock .meta-inner {
   padding: 10px 20px;
 }
@@ -1498,7 +1503,7 @@ a:active {
 }
 .ZEEGA-chrome-metablock .left-col {
   float: left;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 .ZEEGA-chrome-metablock .left-col:after {
   content: "";
@@ -1511,7 +1516,8 @@ a:active {
 }
 .ZEEGA-chrome-metablock .right-col .username {
   font-size: 11px;
-  margin-bottom: 5px;
+  position: absolute;
+  bottom: 10px;
 }
 .ZEEGA-chrome-metablock .right-col .caption {
   line-height: 1.1em;

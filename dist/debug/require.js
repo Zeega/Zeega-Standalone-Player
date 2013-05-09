@@ -375,13 +375,13 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( userId )+
 '" target="blank">\n                <div class="profile-token"><img src="'+
 ( userThumbnail )+
-'"/></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="username">\n                <a href="http://zeega.com/user/'+
+'"/></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
+( description )+
+'</div>\n            <div class="username">\n                <a href="http://zeega.com/user/'+
 ( userId )+
 '" target="blank">\n                    <div class="profile-name">'+
 ( authors )+
-'</div>\n                </a>\n            </div>\n            <div class="caption">And their words to the root and the rock would echo down, down and the magic would hear and answer, faint as a falling butterfly.'+
-( title )+
-'</div>\n        </div>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n    </div>\n</div>';
+'</div>\n                </a>\n            </div>\n        </div>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -389,7 +389,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="http://www.zeega.com">\n    <div class="ZEEGA-tab"><img src="assets/img/zeega-logo-white-30.png"/></div>\n</a>\n\n<a herf="#" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
+__p+='<a href="http://www.zeega.com">\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a herf="#" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
 '&url=http://www.zeega.com/'+
 ( item_id )+
