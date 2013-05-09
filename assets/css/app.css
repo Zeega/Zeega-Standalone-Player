@@ -1,3 +1,8 @@
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 .play-zcon,
 .pause-zcon {
   background-image: url('../img/playpause.png');
@@ -48,25 +53,24 @@
 
 }
 [class^="zsocial-"] {
-  background-image: url('../img/social-sprites-20px.png');
+  background-image: url('../img/social-sprites-33px.png');
   background-position: 0px 0px;
   background-repeat: no-repeat;
   display: inline-block;
-  height: 17px;
-  vertical-align: text-top;
-  width: 17px;
+  height: 33px;
+  width: 33px;
 }
 .zsocial-twitter {
   background-position: 0px 0px;
 }
 .zsocial-facebook {
-  background-position: 0px -17px;
+  background-position: -33px 0px;
 }
 .zsocial-tumblr {
-  background-position: 0px -34px;
+  background-position: -66px 0px;
 }
 .zsocial-email {
-  background-position: 0px -51px;
+  background-position: -99px 0px;
 }
 [class^="zitem-"] {
   background-image: url('../img/zitems-50px.png');
@@ -1310,72 +1314,21 @@ a:active {
 
 }
 .ZEEGA-player-citations {
-  display: none;
   bottom: 0;
   padding: 10px 0;
   pointer-events: none;
   position: absolute;
   width: 100%;
   z-index: 11;
-}
-.ZEEGA-player-citations > ul {
-  padding: 0 10px;
-}
-.ZEEGA-player-citations ul.ZEEGA-citations-primary {
   pointer-events: auto;
-  margin: 0;
-  padding: 0;
-  float: right;
 }
-.ZEEGA-player-citations ul.ZEEGA-citations-primary > li {
-  float: left;
-  margin-right: 5px;
+.ZEEGA-player-citations a {
+  cursor: pointer;
 }
-.ZEEGA-player-citations ul.ZEEGA-citations-primary > li:hover .player-citation-bubble {
-  display: block;
-}
-.ZEEGA-player-citations ul.ZEEGA-standalone-controls {
-  pointer-events: auto;
-  position: absolute;
-  bottom: 10px;
-}
-.ZEEGA-player-citations ul.ZEEGA-standalone-controls li {
-  float: left;
-  padding-right: 5px;
-}
-.ZEEGA-player-citations .player-citation-bubble {
-  background: rgba(0, 0, 0, 0.75);
-  border-radius: 5px;
-  bottom: 40px;
-  box-shadow: 5px 3px 10px rgba(0, 0, 0, 0.5);
-  color: white;
-  display: none;
-  font-family: sans-serif;
-  font-size: 12px;
-  padding: 10px;
-  position: absolute;
-  line-height: 18px;
-  right: 0;
-  width: 300px;
-}
-.ZEEGA-player-citations .player-citation-bubble:after {
-  content: "";
-  display: table;
+.ZEEGA-player-citations .citation-meta {
+  font-size: 11px;
   clear: both;
-}
-.ZEEGA-player-citations .player-citation-bubble .player-citation-content {
-  float: left;
-  width: 190px;
-}
-.ZEEGA-player-citations .player-citation-bubble .player-citation-thumb {
-  float: right;
-}
-.ZEEGA-player-citations .player-citation-bubble .citation-subhead {
-  font-weight: bold;
-  color: #AAA;
-}
-.ZEEGA-player-citations .player-citation-bubble a {
-  text-decoration: underline;
+  margin-top: 5px;
 }
 .ZEEGA-loader-overlay {
   height: 100%;
@@ -1384,41 +1337,12 @@ a:active {
   color: white;
   position: absolute;
 }
-.ZEEGA-loader-overlay h1 {
-  font-size: 4em;
-  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
-}
-.ZEEGA-loader-overlay h2 {
-  font-size: 1em;
-  opacity: 0.7;
-  margin-top: 20px;
-  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
-}
-.ZEEGA-loader-overlay .ZEEGA-loader-inner {
-  padding: 100px 20px 0 20px;
-}
-.ZEEGA-loader-overlay .ZEEGA-loading-bar-wrapper {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  margin-top: 20px;
-  position: relative;
-  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
-}
-.ZEEGA-loader-overlay .ZEEGA-loading-bar-wrapper .ZEEGA-loading-bar {
-  border-radius: 4px;
-  position: absolute;
-  left: 0;
+.ZEEGA-loader-overlay .ZEEGA-loader-bg-overlay {
+  background: url(../img/tiny-stripes-dark.png);
   height: 100%;
-  background: orangered;
-  width: 0%;
-}
-.ZEEGA-loader-overlay .ZEEGA-loading-layers {
-  margin-top: 10px;
-}
-.ZEEGA-loader-overlay .ZEEGA-loading-layers > li {
-  float: left;
-  margin-right: 5px;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
 }
 .ZEEGA-loader-overlay .ZEEGA-loader-bg {
   position: absolute;
@@ -1426,76 +1350,76 @@ a:active {
   height: 100%;
   top: 0;
   left: 0;
-  z-index: -1;
+  z-index: -2;
 }
 .ZEEGA-player-menu-bar {
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
   pointer-events: auto;
   position: absolute;
   width: 100%;
   z-index: 11;
 }
-.ZEEGA-player-menu-bar .ZEEGA-standalone-logo {
-  background: url("../img/zeega-logo-header.png");
-  height: 11px;
-  margin: 5px;
-  width: 62px;
-  display: inline-block;
-}
-.ZEEGA-player-menu-bar .menu-bar-left {
-  float: left;
-}
-.ZEEGA-player-menu-bar .menu-bar-right {
-  float: right;
-}
-.ZEEGA-player-menu-bar .menu-bar-right .project-views {
-  color: white;
-  padding: 10px 0 0 0;
-  opacity: 0.5;
-}
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title {
-  padding: 8px;
-  color: white;
-}
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title .project-title {
+.ZEEGA-player-menu-bar a {
   cursor: pointer;
-  padding-right: 5px;
 }
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar .menu-bar-title .username {
-  opacity: 0.5;
+.ZEEGA-player-menu-bar .menu-right {
+  float: right;
+  margin-top: 12px;
+  margin-right: 10px;
 }
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar .profile-thumb {
-  width: 20px;
-  height: 20px;
-}
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar .sequence-description {
-  opacity: 0.5;
-}
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar .sequence-author {
-  color: grey;
-}
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li {
+.ZEEGA-player-menu-bar .menu-right a {
+  display: inline-block;
+  margin-top: 0;
   float: left;
-  border-right: 1px solid rgba(0, 0, 0, 0.5);
+  margin-right: 10px;
 }
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li:last-child {
-  border-right: none;
+.ZEEGA-player-menu-bar .social-share-icon {
+  opacity: 0.8;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
 }
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li.slide-menu {
-  display: none;
+.ZEEGA-player-menu-bar .social-share-icon:hover {
+  opacity: 1;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
 }
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li.slide-menu a {
-  float: left;
+.btnz {
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 2px;
+  background-image: url(../img/tiny-stripes.png);
+  margin-top: 12px;
+  position: relative;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  font-family: "futura", sans-serif;
+  font-size: 13px;
 }
-.ZEEGA-player-menu-bar .ZEEGA-menu-bar > li > a {
-  padding: 10px;
-  display: block;
+.btnz:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
-.ZEEGA-player-menu-bar:after {
-  content: "";
-  display: table;
-  clear: both;
+.btnz.explore-zeega {
+  background-image: url(../img/tiny-stripes-dark.png);
+  position: fixed;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  height: 1em;
+  width: 550px;
+  text-align: center;
+  background-color: rgba(255, 69, 0, 0.5);
+  font-size: 3em;
+}
+.btnz.explore-zeega:hover {
+  color: white;
+  background-color: #ff4500;
 }
 .pause-overlay {
   color: white;
@@ -1519,4 +1443,105 @@ a:active {
   -moz-background-size: contain;
   -o-background-size: contain;
   background-size: contain;
+}
+.ZEEGA-tab {
+  background: red;
+  display: inline-block;
+  padding: 5px;
+  margin-left: 20px;
+  width: 30px;
+  height: 35px;
+  float: left;
+  margin-right: 20px;
+  border-radius: 0 0 2px 2px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+.ZEEGA-tab img {
+  margin-top: 2px;
+}
+.ZEEGA-tab:hover {
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  padding-top: 10px;
+}
+.profile-token {
+  border-radius: 28px;
+  height: 50px;
+  width: 50px;
+  overflow: hidden;
+  float: left;
+  border: 3px solid 
+    orangered;
+}
+.profile-token img {
+  width: 100%;
+}
+.ZEEGA-chrome-metablock {
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  border-top: 1px solid #222;
+}
+.ZEEGA-chrome-metablock .meta-inner {
+  padding: 10px 20px;
+}
+.ZEEGA-chrome-metablock .meta-inner:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.ZEEGA-chrome-metablock .left-col {
+  float: left;
+  margin-right: 10px;
+}
+.ZEEGA-chrome-metablock .left-col:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.ZEEGA-chrome-metablock .right-col {
+  float: left;
+  width: 400px;
+}
+.ZEEGA-chrome-metablock .right-col .username {
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+.ZEEGA-chrome-metablock .right-col .caption {
+  line-height: 1.1em;
+  font-size: 13px;
+}
+.ZEEGA-chrome-metablock .citations {
+  float: right;
+}
+.ZEEGA-chrome-metablock .citations li {
+  float: right;
+  margin-right: 5px;
+}
+.ZEEGA-notices {
+  position: absolute;
+  top: 70px;
+  left: 20px;
+  font-size: 13px;
+}
+.ZEEGA-notices li {
+  margin-bottom: 5px;
+}
+.ZEEGA-notices .rotating li {
+  opacity: 0;
+  position: absolute;
+  width: 200px;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+}
+.ZEEGA-notices .rotating li.active {
+  opacity: 1;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
 }

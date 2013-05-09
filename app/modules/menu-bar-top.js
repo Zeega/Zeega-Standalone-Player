@@ -14,6 +14,7 @@ function(app, Backbone) {
         
         visible: false,
         hover: false,
+        sticky: false,
 
         template: "menu-bar-top",
 
@@ -22,7 +23,6 @@ function(app, Backbone) {
 
         //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
-
             var tumblr_share,
                 tumblr_caption,
                 views;
@@ -31,13 +31,9 @@ function(app, Backbone) {
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http:" +
                             app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
-
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
                             "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
-
-
-
 
             views = app.views == 1 ? app.views + " view" : app.views + " views";
             
@@ -56,20 +52,30 @@ function(app, Backbone) {
 
         initialize: function() {
             this.model.on("data_loaded", this.render, this);
-            this.model.on("sequence_enter", this.onEnterSequence, this );
             this.model.on("pause", this.fadeIn, this );
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
         },
 
+        endPageEnter: function() {
+            this.sticky = true;
+            this.show();
 
-        onEnterSequence: function( info ) {
-            this.updateDescription( info );
+            this.renderExplore();
         },
 
-        updateDescription: function( info ) {
-            /* update the sequence title in the menu bar */
-            // var def = /Sequence ([0-9]*)/g.test(info.title);
-            // var seqTitle = def ? "" : " - "+ info.title;
-            // this.$(".sequence-description").text(seqTitle);
+        endPageExit: function() {
+            this.sticky = false;
+            this.fadeOut( 0 );
+            this.unrenderExplore();
+        },
+
+        renderExplore: function() {
+            $("#overlays").append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas!</a>");
+        },
+
+        unrenderExplore: function() {
+            $(".explore-zeega").remove();
         },
 
         events: {
@@ -92,6 +98,7 @@ function(app, Backbone) {
         },
 
         toggleFullscreen: function() {
+            console.log("toggle fullscreen")
             if ( app.state.get("fullscreen") ) {
                 this.leaveFullscreen();
             } else {
@@ -108,9 +115,7 @@ function(app, Backbone) {
             else if ( docElm.mozRequestFullScreen ) docElm.mozRequestFullScreen();
             else if ( docElm.webkitRequestFullScreen ) docElm.webkitRequestFullScreen();
 
-            this.$("#project-fullscreen-toggle i")
-                .removeClass("icon-resize-full")
-                .addClass("icon-resize-small");
+            this.$("#project-fullscreen-toggle").text("exit fullscreen");
         },
 
         leaveFullscreen : function() {
@@ -119,13 +124,11 @@ function(app, Backbone) {
             else if ( document.mozCancelFullScreen )    document.mozCancelFullScreen();
             else if ( document.webkitCancelFullScreen )   document.webkitCancelFullScreen();
 
-            this.$("#project-fullscreen-toggle i")
-                .addClass("icon-resize-full")
-                .removeClass("icon-resize-small");
+            this.$("#project-fullscreen-toggle").text("fullscreen");
         },
 
-         fadeOut: function( stay ) {
-            if( this.visible ) {
+        fadeOut: function( stay ) {
+            if( this.visible && this.sticky == false ) {
                 var fadeOutAfter = stay || 2000;
 
                 if ( this.timer ) {
@@ -143,10 +146,17 @@ function(app, Backbone) {
 
         fadeIn: function( stay ) {
             if( !this.visible ) {
-                this.visible = true;
-                this.$el.fadeIn();
+                this.show();
                 this.fadeOut( stay );
             }
+        },
+
+        show: function() {
+            this.visible = true;
+            if ( this.timer ) {
+                clearTimeout( this.timer );
+            }
+            this.$el.fadeIn();
         },
 
         onMouseenter: function() {

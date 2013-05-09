@@ -1,0 +1,112 @@
+.ZEEGA-tab {
+    background: red;
+    display: inline-block;
+    padding: 5px;
+    margin-left: 20px;
+    width: 30px;
+    height: 35px;
+    float: left;
+    margin-right: 20px;
+    border-radius: 0 0 2px 2px;
+    position: relative;
+    z-index: 2;
+    .transition( all, 0.5s );
+
+    img {
+        margin-top: 2px;
+    }
+
+    &:hover {
+        .transition( all, 0.5s );
+        padding-top: 10px;
+    }
+}
+
+.profile-token {
+    border-radius: 28px;
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+    float: left;
+    border: 3px solid 
+    orangered;
+
+    img {
+        width: 100%;
+    }
+}
+
+.ZEEGA-chrome-metablock {
+    color: white;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1;
+    border-top: 1px solid #222;
+    
+    .meta-inner {
+        padding: 10px 20px;
+        .clearfix;
+    }
+
+    .left-col {
+        .clearfix;
+        float:left;
+        margin-right: 10px
+    }
+
+    .right-col {
+        float: left;
+        width: 400px;
+
+        .username {
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+        .caption {
+            line-height: 1.1em;
+            font-size: 13px;
+        }
+    }
+
+    .citations {
+        float: right;
+        li {
+            float: right;
+            margin-right: 5px;
+        }
+    }
+}
+
+
+.ZEEGA-notices {
+
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    font-size: 13px;
+
+    li {
+        margin-bottom: 5px;
+    }
+
+    .sticky {
+
+    }
+
+    .rotating {
+        li {
+            opacity: 0;
+            position: absolute;
+            width: 200px;
+            .transition( opacity, 0.5s );
+
+            &.active {
+                opacity: 1;
+                .transition( opacity, 0.5s );
+            }
+        }
+    }
+    
+}

@@ -20,6 +20,8 @@ function( $, _, Backbone, State ) {
 
         parserPath: "app/zeega-parser2/",
 
+        metadata: $("meta[name=zeega]").data(),
+
         // the path of the zeega api
         // only required for dynamically loaded zeegas
         api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",

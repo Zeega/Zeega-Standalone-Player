@@ -1,10 +1,11 @@
 define([
     "app",
     // Libs
-    "backbone"
+    "backbone",
+    "spin"
 ],
 
-function( app, Backbone ) {
+function( app, Backbone, Spinner ) {
 
     // Create a new module
     var Loader = {};
@@ -16,6 +17,7 @@ function( app, Backbone ) {
         /* variables keeping track of generic layer states */
         layerCount : 0,
         layersReady : 0,
+        spinner: null,
 
         className: "ZEEGA-loader-overlay",
         template: "loader",
@@ -27,30 +29,33 @@ function( app, Backbone ) {
 
         serialize: function() {
             if ( this.model.project ) {
-                return this.model.project.toJSON();
+                return _.extend({},
+                    app.metadata,
+                    this.model.project.toJSON()
+                );
             }
         },
 
         afterRender: function() {
-
-            // investigate the ui for this
-            /*
-            var coverImage;
-
-            coverImage = this.model.data.get("cover_image");
-            if( !_.isNull( coverImage ) && coverImage != "../../../images/default_cover.png" ) {
-                this.$(".ZEEGA-loader-bg").css({
-                    "background": "url('" + coverImage +"')",
-                    "background-position": "50% 50%",
-                    "background-repeat": "no-repeat no-repeat",
-                    "background-attachment": "fixed",
-                    "-webkit-background-size": "cover",
-                    "-moz-background-size": "cover",
-                    "-o-background-size": "cover",
-                    "background-size": "cover"
-                });
-            }
-            */
+            var opts = {
+              lines: 13, // The number of lines to draw
+              length: 10, // The length of each line
+              width: 4, // The line thickness
+              radius: 30, // The radius of the inner circle
+              corners: 1, // Corner roundness (0..1)
+              rotate: 0, // The rotation offset
+              direction: 1, // 1: clockwise, -1: counterclockwise
+              color: '#FFF', // #rgb or #rrggbb
+              speed: 1, // Rounds per second
+              trail: 60, // Afterglow percentage
+              shadow: false, // Whether to render a shadow
+              hwaccel: false, // Whether to use hardware acceleration
+              className: 'spinner', // The CSS class to assign to the spinner
+              zIndex: 2e9, // The z-index (defaults to 2000000000)
+              top: 'auto', // Top position relative to parent in px
+              left: 'auto' // Left position relative to parent in px
+            };
+            this.spinner = new Spinner(opts).spin( this.$el[0] );
         },
 
         onLayerLoading: function( layer ) {
@@ -68,16 +73,15 @@ function( app, Backbone ) {
         onLayerReady: function(layer) {
             this.layersReady++;
 
-            this.$("[data-id='" + layer.id + "']").addClass('loaded');
-
-            this.$(".ZEEGA-loading-bar").stop().animate({
-                width: (this.layersReady/this.layerCount*100) +"%"
-            });
             if (this.layersReady == this.layerCount) {
-                _.delay(function(){
-                    this.onCanPlay();
-                }.bind( this ), this.DELAY );
+                this.$(".click-to-start").addClass("active");
+                this.spinner.stop();
+                this.$(".arrow-right").removeClass("disabled");
             }
+        },
+
+        events: {
+            "click .arrow-right": "onCanPlay"
         },
 
         onCanPlay: _.once(function() {

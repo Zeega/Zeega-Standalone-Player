@@ -17,7 +17,8 @@ require.config({
 
         zeega: "../assets/js/zeega",
 
-        zeegaplayer: "../assets/vendor/zeegaplayer/dist/debug/zeega"
+        zeegaplayer: "../assets/vendor/zeegaplayer/dist/debug/zeega",
+        spin: "../assets/js/libs/spin"
     },
 
     shim: {

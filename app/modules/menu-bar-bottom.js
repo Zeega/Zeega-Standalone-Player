@@ -13,7 +13,8 @@ function(app, Backbone) {
     Citations.View = Backbone.View.extend({
         
         timer: null,
-        visible: false,
+        visible: true,
+        sticky: false,
         hover: false,
         playing: false,
 
@@ -23,17 +24,32 @@ function(app, Backbone) {
 
         serialize: function() {
             if ( this.model.project ) {
-                return this.model.project.toJSON();
+                return _.extend({},
+                    app.metadata,
+                    this.model.project.toJSON()
+                );
             }
         },
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.updateCitations, this);
+            this.model.on("frame_play", this.onFramePlay, this );
             this.model.on("data_loaded", this.render, this);
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );
-            this.model.on("frame_play", this.onFramePlay, this );
+
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
+        },
+
+        endPageEnter: function() {
+            this.sticky = true;
+            this.show();
+        },
+
+        endPageExit: function() {
+            this.sticky = false;
+            this.fadeOut( 0 );
         },
 
         onPlay: function() {
@@ -46,6 +62,11 @@ function(app, Backbone) {
         },
 
         onFramePlay: function( info ){
+            this.showHomeButton();
+            this.updateCitations( info );
+        },
+
+        showHomeButton: function() {
             if( this.model.status.get("frameHistory").length > 1 ){
                 this.$("#project-home").fadeIn( 100 );
             } else {
@@ -54,22 +75,18 @@ function(app, Backbone) {
         },
 
         updateCitations: function( info ) {
-            var layersToCite = _.map( info.layers, function( layer ){
-                // if( layer.attr.citation && layer.attr.archive ) return layer;
-
-                // this is janky . fix!
-                if( _.contains(["Audio", "Image", "Video"], layer.type ) && layer.attr.archive && layer.attr.archive != "Absolute" ) {
-               
-                    return layer;
-                }
-                return false;
+            var layersToCite = _.filter( info.layers, function( layer ) {
+                return _.contains(["Audio", "Image", "Video"], layer.type )
             });
 
-            this.$(".ZEEGA-citations-primary").empty();
-            _.each( _.compact( layersToCite ), function(layer){
-                var citation = new CitationView({ model: new Backbone.Model(layer) });
+            this.$(".citations ul").empty();
+            _.each( layersToCite, function(layer){
+                var citation = new CitationView({
+                    parent: this,
+                    model: new Backbone.Model(layer)
+                });
 
-                this.$(".ZEEGA-citations-primary").append(citation.el);
+                this.$(".citations ul").append(citation.el);
                 citation.render();
             }.bind( this ));
         },
@@ -82,7 +99,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function( stay ) {
-            if( this.visible ) {
+            if( this.visible && this.sticky == false ) {
                 var fadeOutAfter = stay || 2000;
 
                 if ( this.timer ) {
@@ -100,10 +117,17 @@ function(app, Backbone) {
 
         fadeIn: function( stay ) {
             if( !this.visible ) {
-                this.visible = true;
-                this.$el.fadeIn();
+                this.show();
                 this.fadeOut( stay );
             }
+        },
+
+        show: function() {
+            this.visible = true;
+            if ( this.timer ) {
+                clearTimeout( this.timer );
+            }
+            this.$el.fadeIn();
         },
 
         onMouseenter: function() {
@@ -138,15 +162,39 @@ function(app, Backbone) {
         template: "citation",
 
         serialize: function() {
-            return this.model.toJSON();
+            var iconType;
+
+            switch( this.model.get("type") ) {
+                case "Image":
+                    iconType = "picture";
+                    break;
+                case "Audio":
+                    iconType = "film";
+                    break;
+                case "Video":
+                    iconType = "volume-up";
+                    break;
+            }
+
+            return _.extend(
+                { iconType: iconType },
+                this.model.toJSON()
+            );
         },
 
         events: {
-            "hover": "onHover"
+            "mouseenter": "onMouseEnter",
+            "mouseleave": "onMouseLeave"
         },
 
-        onHover: function() {
-            this.$("i").toggleClass("loaded");
+        onMouseEnter: function() {
+            var title = this.model.get("attr").title != "" ? this.model.get("attr").title : "[untitled]";
+
+            this.options.parent.$(".citation-title").text( title );
+        },
+
+        onMouseLeave: function() {
+            this.options.parent.$(".citation-title").empty();;
         }
   
     });

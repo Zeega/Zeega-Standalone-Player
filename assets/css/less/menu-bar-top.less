@@ -1,94 +1,73 @@
 .ZEEGA-player-menu-bar {
+    pointer-events:auto;
+    position: absolute;
+    width: 100%;
+    z-index: 11;
 
-	background: rgba(0,0,0,0.5);
-	display: none;
-	pointer-events:auto;
-	position: absolute;
-	width: 100%;
-	z-index: 11;
+    a {
+        cursor: pointer;
+    }
 
-	.ZEEGA-standalone-logo {
-		background: url("../img/zeega-logo-header.png");
-		height: 11px;
-		margin: 5px;
-		width: 62px;
-		display: inline-block;
-	}
+    .menu-right {
+        float: right;
+        margin-top: 12px;
+        margin-right: 10px;
 
-	.menu-bar-left {
-		float:left;
-	}
+        a {
+            display: inline-block;
+            margin-top: 0;
+            float: left;
+            margin-right: 10px;
+        }
+    }
 
-	.menu-bar-right {
-		float:right;
+    .social-share-icon {
+        opacity: 0.8;
+        .transition( opacity, 0.5s );
+        &:hover {
+            opacity: 1;
+            .transition( opacity, 0.5s );
+        }
+    }
+}
 
+.btnz {
+    background-color: rgba(255,255,255,0.3);
+    .transition( background-color, 0.5s );
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 2px;
+    background-image: url(../img/tiny-stripes.png);
+    margin-top: 12px;
+    position: relative;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+    font-family: "futura", sans-serif;
+    font-size: 13px;
 
-		.project-views {
-			color: white;
-			padding: 10px 0 0 0;
-			opacity: 0.5;
-		}
-	}
+    &:hover {
+        background-color: rgba(255,255,255,0.75);
+        .transition( background-color, 0.5s );
+        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+    }
+}
 
-	.ZEEGA-menu-bar {
+.btnz.explore-zeega {
+    background-image: url(../img/tiny-stripes-dark.png);
+    position: fixed;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    height: 1em;
+    width: 550px;
+    text-align: center;
+    background-color: rgba(255,69,0, 0.5);
+    font-size: 3em;
 
-		.menu-bar-title {
-			padding: 8px;
-			color: white;
-
-			.project-title {
-				cursor: pointer;
-				padding-right: 5px;
-			}
-
-			.username{
-				opacity: 0.5;
-			}
-		}
-
-		.profile-thumb{
-			width: 20px;
-			height: 20px;
-		}
-
-		.sequence-description {
-			opacity: 0.5;
-		}
-
-		.sequence-author {
-			color:grey;
-		}
-
-		&>li {
-			float:left;
-
-			border-right: 1px solid rgba(0,0,0,0.5);
-			&:last-child {
-				border-right:none;
-			}
-
-			&.slide-menu {
-				display:none;
-				a {
-					float: left;
-				}
-			}
-
-			&>a {
-				padding: 10px;
-				display: block;
-
-				&:hover {
-					// background: rgba(0,0,0,0.1);
-				}
-			}
-
-		}
-	}
-
-	&:after {
-		content: "";
-		display: table;
-		clear: both;
-	}
+    &:hover {
+        color: white;
+        background-color: rgba(255,69,0, 1);
+    }
 }

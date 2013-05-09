@@ -1,12 +1,3 @@
-<i class="zitem-<%= attr.archive.toLowerCase() %> zitem-30"></i>
-<div class="player-citation-bubble clearfix">
-  <div class="player-citation-content">
-    <h3><%= attr.title %></h3>
-    <div class="creator">
-      Author: <%= attr.media_creator_realname %>
-    </div>
-    <div class="trackback">
-      <a href="<%= attr.attribution_uri %>" target="blank">view original</a>
-    </div>
-  </div>
-</div>
+<a href="<%= attr.attribution_uri %>" target="blank">
+    <i class="icon-<%= iconType %> icon-white"></i>
+</a>

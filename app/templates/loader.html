@@ -1,9 +1,24 @@
-<div class="ZEEGA-loader-inner">
-    <h1><%= title %></h1>
-    <h2>by <%= authors %></h2>
-    <div class="ZEEGA-loading-bar-wrapper">
-        <div class="ZEEGA-loading-bar"></div>
-    </div>
-    <ul class="ZEEGA-loading-layers"></ul>
+<div class="ZEEGA-notices">
+    <ul class="sticky">
+        <li><i class="icon-headphones icon-white"></i> turn up volume</li>
+    </ul>
+    <ul class="rotating">
+        <li class="click-to-start">click arrow to start</li>
+    </ul>
 </div>
-<span class="ZEEGA-loader-bg"></span>
+
+<a href="#" class="ZEEGA-next controls-arrow arrow-right disabled"></a>
+
+<div class="ZEEGA-loader-bg-overlay"></div>
+<div class="ZEEGA-loader-bg"
+    style="
+        background: url(<%= cover_image %>);
+        background-position: 50% 50%;
+        background-repeat: no-repeat no-repeat;
+        background-attachment: fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    "
+></div>

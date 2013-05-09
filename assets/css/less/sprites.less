@@ -48,17 +48,16 @@
 
 [class^="zsocial-"] {
   
-  background-image: url('@{image-folder}/social-sprites-20px.png');
+  background-image: url('@{image-folder}/social-sprites-33px.png');
   background-position: 0px 0px;
   background-repeat: no-repeat;
   display: inline-block;
-  height: 17px;
-  vertical-align: text-top;
-  width: 17px;  
+  height: 33px;
+  width: 33px;  
 }
 
 .zsocial-mixin(@position) {
-  background-position: (0px)  (@position*-17px);
+  background-position: (@position*-33px) (0px);
 }
 .zsocial-twitter        { .zsocial-mixin(0) }
 .zsocial-facebook       { .zsocial-mixin(1) }
