@@ -70,6 +70,21 @@
             font-size: 11px;
             position: absolute;
             bottom: 10px;
+
+            .zeega-views {
+                opacity: 0.75;
+                .transition( opacity, 0.5s );
+
+                i {
+                    position: relative;
+                    top: -2px;
+                }
+
+                &:hover {
+                    opacity: 1;
+                    .transition( opacity, 0.5s );
+                }
+            }
         }
         .caption {
             line-height: 1.1em;
@@ -92,10 +107,17 @@
     position: absolute;
     top: 70px;
     left: 20px;
-    font-size: 13px;
+    font-size: 20px;
+    font-weight: 100;
+    font-family: "Futura", sans-serif;
 
     li {
         margin-bottom: 5px;
+    }
+
+    i {
+        top: 5px;
+        position: relative;
     }
 
     .sticky {

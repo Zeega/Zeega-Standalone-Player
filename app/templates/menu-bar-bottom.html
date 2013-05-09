@@ -2,22 +2,31 @@
     <div class="meta-inner">
         <div class="left-col">
             <a href="http://zeega.com/user/<%= userId %>" target="blank">
-                <div class="profile-token"><img src="<%= userThumbnail %>"/></div>
+                <div class="profile-token"
+                    style="
+                        background-image: url(<%= userThumbnail %>);
+                        background-size: cover;
+                    "
+
+                ><!--<img src="<%= userThumbnail %>"/>--></div>
             </a>
         </div>
         <div class="right-col">
-            <div class="caption"><%= description %></div>
+            <div class="caption"><%= description %>And their words to the root and the rock would echo down, down and the magic would hear and answer, faint as a falling butterfly.</div>
             <div class="username">
-                <a href="http://zeega.com/user/<%= userId %>" target="blank">
-                    <div class="profile-name"><%= authors %></div>
+                <a class="profile-name" href="http://zeega.com/user/<%= userId %>" data-bypass="true">
+                    <%= authors %>
                 </a>
+                <span class="zeega-views"> <i class="icon-play icon-white"></i> <%= views %></span>
             </div>
         </div>
+
         <div class="citations">
             <ul></ul>
             <div class="citation-meta">
                 <div class="citation-title"></div>
             </div>
         </div>
+        <a href="#" class="ZEEGA-home"><img src="assets/img/restart.png"/></a>
     </div>
 </div>

@@ -23,7 +23,7 @@ return __p;
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n    </ul>\n    <ul class="rotating">\n        <li class="click-to-start">click arrow to start</li>\n    </ul>\n</div>\n\n<a href="#" class="ZEEGA-next controls-arrow arrow-right disabled"></a>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
+__p+='<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n        <li>click arrows and hotspots to explore</li>\n    </ul>\n    <ul class="rotating">\n    </ul>\n</div>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
 ( cover_image )+
 ');\n        background-position: 50% 50%;\n        background-repeat: no-repeat no-repeat;\n        background-attachment: fixed;\n        -webkit-background-size: cover;\n        -moz-background-size: cover;\n        -o-background-size: cover;\n        background-size: cover;\n    "\n></div>\n';
 }
@@ -35,15 +35,19 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="http://zeega.com/user/'+
 ( userId )+
-'" target="blank">\n                <div class="profile-token"><img src="'+
+'" target="blank">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
 ( userThumbnail )+
-'"/></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
+');\n                        background-size: cover;\n                    "\n\n                ><!--<img src="'+
+( userThumbnail )+
+'"/>--></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( description )+
-'</div>\n            <div class="username">\n                <a href="http://zeega.com/user/'+
+'And their words to the root and the rock would echo down, down and the magic would hear and answer, faint as a falling butterfly.</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
 ( userId )+
-'" target="blank">\n                    <div class="profile-name">'+
+'" data-bypass="true">\n                    '+
 ( authors )+
-'</div>\n                </a>\n            </div>\n        </div>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n    </div>\n</div>';
+'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> '+
+( views )+
+'</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"><img src="assets/img/restart.png"/></a>\n    </div>\n</div>';
 }
 return __p;
 };

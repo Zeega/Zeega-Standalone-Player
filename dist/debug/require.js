@@ -361,7 +361,7 @@ return __p;
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n    </ul>\n    <ul class="rotating">\n        <li class="click-to-start">click arrow to start</li>\n    </ul>\n</div>\n\n<a href="#" class="ZEEGA-next controls-arrow arrow-right disabled"></a>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
+__p+='<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n        <li>click arrows and hotspots to explore</li>\n    </ul>\n    <ul class="rotating">\n    </ul>\n</div>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
 ( cover_image )+
 ');\n        background-position: 50% 50%;\n        background-repeat: no-repeat no-repeat;\n        background-attachment: fixed;\n        -webkit-background-size: cover;\n        -moz-background-size: cover;\n        -o-background-size: cover;\n        background-size: cover;\n    "\n></div>\n';
 }
@@ -373,15 +373,19 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="http://zeega.com/user/'+
 ( userId )+
-'" target="blank">\n                <div class="profile-token"><img src="'+
+'" target="blank">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
 ( userThumbnail )+
-'"/></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
+');\n                        background-size: cover;\n                    "\n\n                ><!--<img src="'+
+( userThumbnail )+
+'"/>--></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( description )+
-'</div>\n            <div class="username">\n                <a href="http://zeega.com/user/'+
+'And their words to the root and the rock would echo down, down and the magic would hear and answer, faint as a falling butterfly.</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
 ( userId )+
-'" target="blank">\n                    <div class="profile-name">'+
+'" data-bypass="true">\n                    '+
 ( authors )+
-'</div>\n                </a>\n            </div>\n        </div>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n    </div>\n</div>';
+'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> '+
+( views )+
+'</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"><img src="assets/img/restart.png"/></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -54685,7 +54689,9 @@ function( app, Backbone, Spinner ) {
     // This will fetch the tutorial template and render it.
     Loader.View = Backbone.View.extend({
 
-        DELAY: 2000,
+        MIN_LOAD_TIME: 3000,
+        loadTimer: null,
+        isReady: false,
         /* variables keeping track of generic layer states */
         layerCount : 0,
         layersReady : 0,
@@ -54710,24 +54716,30 @@ function( app, Backbone, Spinner ) {
 
         afterRender: function() {
             var opts = {
-              lines: 13, // The number of lines to draw
-              length: 10, // The length of each line
-              width: 4, // The line thickness
-              radius: 30, // The radius of the inner circle
-              corners: 1, // Corner roundness (0..1)
-              rotate: 0, // The rotation offset
-              direction: 1, // 1: clockwise, -1: counterclockwise
-              color: '#FFF', // #rgb or #rrggbb
-              speed: 1, // Rounds per second
-              trail: 60, // Afterglow percentage
-              shadow: false, // Whether to render a shadow
-              hwaccel: false, // Whether to use hardware acceleration
-              className: 'spinner', // The CSS class to assign to the spinner
-              zIndex: 2e9, // The z-index (defaults to 2000000000)
-              top: 'auto', // Top position relative to parent in px
-              left: 'auto' // Left position relative to parent in px
+                lines: 13, // The number of lines to draw
+                length: 10, // The length of each line
+                width: 4, // The line thickness
+                radius: 30, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 0, // The rotation offset
+                direction: 1, // 1: clockwise, -1: counterclockwise
+                color: '#FFF', // #rgb or #rrggbb
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false, // Whether to use hardware acceleration
+                className: 'spinner', // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: 'auto', // Top position relative to parent in px
+                left: 'auto' // Left position relative to parent in px
             };
             this.spinner = new Spinner(opts).spin( this.$el[0] );
+
+            this.loadTimer = setTimeout(function() {
+                clearTimeout( this.loadTimer );
+                this.loadTimer = "done";
+                this.onCanPlay();
+            }.bind( this ), this.MIN_LOAD_TIME );
         },
 
         onLayerLoading: function( layer ) {
@@ -54746,25 +54758,23 @@ function( app, Backbone, Spinner ) {
             this.layersReady++;
 
             if (this.layersReady == this.layerCount) {
-                this.$(".click-to-start").addClass("active");
-                this.spinner.stop();
-                this.$(".arrow-right").removeClass("disabled");
+                this.isReady =  true;
+                this.onCanPlay();
             }
         },
 
-        events: {
-            "click .arrow-right": "onCanPlay"
-        },
-
-        onCanPlay: _.once(function() {
-            this.$el.fadeOut(function() {
-                this.remove();
-            }.bind( this ));
-            app.layout.hasPlayed = true;
-            app.layout.showMenubar();
-            app.layout.showCitationbar();
-            this.model.play();
-        })
+        onCanPlay: function() {
+            if ( this.loadTimer == "done" && this.isReady ) {
+                this.spinner.stop();
+                this.$el.fadeOut(function() {
+                    this.remove();
+                }.bind( this ));
+                app.layout.hasPlayed = true;
+                app.layout.showMenubar();
+                app.layout.showCitationbar();
+                this.model.play();
+            }
+        }
 
   });
 
@@ -54884,11 +54894,15 @@ function(app, Backbone) {
 
         endPageEnter: function() {
             this.sticky = true;
+            this.$(".citations").hide();
+            this.$(".ZEEGA-home").show();
             this.show();
         },
 
         endPageExit: function() {
             this.sticky = false;
+            this.$(".ZEEGA-home").hide();
+            this.$(".citations").show();
             this.fadeOut( 0 );
         },
 
@@ -54935,7 +54949,7 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click #project-home": "home"
+            "click .ZEEGA-home": "home"
         },
 
         fadeOut: function( stay ) {
@@ -55113,8 +55127,9 @@ function(app, Backbone) {
             this.unrenderExplore();
         },
 
-        renderExplore: function() {
-            $("#overlays").append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
+        renderExplore: function() {            
+            $("#overlays")
+                .append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
         },
 
         unrenderExplore: function() {
@@ -55122,22 +55137,10 @@ function(app, Backbone) {
         },
 
         events: {
-            "click #project-share": "share",
-            "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click .project-title": "home"
-        },
-
-        share: function() {
-            this.model.pause();
-            this.$(".slide-menu").toggle();
-            return false;
-        },
-
-        credits: function() {
-            return false;
         },
 
         toggleFullscreen: function() {
@@ -55212,6 +55215,7 @@ function(app, Backbone) {
         },
 
         home: function() {
+            console.log("GO HOME")
             this.model.cueFrame( this.model.get("startFrame") );
             
             return false;

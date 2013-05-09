@@ -44,11 +44,15 @@ function(app, Backbone) {
 
         endPageEnter: function() {
             this.sticky = true;
+            this.$(".citations").hide();
+            this.$(".ZEEGA-home").show();
             this.show();
         },
 
         endPageExit: function() {
             this.sticky = false;
+            this.$(".ZEEGA-home").hide();
+            this.$(".citations").show();
             this.fadeOut( 0 );
         },
 
@@ -95,7 +99,7 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click #project-home": "home"
+            "click .ZEEGA-home": "home"
         },
 
         fadeOut: function( stay ) {

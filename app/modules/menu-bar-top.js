@@ -70,8 +70,9 @@ function(app, Backbone) {
             this.unrenderExplore();
         },
 
-        renderExplore: function() {
-            $("#overlays").append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
+        renderExplore: function() {            
+            $("#overlays")
+                .append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
         },
 
         unrenderExplore: function() {
@@ -79,22 +80,10 @@ function(app, Backbone) {
         },
 
         events: {
-            "click #project-share": "share",
-            "click #project-credits": "credits",
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click .project-title": "home"
-        },
-
-        share: function() {
-            this.model.pause();
-            this.$(".slide-menu").toggle();
-            return false;
-        },
-
-        credits: function() {
-            return false;
         },
 
         toggleFullscreen: function() {
@@ -169,6 +158,7 @@ function(app, Backbone) {
         },
 
         home: function() {
+            console.log("GO HOME")
             this.model.cueFrame( this.model.get("startFrame") );
             
             return false;
