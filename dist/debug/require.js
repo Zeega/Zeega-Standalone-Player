@@ -55114,7 +55114,7 @@ function(app, Backbone) {
         },
 
         renderExplore: function() {
-            $("#overlays").append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas!</a>");
+            $("#overlays").append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
         },
 
         unrenderExplore: function() {
