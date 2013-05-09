@@ -51,7 +51,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="http://www.zeega.com">\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a herf="#" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
+__p+='<a href="http://www.zeega.com">\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a herf="http://zeega.com/register/" data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
 '&url=http://www.zeega.com/'+
 ( item_id )+
