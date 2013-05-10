@@ -56,9 +56,14 @@ function(app, Backbone) {
         },
 
         updateCitations: function( info ) {
-            var layersToCite = _.filter( info.layers, function( layer ) {
-                return _.contains(["Audio", "Image", "Video"], layer.type )
-            });
+            var soundtrack = this.model.getSoundtrack(),
+                layersToCite = _.filter( info.layers, function( layer ) {
+                    return _.contains(["Audio", "Image", "Video"], layer.type );
+                });
+
+            if ( soundtrack ) {
+                layersToCite.unshift( soundtrack.toJSON() );
+            }
 
             this.$(".citations ul").empty();
             _.each( layersToCite, function(layer){
@@ -70,6 +75,8 @@ function(app, Backbone) {
                 this.$(".citations ul").append(citation.el);
                 citation.render();
             }.bind( this ));
+
+
         },
 
         events: {
@@ -80,7 +87,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function( stay ) {
-            if( this.visible && this.sticky == false ) {
+            if( this.visible && this.sticky === false ) {
                 var fadeOutAfter = stay || 2000;
 
                 if ( this.timer ) {
@@ -149,10 +156,10 @@ function(app, Backbone) {
                 case "Image":
                     iconType = "picture";
                     break;
-                case "Audio":
+                case "Video":
                     iconType = "film";
                     break;
-                case "Video":
+                case "Audio":
                     iconType = "volume-up";
                     break;
             }
@@ -169,13 +176,13 @@ function(app, Backbone) {
         },
 
         onMouseEnter: function() {
-            var title = this.model.get("attr").title != "" ? this.model.get("attr").title : "[untitled]";
+            var title = this.model.get("attr").title !== "" ? this.model.get("attr").title : "[untitled]";
 
             this.options.parent.$(".citation-title").text( title );
         },
 
         onMouseLeave: function() {
-            this.options.parent.$(".citation-title").empty();;
+            this.options.parent.$(".citation-title").empty();
         }
   
     });

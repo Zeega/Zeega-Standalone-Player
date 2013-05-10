@@ -373,11 +373,9 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="http://zeega.com/user/'+
 ( userId )+
-'" target="blank">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
+'" target="blank" data-bypass="true">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
 ( userThumbnail )+
-');\n                        background-size: cover;\n                    "\n\n                ><!--<img src="'+
-( userThumbnail )+
-'"/>--></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
+');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
 '</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
 ( userId )+
@@ -387,7 +385,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  if ( !_.isNumber( views ) ) { views = 0 ;} 
 ;__p+=' '+
 ( views )+
-'</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+' views</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -35327,7 +35325,7 @@ function( app, _Layer, Visual, TextModal ) {
                 .css( css )
                 .text( this.model.getAttr("content") );
 
-            this.$el.css( css );
+            // this.$el.css( css );
         },
 
         afterEditorRender: function() {
@@ -35578,15 +35576,6 @@ function( app, Layer, Visual ){
             "width",
             "opacity"
         ],
-
-        // serialize: function() {
-
-        //     return _.extend({},
-        //         this.model.toJSON(),
-        //         app.status.get("project").project.toJSON(),
-        //         app.metadata
-        //     );
-        // },
 
         onPlay: function() {
             app.status.emit("endpage_enter");
@@ -35880,18 +35869,23 @@ function( app, Backbone, Layers, ThumbWorker ) {
         },
 
         onLayerAddRemove: function() {
-            this.updateThumb();
             this.onLayerSort();
+            this.once("sync", function() {
+                this.updateThumb();
+            }.bind( this ));
         },
 
         onLayerSort: function() {
             this.set("layers", this.layers.pluck("id") );
             this.lazySave();
-            this.updateThumb();
+            this.once("sync", function() {
+                this.updateThumb();
+            }.bind( this ));
         },
 
         addLayerType: function( type ) {
             var newLayer = new Layers[ type ]({ type: type });
+
             newLayer.order[ this.id ] = this.layers.length;
             newLayer.save().success(function( response ) {
                 this.layers.add( newLayer );
@@ -36584,7 +36578,7 @@ function( app, SequenceCollection ) {
                     layers = layers.concat( [ sequence.soundtrackModel.toJSON() ] );
                 }
             });
-console.log("layers", layers, this.sequences.toJSON())
+
             return _.extend({}, this.toJSON(), {
                 sequences: this.sequences.toJSON(),
                 frames: frames,
@@ -38305,6 +38299,10 @@ function( app, ZeegaParser, Relay, Status, PlayerLayout ) {
             return this.project.getProjectJSON();
         },
 
+        getSoundtrack: function() {
+            return app.soundtrack;
+        },
+
         getFrameData: function() {
             if ( this.status.get("current_frame") ) {
                 return _.extend({},
@@ -38313,12 +38311,6 @@ function( app, ZeegaParser, Relay, Status, PlayerLayout ) {
                 );
             }
 
-            return false;
-        },
-
-        // TODO
-        // returns the frame structure for the project
-        getProjectTree: function() {
             return false;
         },
 
@@ -54740,7 +54732,9 @@ function( app, Backbone, Spinner ) {
             this.loadTimer = setTimeout(function() {
                 clearTimeout( this.loadTimer );
                 this.loadTimer = "done";
-                this.onCanPlay();
+                if ( this.loadTimer == "done" && this.isReady ) {
+                    this.onCanPlay();
+                }
             }.bind( this ), this.MIN_LOAD_TIME );
         },
 
@@ -54761,22 +54755,21 @@ function( app, Backbone, Spinner ) {
 
             if (this.layersReady == this.layerCount) {
                 this.isReady =  true;
-                this.onCanPlay();
+                if ( this.loadTimer == "done" && this.isReady ) {
+                    this.onCanPlay();
+                }
             }
         },
 
-        onCanPlay: function() {
-            if ( this.loadTimer == "done" && this.isReady ) {
-                this.spinner.stop();
-                this.$el.fadeOut(function() {
-                    this.remove();
-                }.bind( this ));
-                app.layout.hasPlayed = true;
-                app.layout.showMenubar();
-                app.layout.showCitationbar();
-                this.model.play();
-            }
-        }
+        onCanPlay: _.once(function() {
+            
+            this.spinner.stop();
+            this.$el.fadeOut(function() {
+                this.remove();
+            }.bind( this ));
+            app.layout.hasPlayed = true;
+            this.model.play();
+        })
 
   });
 
@@ -54885,10 +54878,9 @@ function(app, Backbone) {
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.onFramePlay, this );
+            this.model.on("frame_play", this.updateCitations, this );
             this.model.on("data_loaded", this.render, this);
-            this.model.on("play", this.onPlay, this );
-            this.model.on("pause", this.onPause, this );
+            this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
@@ -54908,32 +54900,15 @@ function(app, Backbone) {
             this.fadeOut( 0 );
         },
 
-        onPlay: function() {
-            this.$("#project-play-pause i").addClass("pause-zcon").removeClass("play-zcon");
-        },
-
-        onPause: function() {
-            this.$("#project-play-pause i").addClass("play-zcon").removeClass("pause-zcon");
-            this.fadeIn();
-        },
-
-        onFramePlay: function( info ){
-            this.showHomeButton();
-            this.updateCitations( info );
-        },
-
-        showHomeButton: function() {
-            if( this.model.status.get("frameHistory").length > 1 ){
-                this.$("#project-home").fadeIn( 100 );
-            } else {
-                this.$("#project-home").fadeOut( 100 );
-            }
-        },
-
         updateCitations: function( info ) {
-            var layersToCite = _.filter( info.layers, function( layer ) {
-                return _.contains(["Audio", "Image", "Video"], layer.type )
-            });
+            var soundtrack = this.model.getSoundtrack(),
+                layersToCite = _.filter( info.layers, function( layer ) {
+                    return _.contains(["Audio", "Image", "Video"], layer.type );
+                });
+
+            if ( soundtrack ) {
+                layersToCite.unshift( soundtrack.toJSON() );
+            }
 
             this.$(".citations ul").empty();
             _.each( layersToCite, function(layer){
@@ -54945,6 +54920,8 @@ function(app, Backbone) {
                 this.$(".citations ul").append(citation.el);
                 citation.render();
             }.bind( this ));
+
+
         },
 
         events: {
@@ -54955,7 +54932,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function( stay ) {
-            if( this.visible && this.sticky == false ) {
+            if( this.visible && this.sticky === false ) {
                 var fadeOutAfter = stay || 2000;
 
                 if ( this.timer ) {
@@ -55024,10 +55001,10 @@ function(app, Backbone) {
                 case "Image":
                     iconType = "picture";
                     break;
-                case "Audio":
+                case "Video":
                     iconType = "film";
                     break;
-                case "Video":
+                case "Audio":
                     iconType = "volume-up";
                     break;
             }
@@ -55044,13 +55021,13 @@ function(app, Backbone) {
         },
 
         onMouseEnter: function() {
-            var title = this.model.get("attr").title != "" ? this.model.get("attr").title : "[untitled]";
+            var title = this.model.get("attr").title !== "" ? this.model.get("attr").title : "[untitled]";
 
             this.options.parent.$(".citation-title").text( title );
         },
 
         onMouseLeave: function() {
-            this.options.parent.$(".citation-title").empty();;
+            this.options.parent.$(".citation-title").empty();
         }
   
     });
@@ -55071,7 +55048,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
-        visible: false,
+        visible: true,
         hover: false,
         sticky: false,
 
@@ -55146,7 +55123,6 @@ function(app, Backbone) {
         },
 
         toggleFullscreen: function() {
-            console.log("toggle fullscreen")
             if ( app.state.get("fullscreen") ) {
                 this.leaveFullscreen();
             } else {
@@ -55176,7 +55152,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function( stay ) {
-            if( this.visible && this.sticky == false ) {
+            if( this.visible && this.sticky === false ) {
                 var fadeOutAfter = stay || 2000;
 
                 if ( this.timer ) {
@@ -55217,7 +55193,6 @@ function(app, Backbone) {
         },
 
         home: function() {
-            console.log("GO HOME")
             this.model.cueFrame( this.model.get("startFrame") );
             
             return false;
@@ -55344,6 +55319,11 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
                     this.showCitationbar();
                 }
             }
+        },
+
+        fadeOutChrome: function() {
+            this.menuBar.fadeOut();
+            this.citations.fadeOut();
         },
 
         showMenubar: _.debounce(function() {

@@ -87,7 +87,6 @@ function(app, Backbone) {
         },
 
         toggleFullscreen: function() {
-            console.log("toggle fullscreen")
             if ( app.state.get("fullscreen") ) {
                 this.leaveFullscreen();
             } else {
@@ -117,7 +116,7 @@ function(app, Backbone) {
         },
 
         fadeOut: function( stay ) {
-            if( this.visible && this.sticky == false ) {
+            if( this.visible && this.sticky === false ) {
                 var fadeOutAfter = stay || 2000;
 
                 if ( this.timer ) {
@@ -158,7 +157,6 @@ function(app, Backbone) {
         },
 
         home: function() {
-            console.log("GO HOME")
             this.model.cueFrame( this.model.get("startFrame") );
             
             return false;

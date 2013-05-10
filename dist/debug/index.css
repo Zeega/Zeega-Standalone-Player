@@ -2236,6 +2236,10 @@ a:active {
   clear: both;
   margin-top: 5px;
 }
+.ZEEGA-player-citations .citation-meta .citation-title {
+  position: relative;
+  top: 10px;
+}
 .ZEEGA-player-citations .ZEEGA-home {
   position: relative;
   background-image: url(../img/restart.png);
@@ -2310,7 +2314,7 @@ a:active {
   -webkit-transition: opacity 0.5s;
 }
 .btnz {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   transition: background-color 0.5s;
   -webkit-transition: background-color 0.5s;
   display: inline-block;
@@ -2322,8 +2326,10 @@ a:active {
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
   font-family: "futura", sans-serif;
   font-size: 13px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75), 0px -1px 0px rgba(0, 0, 0, 0.75);
 }
 .btnz:hover {
+  text-shadow: none;
   background-color: rgba(255, 255, 255, 0.75);
   transition: background-color 0.5s;
   -webkit-transition: background-color 0.5s;

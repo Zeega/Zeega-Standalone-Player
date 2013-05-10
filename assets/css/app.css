@@ -1330,6 +1330,10 @@ a:active {
   clear: both;
   margin-top: 5px;
 }
+.ZEEGA-player-citations .citation-meta .citation-title {
+  position: relative;
+  top: 10px;
+}
 .ZEEGA-player-citations .ZEEGA-home {
   position: relative;
   background-image: url(../img/restart.png);
