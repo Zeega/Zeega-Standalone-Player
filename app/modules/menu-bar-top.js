@@ -12,7 +12,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
-        visible: false,
+        visible: true,
         hover: false,
         sticky: false,
 

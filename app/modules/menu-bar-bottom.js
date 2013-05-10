@@ -33,10 +33,9 @@ function(app, Backbone) {
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.onFramePlay, this );
+            this.model.on("frame_play", this.updateCitations, this );
             this.model.on("data_loaded", this.render, this);
-            this.model.on("play", this.onPlay, this );
-            this.model.on("pause", this.onPause, this );
+            this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
@@ -54,28 +53,6 @@ function(app, Backbone) {
             this.$(".ZEEGA-home").hide();
             this.$(".citations").show();
             this.fadeOut( 0 );
-        },
-
-        onPlay: function() {
-            this.$("#project-play-pause i").addClass("pause-zcon").removeClass("play-zcon");
-        },
-
-        onPause: function() {
-            this.$("#project-play-pause i").addClass("play-zcon").removeClass("pause-zcon");
-            this.fadeIn();
-        },
-
-        onFramePlay: function( info ){
-            this.showHomeButton();
-            this.updateCitations( info );
-        },
-
-        showHomeButton: function() {
-            if( this.model.status.get("frameHistory").length > 1 ){
-                this.$("#project-home").fadeIn( 100 );
-            } else {
-                this.$("#project-home").fadeOut( 100 );
-            }
         },
 
         updateCitations: function( info ) {

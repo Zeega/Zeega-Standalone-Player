@@ -62,7 +62,9 @@ function( app, Backbone, Spinner ) {
             this.loadTimer = setTimeout(function() {
                 clearTimeout( this.loadTimer );
                 this.loadTimer = "done";
-                this.onCanPlay();
+                if ( this.loadTimer == "done" && this.isReady ) {
+                    this.onCanPlay();
+                }
             }.bind( this ), this.MIN_LOAD_TIME );
         },
 
@@ -83,22 +85,21 @@ function( app, Backbone, Spinner ) {
 
             if (this.layersReady == this.layerCount) {
                 this.isReady =  true;
-                this.onCanPlay();
+                if ( this.loadTimer == "done" && this.isReady ) {
+                    this.onCanPlay();
+                }
             }
         },
 
-        onCanPlay: function() {
-            if ( this.loadTimer == "done" && this.isReady ) {
-                this.spinner.stop();
-                this.$el.fadeOut(function() {
-                    this.remove();
-                }.bind( this ));
-                app.layout.hasPlayed = true;
-                app.layout.showMenubar();
-                app.layout.showCitationbar();
-                this.model.play();
-            }
-        }
+        onCanPlay: _.once(function() {
+            
+            this.spinner.stop();
+            this.$el.fadeOut(function() {
+                this.remove();
+            }.bind( this ));
+            app.layout.hasPlayed = true;
+            this.model.play();
+        })
 
   });
 

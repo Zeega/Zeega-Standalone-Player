@@ -90,6 +90,11 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
             }
         },
 
+        fadeOutChrome: function() {
+            this.menuBar.fadeOut();
+            this.citations.fadeOut();
+        },
+
         showMenubar: _.debounce(function() {
             this.menuBar.fadeIn();
         }, 500, true ),
