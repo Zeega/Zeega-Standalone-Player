@@ -1,50 +1,5 @@
 @image-folder: '../img';
 
-.play-zcon,
-.pause-zcon {
-  background-image: url('@{image-folder}/playpause.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 25px; 
-}
-.pause-zcon {
-  background-position: -25px 0px;
-}
-
-.home-zcon {
-  background-image: url('@{image-folder}/home.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 32px;
-}
-
-.back-zcon {
-  background-image: url('@{image-folder}/back.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 17px;
-}
-
-.next-zcon {
-  background-image: url('@{image-folder}/back.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 17px;
-  transform:rotate(180deg);
-  -ms-transform:rotate(180deg); /* IE 9 */
-  -moz-transform:rotate(180deg); /* Firefox */
-  -webkit-transform:rotate(180deg); /* Safari and Chrome */
-  -o-transform:rotate(180deg); /* Opera */
-}
-
 
 [class^="zsocial-"] {
   
@@ -58,6 +13,9 @@
 
 .zsocial-mixin(@position) {
   background-position: (@position*-33px) (0px);
+  &:hover {
+    background-position: (@position*-33px) (-34px);
+  }
 }
 .zsocial-twitter        { .zsocial-mixin(0) }
 .zsocial-facebook       { .zsocial-mixin(1) }

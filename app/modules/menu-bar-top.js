@@ -20,33 +20,25 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-menu-bar",
 
-
-        //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
             var tumblr_share,
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http:" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
-                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http:" +
-                            app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http://zeega.com/" +
+                             "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
+                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("item_id") );
 
-            views = app.views == 1 ? app.views + " view" : app.views + " views";
-            
             if ( this.model.project ) {
                 return _.extend({
-                        directory: app.directory,
-                        hostname: app.hostname,
-                        user_thumbnail: app.userThumbnail,
-                        views: views,
                         tumblr_share: tumblr_share
                     },
                     this.model.project.toJSON()
-                    );
+                );
             }
         },
 

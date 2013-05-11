@@ -36,7 +36,7 @@ function(app, Backbone, UI) {
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
                 url: window.projectJSON ? null :
-                    app.state.get("projectID") !== null ? app.api + "/items/" + app.state.get("projectID") :
+                    app.state.get("projectID") !== null ? app.metadata.api + "/items/" + app.state.get("projectID") :
                     "testproject.json",
                 startFrame: app.state.get("frameID")
             });

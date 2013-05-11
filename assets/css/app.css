@@ -3,55 +3,6 @@
   display: table;
   clear: both;
 }
-.play-zcon,
-.pause-zcon {
-  background-image: url('../img/playpause.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 25px;
-}
-.pause-zcon {
-  background-position: -25px 0px;
-}
-.home-zcon {
-  background-image: url('../img/home.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 32px;
-}
-.back-zcon {
-  background-image: url('../img/back.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 17px;
-}
-.next-zcon {
-  background-image: url('../img/back.png');
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 25px;
-  width: 17px;
-  transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  /* IE 9 */
-
-  -moz-transform: rotate(180deg);
-  /* Firefox */
-
-  -webkit-transform: rotate(180deg);
-  /* Safari and Chrome */
-
-  -o-transform: rotate(180deg);
-  /* Opera */
-
-}
 [class^="zsocial-"] {
   background-image: url('../img/social-sprites-33px.png');
   background-position: 0px 0px;
@@ -63,14 +14,26 @@
 .zsocial-twitter {
   background-position: 0px 0px;
 }
+.zsocial-twitter:hover {
+  background-position: 0px -34px;
+}
 .zsocial-facebook {
   background-position: -33px 0px;
+}
+.zsocial-facebook:hover {
+  background-position: -33px -34px;
 }
 .zsocial-tumblr {
   background-position: -66px 0px;
 }
+.zsocial-tumblr:hover {
+  background-position: -66px -34px;
+}
 .zsocial-email {
   background-position: -99px 0px;
+}
+.zsocial-email:hover {
+  background-position: -99px -34px;
 }
 [class^="zitem-"] {
   background-image: url('../img/zitems-50px.png');
