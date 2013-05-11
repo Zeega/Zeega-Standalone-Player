@@ -383,9 +383,15 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( authors )+
 '\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
-;__p+=' '+
+;__p+=''+
 ( views )+
-' views</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+' ';
+ if ( views != 1 ) { 
+;__p+='views';
+ } else { 
+;__p+='view';
+ } 
+;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -395,10 +401,10 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<a href="http://www.zeega.com">\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="http://zeega.com/register/" data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
-'&url=http://www.zeega.com/'+
-( item_id )+
 '&text='+
 ( title )+
+' http://www.zeega.com/'+
+( item_id )+
 ' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/'+
 ( item_id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
@@ -35324,8 +35330,6 @@ function( app, _Layer, Visual, TextModal ) {
             this.$(".visual-target")
                 .css( css )
                 .text( this.model.getAttr("content") );
-
-            // this.$el.css( css );
         },
 
         afterEditorRender: function() {
@@ -35371,7 +35375,17 @@ function( app, _Layer, Visual, TextModal ) {
         }, 500 ),
 
         beforePlayerRender: function() {
-            this.updateStyle();
+            var css = {
+                color: this.model.get("attr").color,
+                fontWeight: this.model.getAttr("bold") ? "bold" : "normal",
+                fontStyle: this.model.getAttr("italic") ? "italic" : "normal",
+                fontFamily: this.model.getAttr("fontFamily"),
+                fontSize: this.model.getAttr("fontSize") + "%",
+                textAlign: this.model.getAttr("textAlign"),
+                lineHeight: this.model.getAttr("lineHeight") + "em"
+            };
+
+            this.$el.css( css );
         }
   });
 
@@ -54225,18 +54239,8 @@ function( $, _, Backbone, State ) {
     var app = {
         // The root path to run the application.
         root: "/",
-
-        parserPath: "app/zeega-parser2/",
-
         metadata: $("meta[name=zeega]").data(),
 
-        // the path of the zeega api
-        // only required for dynamically loaded zeegas
-        api: "http:" + meta.data("hostname") + meta.data("directory") + "api/",
-        hostname: meta.data("hostname") || "",
-        directory: meta.data("directory") || "",
-        userThumbnail: meta.data("userThumbnail"),
-        views: meta.data("views"),
       /*
         app.state stores information on the current state of the application
       */
@@ -55056,33 +55060,25 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-menu-bar",
 
-
-        //TODO move views, user thumbnail to project data.  directory, hostname from app.
         serialize: function() {
             var tumblr_share,
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http:" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
-                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http:" +
-                            app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http://zeega.com/" +
+                             "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
+                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("item_id") );
 
-            views = app.views == 1 ? app.views + " view" : app.views + " views";
-            
             if ( this.model.project ) {
                 return _.extend({
-                        directory: app.directory,
-                        hostname: app.hostname,
-                        user_thumbnail: app.userThumbnail,
-                        views: views,
                         tumblr_share: tumblr_share
                     },
                     this.model.project.toJSON()
-                    );
+                );
             }
         },
 
@@ -55391,7 +55387,7 @@ function(app, Backbone, UI) {
                 target: '#player',
                 data: $.parseJSON( window.projectJSON ) || null,
                 url: window.projectJSON ? null :
-                    app.state.get("projectID") !== null ? app.api + "/items/" + app.state.get("projectID") :
+                    app.state.get("projectID") !== null ? app.metadata.api + "/items/" + app.state.get("projectID") :
                     "testproject.json",
                 startFrame: app.state.get("frameID")
             });
