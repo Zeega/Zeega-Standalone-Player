@@ -1,7 +1,7 @@
 <div class="ZEEGA-chrome-metablock">
     <div class="meta-inner">
         <div class="left-col">
-            <a href="http://zeega.com/user/<%= userId %>" target="blank" data-bypass="true">
+            <a href="http://zeega.com/user/<%= userId %>" <% if (window!=window.top) { %> target="blank" <% } %> data-bypass="true">
                 <div class="profile-token"
                     style="
                         background-image: url(<%= userThumbnail %>);
@@ -13,7 +13,7 @@
         <div class="right-col">
             <div class="caption"><%= title %></div>
             <div class="username">
-                <a class="profile-name" href="http://zeega.com/user/<%= userId %>" data-bypass="true">
+                <a class="profile-name" href="http://zeega.com/user/<%= userId %>" data-bypass="true" <% if (window!=window.top) { %> target="blank" <% } %> >
                     <%= authors %>
                 </a>
                 <span class="zeega-views"> <i class="icon-play icon-white"></i> <% if ( !_.isNumber( views ) ) { views = 0 ;} %><%= views %> <% if ( views != 1 ) { %>views<% } else { %>view<% } %></span>

@@ -1,10 +1,10 @@
-<a href="http://www.zeega.com">
+<a href="http://www.zeega.com" <% if (window!=window.top) { %> target="blank" <% } %> >
     <div class="ZEEGA-tab">
         <div class="ZTab-logo"></div>
     </div>
 </a>
 
-<a href="http://zeega.com/register/" data-bypass="true" class="btnz btns-join">Join Zeega</a>
+<a href="http://zeega.com/register/" <% if (window!=window.top) { %> target="blank" <% } %> data-bypass="true" class="btnz btns-join">Join Zeega</a>
 
 <div class="menu-right">
     <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/<%= item_id %>&text=<%= title %> http://www.zeega.com/<%= item_id %> made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>

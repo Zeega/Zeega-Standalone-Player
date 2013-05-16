@@ -35,13 +35,21 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="http://zeega.com/user/'+
 ( userId )+
-'" target="blank" data-bypass="true">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
+'" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' data-bypass="true">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
 ( userThumbnail )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
 '</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
 ( userId )+
-'" data-bypass="true">\n                    '+
+'" data-bypass="true" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' >\n                    '+
 ( authors )+
 '\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
@@ -61,7 +69,15 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="http://www.zeega.com">\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="http://zeega.com/register/" data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
+__p+='<a href="http://www.zeega.com" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="http://zeega.com/register/" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
 ( item_id )+
 '&text='+
 ( title )+
