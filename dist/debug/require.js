@@ -55122,11 +55122,21 @@ function(app, Backbone) {
             if ( window == window.top ){
                 $("#overlays")
                     .append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
+            } else {
+                if( $("audio")[0] ){
+                    $("audio")[0].pause();
+                }
             }
         },
 
         unrenderExplore: function() {
-            $(".explore-zeega").remove();
+            if ( window == window.top ){
+                $(".explore-zeega").remove();
+            } else {
+                if( $("audio")[0] ){
+                    $("audio")[0].play();
+                }
+            }
         },
 
         events: {
