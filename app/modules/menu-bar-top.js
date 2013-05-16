@@ -63,7 +63,7 @@ function(app, Backbone) {
         },
 
         renderExplore: function() {
-            if ( window != window.top ){
+            if ( window == window.top ){
                 $("#overlays")
                     .append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
             }
