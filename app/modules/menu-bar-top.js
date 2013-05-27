@@ -25,13 +25,13 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http://zeega.com/" +
                              "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("item_id") );
+                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("id") );
 
             if ( this.model.project ) {
                 return _.extend({
