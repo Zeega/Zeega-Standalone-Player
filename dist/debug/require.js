@@ -338,26 +338,6 @@ var requirejs, require, define;
 }());
 ;this["JST"] = this["JST"] || {};
 
-this["JST"]["app/templates/citation.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<a href="'+
-( attr.attribution_uri )+
-'" target="blank">\n    <i class="icon-'+
-( iconType )+
-' icon-white"></i>\n</a>';
-}
-return __p;
-};
-
-this["JST"]["app/templates/controls.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class="arrow arrow-right next disabled"></a>';
-}
-return __p;
-};
-
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -404,6 +384,14 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 return __p;
 };
 
+this["JST"]["app/templates/controls.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class="arrow arrow-right next disabled"></a>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -416,16 +404,28 @@ __p+='<a href="http://www.zeega.com" ';
 ;__p+=' target="blank" ';
  } 
 ;__p+=' data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
-( item_id )+
+( id )+
 '&text='+
 ( title )+
 ' http://www.zeega.com/'+
-( item_id )+
+( id )+
 ' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/'+
-( item_id )+
+( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
 ( tumblr_share )+
 '" target="blank"><i class="zsocial-tumblr"></i></a>\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n</div>';
+}
+return __p;
+};
+
+this["JST"]["app/templates/citation.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<a href="'+
+( attr.attribution_uri )+
+'" target="blank">\n    <i class="icon-'+
+( iconType )+
+' icon-white"></i>\n</a>';
 }
 return __p;
 };
@@ -55081,13 +55081,13 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http://zeega.com/" +
                              "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("item_id") );
+                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("id") );
 
             if ( this.model.project ) {
                 return _.extend({
