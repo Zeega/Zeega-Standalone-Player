@@ -338,6 +338,26 @@ var requirejs, require, define;
 }());
 ;this["JST"] = this["JST"] || {};
 
+this["JST"]["app/templates/citation.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<a href="'+
+( attr.attribution_uri )+
+'" target="blank">\n    <i class="icon-'+
+( iconType )+
+' icon-white"></i>\n</a>';
+}
+return __p;
+};
+
+this["JST"]["app/templates/controls.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class="arrow arrow-right next disabled"></a>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -351,7 +371,9 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="http://zeega.com/user/'+
+__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="';
+ path 
+;__p+='profile/'+
 ( userId )+
 '" ';
  if (window!=window.top) { 
@@ -361,7 +383,9 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( userThumbnail )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
-'</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
+'</div>\n            <div class="username">\n                <a class="profile-name" href="';
+ path 
+;__p+='profile/'+
 ( userId )+
 '" data-bypass="true" ';
  if (window!=window.top) { 
@@ -380,14 +404,6 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ;__p+='view';
  } 
 ;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
-}
-return __p;
-};
-
-this["JST"]["app/templates/controls.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class="arrow arrow-right next disabled"></a>';
 }
 return __p;
 };
@@ -414,18 +430,6 @@ __p+='<a href="http://www.zeega.com" ';
 '" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
 ( tumblr_share )+
 '" target="blank"><i class="zsocial-tumblr"></i></a>\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n</div>';
-}
-return __p;
-};
-
-this["JST"]["app/templates/citation.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<a href="'+
-( attr.attribution_uri )+
-'" target="blank">\n    <i class="icon-'+
-( iconType )+
-' icon-white"></i>\n</a>';
 }
 return __p;
 };
@@ -54889,7 +54893,9 @@ function(app, Backbone) {
 
         serialize: function() {
             if ( this.model.project ) {
-                return _.extend({},
+                return _.extend({
+                    path: app.metadata.hostname + app.metadata.directory
+                },
                     app.metadata,
                     this.model.project.toJSON()
                 );
@@ -55081,17 +55087,18 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
-                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http://zeega.com/" +
+            tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
+                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
                              "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("id") );
+                            "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
 
             if ( this.model.project ) {
                 return _.extend({
-                        tumblr_share: tumblr_share
+                        tumblr_share: tumblr_share,
+                        path: app.metadata.hostname + app.metadata.directory
                     },
                     this.model.project.toJSON()
                 );
@@ -55121,7 +55128,7 @@ function(app, Backbone) {
         renderExplore: function() {
             if ( window == window.top ){
                 $("#overlays")
-                    .append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
+                    .append("<a href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
             } else {
                 if( $("audio")[0] ){
                     $("audio")[0].pause();
