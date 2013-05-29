@@ -54904,7 +54904,7 @@ function(app, Backbone) {
         serialize: function() {
             if ( this.model.project ) {
                 return _.extend({
-                    path: app.metadata.hostname + app.metadata.directory
+                    path: "http:" + app.metadata.hostname + app.metadata.directory
                 },
                     app.metadata,
                     this.model.project.toJSON()
@@ -55108,7 +55108,7 @@ function(app, Backbone) {
             if ( this.model.project ) {
                 return _.extend({
                         tumblr_share: tumblr_share,
-                        path: "http" + app.metadata.hostname + app.metadata.directory
+                        path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
                     this.model.project.toJSON()
                 );
