@@ -55098,7 +55098,10 @@ function(app, Backbone) {
 
         serialize: function() {
             var tumblr_share,
-                tumblr_caption;
+                tumblr_caption,
+                path;
+
+            path = encodeURIComponent( app.metadata.hostname + app.metadata.directory );
 
             tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
@@ -55108,11 +55111,12 @@ function(app, Backbone) {
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
                             "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
 
+
             if ( this.model.project ) {
                 return _.extend(
                     {
                         tumblr_share: tumblr_share,
-                        path: encodeURIComponent( app.metadata.hostname + app.metadata.directory )
+                        path: path
                     },
                     app.metadata,
                     this.model.project.toJSON()
