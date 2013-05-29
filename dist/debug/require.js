@@ -55106,7 +55106,8 @@ function(app, Backbone) {
                             "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
 
             if ( this.model.project ) {
-                return _.extend({
+                return _.extend({},
+                    {
                         tumblr_share: tumblr_share,
                         path: app.metadata.hostname + app.metadata.directory
                     },
