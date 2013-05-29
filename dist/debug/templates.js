@@ -74,13 +74,17 @@ this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<a href="';
- path 
+ hostname 
+;__p+='';
+ directory 
 ;__p+='" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
 ;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="';
- path 
+ hostname 
+;__p+='';
+ directory 
 ;__p+='register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';

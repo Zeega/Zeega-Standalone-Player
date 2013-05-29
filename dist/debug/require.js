@@ -412,13 +412,17 @@ this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<a href="';
- path 
+ hostname 
+;__p+='';
+ directory 
 ;__p+='" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
 ;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="';
- path 
+ hostname 
+;__p+='';
+ directory 
 ;__p+='register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
@@ -55094,8 +55098,7 @@ function(app, Backbone) {
 
         serialize: function() {
             var tumblr_share,
-                tumblr_caption,
-                views;
+                tumblr_caption;
 
             tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
@@ -55106,11 +55109,12 @@ function(app, Backbone) {
                             "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
 
             if ( this.model.project ) {
-                return _.extend({},
+                return _.extend(
                     {
                         tumblr_share: tumblr_share,
-                        path: app.metadata.hostname + app.metadata.directory
+                        path: encodeURIComponent( app.metadata.hostname + app.metadata.directory )
                     },
+                    app.metadata,
                     this.model.project.toJSON()
                 );
             }
