@@ -411,35 +411,31 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="';
- hostname 
-;__p+='';
- directory 
-;__p+='" ';
+__p+='<a href="'+
+( path )+
+'" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="';
- hostname 
-;__p+='';
- directory 
-;__p+='register/" ';
+;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+( path )+
+'register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=';
- path 
-;__p+=''+
+;__p+=' data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
+( path )+
+''+
 ( id )+
 '&text='+
 ( title )+
-' ';
- path 
-;__p+=''+
+' '+
+( path )+
+''+
 ( id )+
-' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u=';
- path 
-;__p+=''+
+' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u='+
+( path )+
+''+
 ( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
 ( tumblr_share )+
@@ -55099,9 +55095,7 @@ function(app, Backbone) {
         serialize: function() {
             var tumblr_share,
                 tumblr_caption,
-                path;
-
-            path = encodeURIComponent( app.metadata.hostname + app.metadata.directory );
+                views;
 
             tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
@@ -55110,15 +55104,12 @@ function(app, Backbone) {
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
                             "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
-
-
+            //this.model.project.set({app_path: app.metadata.hostname + app.metadata.directory});
             if ( this.model.project ) {
-                return _.extend(
-                    {
+                return _.extend({
                         tumblr_share: tumblr_share,
-                        path: path
+                        path: app.metadata.hostname + app.metadata.directory
                     },
-                    app.metadata,
                     this.model.project.toJSON()
                 );
             }

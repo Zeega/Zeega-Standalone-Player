@@ -23,9 +23,7 @@ function(app, Backbone) {
         serialize: function() {
             var tumblr_share,
                 tumblr_caption,
-                path;
-
-            path = encodeURIComponent( app.metadata.hostname + app.metadata.directory );
+                views;
 
             tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
@@ -34,15 +32,12 @@ function(app, Backbone) {
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
                             "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
-
-
+            //this.model.project.set({app_path: app.metadata.hostname + app.metadata.directory});
             if ( this.model.project ) {
-                return _.extend(
-                    {
+                return _.extend({
                         tumblr_share: tumblr_share,
-                        path: path
+                        path: app.metadata.hostname + app.metadata.directory
                     },
-                    app.metadata,
                     this.model.project.toJSON()
                 );
             }
