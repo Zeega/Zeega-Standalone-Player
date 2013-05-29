@@ -25,17 +25,18 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
-                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http://zeega.com/" +
+            tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
+                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
                              "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("id") );
+                            "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
 
             if ( this.model.project ) {
                 return _.extend({
-                        tumblr_share: tumblr_share
+                        tumblr_share: tumblr_share,
+                        path: app.metadata.hostname + app.metadata.directory
                     },
                     this.model.project.toJSON()
                 );
@@ -65,7 +66,7 @@ function(app, Backbone) {
         renderExplore: function() {
             if ( window == window.top ){
                 $("#overlays")
-                    .append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
+                    .append("<a href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
             } else {
                 if( $("audio")[0] ){
                     $("audio")[0].pause();

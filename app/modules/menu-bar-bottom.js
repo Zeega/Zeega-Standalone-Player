@@ -24,7 +24,9 @@ function(app, Backbone) {
 
         serialize: function() {
             if ( this.model.project ) {
-                return _.extend({},
+                return _.extend({
+                    path: app.metadata.hostname + app.metadata.directory
+                },
                     app.metadata,
                     this.model.project.toJSON()
                 );
