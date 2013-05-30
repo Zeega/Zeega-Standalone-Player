@@ -47,8 +47,15 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+            
         },
 
+        afterRender: function(){
+            var soundtrack = this.model.getSoundtrack();
+            if ( soundtrack ) {
+                this.$(".ZEEGA-sound-state").show();
+            }
+        },
         endPageEnter: function() {
             this.sticky = true;
             this.show();
@@ -87,7 +94,22 @@ function(app, Backbone) {
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
-            "click .project-title": "home"
+            "click .project-title": "home",
+            "click .ZEEGA-sound-state": "toggleMute"
+        },
+
+        toggleMute: function(){
+            var soundtrack = this.model.getSoundtrack();
+            if ( soundtrack ){
+                if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
+                    this.$(".ZEEGA-sound-state").removeClass("muted");
+                    soundtrack.visual.onPlay();
+                } else {
+                    this.$(".ZEEGA-sound-state").addClass("muted");
+                    soundtrack.visual.onPause();
+                }
+            }
+            return false;
         },
 
         toggleFullscreen: function() {
