@@ -22,7 +22,9 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-citations",
 
+        
         serialize: function() {
+            
             if ( this.model.project ) {
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory
@@ -34,6 +36,18 @@ function(app, Backbone) {
         },
 
         initialize: function() {
+
+            //temp until data arrives
+
+            var favs = Math.floor(3*Math.random());
+            var fav = Math.floor(2*Math.random());
+
+            this.model.project.set({
+                favorites: favs,
+                favorite: fav
+            });
+
+
             /* update the arrow state whenever a frame is rendered */
             this.model.on("frame_play", this.updateCitations, this );
             this.model.on("data_loaded", this.render, this);
@@ -41,6 +55,23 @@ function(app, Backbone) {
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+        },
+
+        toggleFavorite: function(){
+            var url;
+            this.$(".btnz").toggleClass("favorited");
+
+            if(this.model.project.get("favorite") == 1 ){
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
+                this.model.project.set({ "favorite": 0 });
+            } else {
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
+                this.model.project.set({ "favorite": 1 });
+            }
+            $.ajax({ url: url, type: 'POST', success: function(){  }  });
+
+            return false;
+
         },
 
         endPageEnter: function() {
@@ -85,7 +116,8 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click .ZEEGA-home": "home"
+            "click .ZEEGA-home": "home",
+            "click .favorite-btnz": "toggleFavorite"
         },
 
         fadeOut: function( stay ) {

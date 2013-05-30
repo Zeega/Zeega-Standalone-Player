@@ -1502,7 +1502,7 @@ a:active {
 }
 .ZEEGA-chrome-metablock .right-col {
   float: left;
-  width: 400px;
+  width: 360px;
 }
 .ZEEGA-chrome-metablock .right-col .username {
   font-size: 11px;
@@ -1526,6 +1526,22 @@ a:active {
 .ZEEGA-chrome-metablock .right-col .caption {
   line-height: 1.1em;
   font-size: 13px;
+  word-wrap: break-word;
+}
+.ZEEGA-chrome-metablock .favorite {
+  float: left;
+}
+.ZEEGA-chrome-metablock .favorite .btnz {
+  margin-top: 6px;
+  color: white;
+  background-color: grey;
+}
+.ZEEGA-chrome-metablock .favorite .btnz:hover {
+  background-color: #ff4500;
+}
+.ZEEGA-chrome-metablock .favorite .btnz.favorited {
+  background-color: #ff4500;
+  background-image: none;
 }
 .ZEEGA-chrome-metablock .citations {
   float: right;

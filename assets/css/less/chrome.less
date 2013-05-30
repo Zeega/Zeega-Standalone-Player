@@ -64,7 +64,7 @@
 
     .right-col {
         float: left;
-        width: 400px;
+        width: 360px;
 
         .username {
             font-size: 11px;
@@ -89,6 +89,24 @@
         .caption {
             line-height: 1.1em;
             font-size: 13px;
+            word-wrap: break-word;
+        }
+    }
+
+    .favorite {
+        float:left;
+        .btnz{
+            margin-top: 6px;
+            color: white;
+            background-color: grey;
+            &:hover{
+                background-color: #ff4500;
+            }
+            &.favorited{
+                
+                background-color: #ff4500;
+                background-image:none;
+            }
         }
     }
 
