@@ -2298,6 +2298,32 @@ a:active {
   -webkit-transition: background-color 0.5s;
   box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
+.ZEEGA-sound-state {
+  background: transparent;
+  background-repeat: no-repeat;
+  background-image: url(../img/sounds-sprite.png);
+  background-position: 0 0px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 0 0 2px 2px;
+  z-index: 2;
+  background-size: 30px 150px;
+  right: 20px;
+  top: 20px;
+}
+.ZEEGA-sound-state.muted {
+  background-position: 0px -30px;
+}
+.ZEEGA-sound-state.loading-0 {
+  background-position: 0px -60px;
+}
+.ZEEGA-sound-state.loading-1 {
+  background-position: 0px -90px;
+}
+.ZEEGA-sound-state.loading-2 {
+  background-position: 0px -120px;
+}
 .btnz.explore-zeega {
   background-image: url(../img/tiny-stripes-dark.png);
   position: fixed;
