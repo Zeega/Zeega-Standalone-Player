@@ -101,7 +101,7 @@ __p+='<a href="'+
 ( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
 ( tumblr_share )+
-'" target="blank"><i class="zsocial-tumblr"></i></a>\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n</div>';
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
 }
 return __p;
 };

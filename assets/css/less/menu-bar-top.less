@@ -53,6 +53,36 @@
     }
 }
 
+.ZEEGA-sound-state {
+    background: transparent;
+    background-repeat: no-repeat;
+    background-image: url(../img/sounds-sprite.png);
+    background-position: 0 0px;
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 0 0 2px 2px;
+    z-index: 2;
+    background-size: 30px 150px;
+    right: 20px;
+    top: 20px;
+
+    &.muted{
+        background-position: 0px -30px;
+    }
+
+    &.loading-0{
+        background-position: 0px -60px;
+    }
+    &.loading-1{
+        background-position: 0px -90px;
+    }
+    &.loading-2{
+        background-position: 0px -120px;
+    }
+
+}
+
 .btnz.explore-zeega {
     background-image: url(../img/tiny-stripes-dark.png);
     position: fixed;
