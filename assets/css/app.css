@@ -1529,6 +1529,7 @@ a:active {
 .ZEEGA-chrome-metablock .right-col {
   float: left;
   width: 360px;
+  min-height: 20px;
 }
 .ZEEGA-chrome-metablock .right-col .username {
   font-size: 11px;
@@ -1556,6 +1557,7 @@ a:active {
 }
 .ZEEGA-chrome-metablock .favorite {
   float: left;
+  display: none;
 }
 .ZEEGA-chrome-metablock .favorite .btnz {
   margin-top: 6px;

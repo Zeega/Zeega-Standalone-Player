@@ -55,7 +55,19 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } 
 ;__p+=' >\n                    '+
 ( authors )+
-'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
+'\n                </a>\n                ';
+ if ( favorite_count > 0 ) {  
+;__p+=' \n                <span class="zeega-favorite_count"> ♥ '+
+( favorite_count )+
+' ';
+ if ( favorite_count == 1) {  
+;__p+=' favorite ';
+ } else {
+;__p+=' favorites ';
+ } 
+;__p+='</span>\n                ';
+ } 
+;__p+='\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
 ;__p+=''+
 ( views )+
@@ -65,7 +77,13 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
+ if ( favorite == 1 ) {  
+;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
+ } else {
+;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
+ } 
+;__p+='\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };

@@ -1,2 +1,223 @@
-
-{   "id" : 12476,   "user_id": 36,  "title" : "Joseph's Awesome Zeega!!",   "date_created" : "05/27/2013 ", "date_updated" : "1369704844",  "date_published" : "1369704844","tags" : "",    "authors" : "Joseph Bergen","cover_image" : "http:\/\/25.media.tumblr.com\/bbb64474b739ce62a7fdad513e85ff56\/tumblr_mk4kdrwOOB1r0lxmlo1_500.gif","enabled" : true,"estimated_time" : "Some time","description" : "","location" : "","item_id" : "122194","mobile" : false,"version" : 1.1,"published" : true,   "cover_image" : "http:\/\/25.media.tumblr.com\/bbb64474b739ce62a7fdad513e85ff56\/tumblr_mk4kdrwOOB1r0lxmlo1_500.gif","sequences" : [{"id" : 21865,"title" : "Intro Sequence","attr" : [],"persistent_layers" : [],"description" : null,"advance_to" : null,"frames" :[87658,87665]} ]   ,"frames" : [{"id" : 87658,"attr" : {"advance":false},"thumbnail_url" : "","controllable": true,"layers" :[228282]},{"id" : 87665,"attr" : {"advance":true},"thumbnail_url" : "","controllable": true,"layers" :[228283]}]  ,"layers":[{"id":228282,"item_id":null,"type":"TextV2","project_id":"","attr":{"citation":false,"color":"#FFF","content":"poopy","fontSize":150,"fontFamily":"Archivo Black","default_controls":true,"left":12.5,"opacity":1,"title":"Text Layer","top":40,"width":75,"dissolve":true,"to_frame":87665,"bold":false,"italic":false,"textAlign":"left","lineHeight":1,"mobileTextPosition":"middle"},"enabled":true},{"id":228283,"item_id":null,"type":"Image","project_id":"","attr":{"title":"","url":"none","left":7.1214881795893,"top":0,"width":85.757023640821,"opacity":1,"aspectRatio":1.1415525114155,"dissolve":true,"id":121744,"user_id":1,"user_thumbnail":"","username":"admin@zeega.org","display_name":"Admin","headline":"","description":"","text":"","uri":"http:\/\/25.media.tumblr.com\/bbb64474b739ce62a7fdad513e85ff56\/tumblr_mk4kdrwOOB1r0lxmlo1_500.gif","attribution_uri":"http:\/\/djdonovan.tumblr.com\/post\/46087026458","date_created":"2013-05-21 06:30:43","media_type":"Image","layer_type":"Image","archive":"Tumblr","thumbnail_url":"http:\/\/24.media.tumblr.com\/bbb64474b739ce62a7fdad513e85ff56\/tumblr_mk4kdrwOOB1r0lxmlo1_75sq.gif","media_geo_latitude":null,"media_geo_longitude":null,"media_date_created":"2013-03-23 05:51:38","media_creator_username":"djdonovan","media_creator_realname":"djdonovan","child_items_count":0,"attributes":[],"child_items":[],"tags":["food","animals","transparent","transparent gif","transparent gifs","gif","gifs","dog","lol","funny","funny gif","funny gifs"],"editable":false,"published":false,"enabled":true,"views":0,"allowDelete":0,"height":100},"enabled":true},{"id":228285,"item_id":null,"type":"TextV2","project_id":"","attr":{"citation":false,"color":"#FFF","content":"text","fontSize":150,"fontFamily":"Archivo Black","default_controls":true,"left":12.5,"opacity":1,"title":"Text Layer","top":40,"width":75,"dissolve":true,"bold":false,"italic":false,"textAlign":"left","lineHeight":1,"mobileTextPosition":"middle"},"enabled":true}]} 
+{
+"project": {
+"id": "51a9169714c50a516f000001",
+"user": {
+"id": "5192b82720d5cd1712000cab",
+"display_name": "James Burns",
+"thumbnail_url": "http://static.zeega.org/community/users/6/profile/5117fb5023f85.jpg"
+},
+"title": "",
+"date_created": "05/31/2013 ",
+"date_updated": "1370040942",
+"date_published": "",
+"tags": [],
+"authors": "James Burns",
+"cover_image": "http://www.cerealbowlcollective.org/guide/stuff/mtl%20copy.jpg",
+"enabled": true,
+"estimated_time": "Some time",
+"description": "",
+"location": "",
+"item_id": null,
+"mobile": true,
+"published": false,
+"views": 0,
+"editable": true,
+"favorite": false,
+"favorite_count": 5,
+"sequences": [
+{
+"id": "51a9169714c50a516f000002",
+"title": "",
+"attr": {
+"soundtrack": "51a9233114c50a1070000000"
+},
+"persistent_layers": [],
+"description": null,
+"advance_to": null,
+"frames": [
+"51a9169714c50a516f000000",
+"51a9232614c50a636f000000"
+]
+}
+],
+"frames": [
+{
+"id": "51a9169714c50a516f000000",
+"attr": {
+"advance": true
+},
+"thumbnail_url": "",
+"controllable": true,
+"layers": [
+"51a9169b14c50a506f000001"
+]
+},
+{
+"id": "51a9232614c50a636f000000",
+"attr": {
+"advance": true
+},
+"thumbnail_url": "",
+"controllable": true,
+"layers": [
+"51a92a6e14c50a636f000001"
+]
+}
+],
+"layers": [
+{
+"id": "51a9169b14c50a506f000001",
+"type": "Image",
+"project_id": "",
+"attr": {
+"title": "mtl%20copy.jpg",
+"url": "none",
+"left": -7.3593073593074,
+"top": -28.269230769231,
+"width": 142.13564213564,
+"opacity": 1,
+"aspectRatio": 1.1735294117647,
+"dissolve": true,
+"id": "5192c0c83a98e127dc61dcdd",
+"user": {
+"id": "5192b78a20d5cd1712000000",
+"display_name": "Admin",
+"thumbnail_url": "http://mlhplayground.org/gamma-james/images/vertov.jpeg"
+},
+"headline": "",
+"description": "None",
+"text": "",
+"uri": "http://www.cerealbowlcollective.org/guide/stuff/mtl%20copy.jpg",
+"attribution_uri": "http://www.cerealbowlcollective.org/guide/stuff/mtl%20copy.jpg",
+"date_created": "2013-04-16 00:52:23",
+"media_type": "Image",
+"layer_type": "Image",
+"archive": "Absolute",
+"thumbnail_url": "http://www.cerealbowlcollective.org/guide/stuff/mtl%20copy.jpg",
+"media_geo_latitude": null,
+"media_geo_longitude": null,
+"media_date_created": "2013-04-16 12:52:15",
+"media_creator_username": "Unknown",
+"media_creator_realname": "Unknown",
+"child_items_count": 0,
+"attributes": [],
+"child_items": [],
+"tags": [],
+"editable": true,
+"published": false,
+"enabled": true,
+"views": 0,
+"allowDelete": 0,
+"height": 161.15384615385
+}
+},
+{
+"id": "51a9233114c50a1070000000",
+"type": "Audio",
+"project_id": "",
+"attr": {
+"title": "Steve Dahlberg Interview (Nika)",
+"url": "none",
+"left": 0,
+"top": 0,
+"height": 0,
+"width": 0,
+"volume": 0.5,
+"cue_in": 0,
+"cue_out": null,
+"duration": null,
+"fade_in": 0,
+"fade_out": 0,
+"loop": true,
+"opacity": 0,
+"citation": true,
+"soundtrack": true,
+"id": "5192c0c13a98e127dc6167af",
+"user": {
+"id": "5192b78a20d5cd1712000000",
+"display_name": "Admin",
+"thumbnail_url": "http://mlhplayground.org/gamma-james/images/vertov.jpeg"
+},
+"headline": "",
+"description": "",
+"text": "",
+"uri": "http://api.soundcloud.com/tracks/87298581/stream?consumer_key=lyCI2ejeGofrnVyfMI18VQ",
+"attribution_uri": "http://soundcloud.com/are-you-creative/steve-dahlberg-interview-nika",
+"date_created": "2013-05-11 16:52:38",
+"media_type": "Audio",
+"layer_type": "Audio",
+"archive": "SoundCloud",
+"thumbnail_url": "http://i1.sndcdn.com/avatars-000038196309-48l5a3-large.jpg?9556ac0",
+"media_geo_latitude": null,
+"media_geo_longitude": null,
+"media_date_created": "2013-04-10 08:07:26",
+"media_creator_username": "Are You Creative?",
+"media_creator_realname": "Are You Creative?",
+"child_items_count": 0,
+"attributes": [],
+"child_items": [],
+"tags": [
+""
+],
+"editable": false,
+"published": false,
+"enabled": true,
+"views": 0,
+"allowDelete": 0
+}
+},
+{
+"id": "51a92a6e14c50a636f000001",
+"type": "Image",
+"project_id": "",
+"attr": {
+"title": "BabyBoom75.gif",
+"url": "none",
+"left": 0,
+"top": 6.6508875739645,
+"width": 100,
+"opacity": 1,
+"aspectRatio": 1.5371621621622,
+"dissolve": true,
+"id": "5192c0c83a98e127dc61dcbd",
+"user": {
+"id": "5192b78a20d5cd1712000000",
+"display_name": "Admin",
+"thumbnail_url": "http://mlhplayground.org/gamma-james/images/vertov.jpeg"
+},
+"headline": "",
+"description": "None",
+"text": "",
+"uri": "http://users.rcn.com/jkimball.ma.ultranet/BiologyPages/B/BabyBoom75.gif",
+"attribution_uri": "http://users.rcn.com/jkimball.ma.ultranet/BiologyPages/B/BabyBoom75.gif",
+"date_created": "2013-04-15 23:45:42",
+"media_type": "Image",
+"layer_type": "Image",
+"archive": "Absolute",
+"thumbnail_url": "http://users.rcn.com/jkimball.ma.ultranet/BiologyPages/B/BabyBoom75.gif",
+"media_geo_latitude": null,
+"media_geo_longitude": null,
+"media_date_created": "2013-04-15 11:45:38",
+"media_creator_username": "Unknown",
+"media_creator_realname": "Unknown",
+"child_items_count": 0,
+"attributes": [],
+"child_items": [],
+"tags": [],
+"editable": false,
+"published": false,
+"enabled": true,
+"views": 0,
+"allowDelete": 0,
+"height": 86.698224852071
+}
+}
+]
+},
+"request": {
+"user": {
+"authenticated": true,
+"id": "5192b82720d5cd1712000cab"
+}
+}
+}

@@ -393,7 +393,19 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } 
 ;__p+=' >\n                    '+
 ( authors )+
-'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
+'\n                </a>\n                ';
+ if ( favorite_count > 0 ) {  
+;__p+=' \n                <span class="zeega-favorite_count"> ♥ '+
+( favorite_count )+
+' ';
+ if ( favorite_count == 1) {  
+;__p+=' favorite ';
+ } else {
+;__p+=' favorites ';
+ } 
+;__p+='</span>\n                ';
+ } 
+;__p+='\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
 ;__p+=''+
 ( views )+
@@ -403,7 +415,13 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
+ if ( favorite == 1 ) {  
+;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
+ } else {
+;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
+ } 
+;__p+='\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -33555,7 +33573,7 @@ function( app, Controls ) {
             if ( this.isNew() ) {
                 return app.api + "projects/" + app.project.id + "/layers";
             } else {
-                return app.api + "layers/" + this.id;
+                return app.api + "projects/" + app.project.id + "/layers/" + this.id;
             }
         },
 
@@ -34559,19 +34577,19 @@ function( app, _Layer, Visual ){
 
         
         window.onPlayerLoaded = function( containerId ) {
-            onPlayerLoaded[ containerId ] && onPlayerLoaded[ containerId ]();
+            var k = onPlayerLoaded[ containerId ] && onPlayerLoaded[ containerId ]();
         };
 
         window.onLoading= function( containerId, value ) {
-            onLoading[ containerId ] && onLoading[ containerId ](value);
+            var k = onLoading[ containerId ] && onLoading[ containerId ](value);
         };
 
         window.onStateChange= function( containerId, eventid, eventvalue ) {
-            onStateChange[ containerId ] && onStateChange[ containerId ](eventid, eventvalue);
+            var k = onStateChange[ containerId ] && onStateChange[ containerId ](eventid, eventvalue);
         };
 
         window.onError= function( containerId, value ) {
-          onError[ containerId ] && onError[ containerId ](value);
+            var k = onError[ containerId ] && onError[ containerId ](value);
         };
 
         Layer.Audio.Visual = Visual.extend({
@@ -35109,7 +35127,7 @@ function( app ) {
                 this.linkToNewPage();
                 this.closeThis();
                 this.model.visual.$el.addClass("linked-layer");
-            } else if ( this.selectedFrame !== null ) {
+            } else if ( this.selectedFrame !== null && !_.isUndefined( this.selectedFrame )) {
                 this.model.saveAttr({ to_frame: this.selectedFrame });
                 this.model.trigger("change:to_frame", this.model, this.selectedFrame );
                 this.closeThis();
@@ -35415,7 +35433,7 @@ function( app, _Layer, Visual, TextModal ) {
                 });
             }
 
-            if ( !_.isNull( this.getAttr("to_frame") ) ) {
+            if ( !_.isNull( this.getAttr("to_frame")) && !_.isUndefined ( this.getAttr("to_frame") ) ) {
                 this.$el.addClass("linked-layer link-reveal");
                 setTimeout(function() {
                     this.$el.removeClass("link-reveal");
@@ -35792,7 +35810,7 @@ function( app, Layers ) {
             if ( this.isNew() ) {
                 return app.api + 'projects/'+ app.project.id +'/sequences';
             } else {
-                return app.api +'sequences/' + this.id;
+                return app.api + 'projects/'+ app.project.id +'/sequences/' + this.id;
             }
         },
 
@@ -35865,11 +35883,15 @@ function( app, Layers ) {
         },
 
         persistLayer: function( layer ) {
-            if ( !_.contains( layer.id, this.get("persistent_layers") ) ) {
-                var pLayers = this.get("persistent_layers");
+            var persistentLayers = this.get("persistent_layers");
 
-                pLayers.push( layer.id );
-                this.set("persistent_layers", pLayers );
+            if ( !_.isArray(persistentLayers) ) {
+                persistentLayers = [];
+            }
+
+            if ( _.isEmpty(persistentLayers) || !_.contains( layer.id, persistentLayers ) ) {
+                persistentLayers.push( layer.id );
+                this.set("persistent_layers", persistentLayers );
                 this.frames.each(function( frame ) {
                     layer.order[ frame.id ] = frame.layers.length;
                     frame.layers.add( layer );
@@ -35959,9 +35981,9 @@ function( app, Backbone, Layers, ThumbWorker ) {
 
         url: function() {
             if( this.isNew() ) {
-                return app.api + 'projects/'+ app.project.id +'/sequences/'+ app.status.get("currentSequence").id +'/frames';
+                return app.api + 'projects/' + app.project.id +'/sequences/'+ app.status.get("currentSequence").id +'/frames';
             } else {
-                return app.api + 'frames/'+ this.id;
+                return app.api + 'projects/' + app.project.id + '/frames/'+ this.id;
             }
         },
 
@@ -35994,7 +36016,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
 
                 worker.postMessage({
                     cmd: 'capture',
-                    msg: app.api + "frames/" + this.id + "/thumbnail"
+                    msg: app.api + "projects/" + app.project.id + "/frames/" + this.id + "/thumbnail"
                 });
 
             }, 1000);
@@ -36589,7 +36611,7 @@ function( app, SequenceCollection ) {
                         if ( layer.get("attr").to_frame != frame.id ) {
                             var targetFrameID, targetFrame, linksFrom;
 
-                            targetFrameID = parseInt( layer.get("attr").to_frame, 10 );
+                            targetFrameID = layer.get("attr").to_frame;
                             targetFrame = this.getFrame( targetFrameID );
 
                             if ( targetFrame ) {
@@ -36809,7 +36831,7 @@ function() {
     Parser[ type ] = { name: type };
 
     Parser[ type ].validate = function( response ) {
-        if ( response.sequences && response.frames && response.layers ) {
+        if ( response.project.sequences && response.project.frames && response.project.layers ) {
             return true;
         }
         return false;
@@ -36826,39 +36848,40 @@ function() {
 
     // no op. projects are already formatted
     Parser[type].parse = function( response, opts ) {
+        removeDupeSoundtrack( response.project );
+        return response.project;
 
-        removeDupeSoundtrack( response );
 
-        if ( opts.endPage ) {
-            var endId, lastPageId, lastPage, endPage, endLayers;
+        // if ( opts.endPage ) {
+        //     var endId, lastPageId, lastPage, endPage, endLayers;
 
-            endId = -1;
-            lastPageId = response.sequences[0].frames[ response.sequences[0].frames.length - 1 ];
-            lastPage = _.find( response.frames, function( frame ) {
-                return frame.id == lastPageId;
-            });
-            endPage = _.extend({}, lastPage );
+        //     endId = -1;
+        //     lastPageId = response.sequences[0].frames[ response.sequences[0].frames.length - 1 ];
+        //     lastPage = _.find( response.frames, function( frame ) {
+        //         return frame.id == lastPageId;
+        //     });
+        //     endPage = _.extend({}, lastPage );
 
-            // only allow images, color layers
-            endLayers = _.filter(response.layers, function( layer ) {
-                return _.include(["Image", "Rectangle"], layer.type ) && _.include( endPage.layers, layer.id );
-            });
+        //     // only allow images, color layers
+        //     endLayers = _.filter(response.layers, function( layer ) {
+        //         return _.include(["Image", "Rectangle"], layer.type ) && _.include( endPage.layers, layer.id );
+        //     });
 
-            endPage.layers = _.pluck( endLayers, "id");
-            endPage.layers.push( endId );
+        //     endPage.layers = _.pluck( endLayers, "id");
+        //     endPage.layers.push( endId );
 
-            // add layer to layer array
-            response.layers.push({
-                id: endId,
-                type: "EndPageLayer"
-            });
+        //     // add layer to layer array
+        //     response.layers.push({
+        //         id: endId,
+        //         type: "EndPageLayer"
+        //     });
             
-            endPage.id = endId;
-            response.frames.push( endPage );
-            response.sequences[0].frames.push( endId );
-        }
+        //     endPage.id = endId;
+        //     response.frames.push( endPage );
+        //     response.sequences[0].frames.push( endId );
+        // }
 
-        return response;
+        // return response;
     };
 
     return Parser;
@@ -54986,7 +55009,9 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-citations",
 
+        
         serialize: function() {
+            
             if ( this.model.project ) {
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory
@@ -54998,6 +55023,7 @@ function(app, Backbone) {
         },
 
         initialize: function() {
+
             /* update the arrow state whenever a frame is rendered */
             this.model.on("frame_play", this.updateCitations, this );
             this.model.on("data_loaded", this.render, this);
@@ -55005,6 +55031,29 @@ function(app, Backbone) {
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+        },
+
+        afterRender: function(){
+            if ( app.metadata.loggedIn ){
+                this.$(".favorite").show();
+            }
+        },
+
+        toggleFavorite: function(){
+            var url;
+            this.$(".btnz").toggleClass("favorited");
+
+            if(this.model.project.get("favorite") == 1 ){
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
+                this.model.project.set({ "favorite": 0 });
+            } else {
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
+                this.model.project.set({ "favorite": 1 });
+            }
+            $.ajax({ url: url, type: 'POST', success: function(){  }  });
+
+            return false;
+
         },
 
         endPageEnter: function() {
@@ -55049,7 +55098,8 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click .ZEEGA-home": "home"
+            "click .ZEEGA-home": "home",
+            "click .favorite-btnz": "toggleFavorite"
         },
 
         fadeOut: function( stay ) {

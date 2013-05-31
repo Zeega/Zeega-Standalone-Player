@@ -37,17 +37,6 @@ function(app, Backbone) {
 
         initialize: function() {
 
-            //temp until data arrives
-
-            var favs = Math.floor(3*Math.random());
-            var fav = Math.floor(2*Math.random());
-
-            this.model.project.set({
-                favorites: favs,
-                favorite: fav
-            });
-
-
             /* update the arrow state whenever a frame is rendered */
             this.model.on("frame_play", this.updateCitations, this );
             this.model.on("data_loaded", this.render, this);
@@ -55,6 +44,12 @@ function(app, Backbone) {
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+        },
+
+        afterRender: function(){
+            if ( app.metadata.loggedIn ){
+                this.$(".favorite").show();
+            }
         },
 
         toggleFavorite: function(){
