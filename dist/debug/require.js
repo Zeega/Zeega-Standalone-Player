@@ -441,7 +441,7 @@ __p+='<a href="'+
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
+;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
 ( path )+
 ''+
 ( id )+
@@ -55262,6 +55262,9 @@ function(app, Backbone) {
             var soundtrack = this.model.getSoundtrack();
             if ( soundtrack ) {
                 this.$(".ZEEGA-sound-state").show();
+            }
+            if( !app.metadata.loggedIn ){
+                this.$(".btnz-join").show();
             }
         },
         endPageEnter: function() {

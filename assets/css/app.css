@@ -1349,6 +1349,9 @@ a:active {
 .ZEEGA-player-menu-bar a {
   cursor: pointer;
 }
+.ZEEGA-player-menu-bar .btnz-join {
+  display: none;
+}
 .ZEEGA-player-menu-bar .menu-right {
   float: right;
   margin-top: 12px;
