@@ -56,8 +56,8 @@ function(app, Backbone) {
             if ( soundtrack ) {
                 this.$(".ZEEGA-sound-state").show();
             }
-            if( !app.metadata.loggedIn ){
-                this.$(".btnz-join").show();
+            if( app.metadata.loggedIn ){
+                this.$(".btnz-join").hide();
             }
         },
         endPageEnter: function() {
