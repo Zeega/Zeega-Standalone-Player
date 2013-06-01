@@ -416,7 +416,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ;__p+='view';
  } 
 ;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
- if ( favorite ) {  
+ if ( favorite === true ) {  
 ;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
  } else {
 ;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
