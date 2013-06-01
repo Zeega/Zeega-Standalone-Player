@@ -56,12 +56,12 @@ function(app, Backbone) {
             var url;
             this.$(".btnz").toggleClass("favorited");
 
-            if(this.model.project.get("favorite") == 1 ){
+            if(this.model.project.get("favorite")){
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
-                this.model.project.set({ "favorite": 0 });
+                this.model.project.set({ "favorite": false });
             } else {
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
-                this.model.project.set({ "favorite": 1 });
+                this.model.project.set({ "favorite": true });
             }
             $.ajax({ url: url, type: 'POST', success: function(){  }  });
 

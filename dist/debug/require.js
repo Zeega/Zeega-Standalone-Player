@@ -416,7 +416,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ;__p+='view';
  } 
 ;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
- if ( favorite == 1 ) {  
+ if ( favorite ) {  
 ;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
  } else {
 ;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
@@ -55043,12 +55043,12 @@ function(app, Backbone) {
             var url;
             this.$(".btnz").toggleClass("favorited");
 
-            if(this.model.project.get("favorite") == 1 ){
+            if(this.model.project.get("favorite")){
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
-                this.model.project.set({ "favorite": 0 });
+                this.model.project.set({ "favorite": false });
             } else {
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
-                this.model.project.set({ "favorite": 1 });
+                this.model.project.set({ "favorite": true });
             }
             $.ajax({ url: url, type: 'POST', success: function(){  }  });
 
