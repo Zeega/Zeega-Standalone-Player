@@ -50,6 +50,7 @@ function(app, Backbone) {
             if ( app.metadata.loggedIn ){
                 this.$(".favorite").show();
             }
+            console.log(this.model.project)
         },
 
         toggleFavorite: function(){
