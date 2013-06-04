@@ -97,7 +97,7 @@ __p+='<a href="'+
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
