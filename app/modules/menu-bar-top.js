@@ -76,7 +76,7 @@ function(app, Backbone) {
         renderExplore: function() {
             if ( window == window.top ){
                 $("#overlays")
-                    .append("<a href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
+                    .append("<a data-bypass='true' href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
             } else {
                 if( $("audio")[0] ){
                     $("audio")[0].pause();
