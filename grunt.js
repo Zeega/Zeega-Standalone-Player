@@ -15,7 +15,17 @@ module.exports = function(grunt) {
 		// https://github.com/cowboy/grunt/blob/master/docs/task_lint.md
 		lint: {
 			files: [
-				"build/config.js", "app/**/*.js"
+				"build/config.js", [
+					"app/modules/*.js",
+
+					// engine
+					"app/engine/data-parsers/*.js",
+					"app/engine/modules/*.js",
+					"app/engine/plugins/**/*.js",
+
+					// player
+					"app/player/modules/*.js"
+				]
 			]
 		},
 
@@ -83,6 +93,7 @@ module.exports = function(grunt) {
 			]
 		},
 
+/*
 		styles: {
 			// Out the concatenated contents of the following styles into the below
 			// development file path.
@@ -97,7 +108,7 @@ module.exports = function(grunt) {
 				additional: []
 			}
 		},
-
+*/
 		// Takes the built require.js file and minifies it for filesize benefits.
 		min: {
 			"dist/release/require.js": [
@@ -228,13 +239,23 @@ module.exports = function(grunt) {
 		
 		copy: {
 
-			pre: {
+			player: {
 				options: {
 					cwd: "/",
 					flatten : false
 				},
 				files: {
-					"assets/img/zeegaplayer/": "assets/vendor/zeegaplayer/dist/release/img/**/*"
+					"assets/img/zeegaplayer/": "app/player/assets/img/*"
+				}
+			},
+
+			layers: {
+				options: {
+					cwd: "/",
+					flatten : false
+				},
+				files: {
+					"assets/img/zeegaplayer/": "app/player/assets/img/*"
 				}
 			},
 
@@ -258,7 +279,7 @@ module.exports = function(grunt) {
 	// dist/debug/templates.js, compile all the application code into
 	// dist/debug/require.js, and then concatenate the require/define shim
 	// almond.js and dist/debug/templates.js into the require.js file.
-	grunt.registerTask("debug", "clean lint  jst requirejs concat styles less");
+	grunt.registerTask("debug", "clean lint  jst requirejs concat less");
 
 	// The release task will run the debug tasks and then minify the
 	// dist/debug/require.js file and CSS files.
