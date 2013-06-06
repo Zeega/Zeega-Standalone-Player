@@ -685,7 +685,7 @@ return __p;
 this["JST"]["app/player/templates/layouts/player-layout.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class=\'ZEEGA-player-window\'></div>';
+__p+='<div class="ZEEGA-player-wrapper">\n    <div class=\'ZEEGA-player-window\'></div>\n</div>';
 }
 return __p;
 };;
@@ -16780,7 +16780,7 @@ function( $, _, Backbone, State ) {
   if (typeof exports == 'object')  module.exports = factory()
 
   /* AMD module */
-  else if (typeof define == 'function' && define.amd) define('spin',[],factory)
+  else if (typeof define == 'function' && define.amd) define('engineVendor/spin',[],factory)
 
   /* Browser global */
   else root.Spinner = factory()
@@ -32124,7 +32124,7 @@ $.widget( "ui.tooltip", {
 define("jqueryUI", function(){});
 
 define('player/app',[
-    "spin",
+    "engineVendor/spin",
     "backbone",
     "jqueryUI",
     "plugins/backbone.layoutmanager"
@@ -35947,10 +35947,10 @@ function( app, Layer, Visual ){
 
         attr: {
             title: "End Page Layer",
-            left: 0,
-            top: 0,
-            height: 100,
-            width: 100,
+            height: 112.67,
+            width: 236.72,
+            top: -6.57277,
+            left: -68.4375,
             opacity: 1,
             aspectRatio: null,
             dissolve: true
@@ -37887,9 +37887,10 @@ function( app, ControlsView ) {
 
         afterRender: function() {
             // correctly size the player window
-            this.$(".ZEEGA-player-window").css( this.getWindowSize() );
-            this.setPrevNext();
+            this.$(".ZEEGA-player-wrapper").css( this.getWrapperSize() );
+            this.$(".ZEEGA-player-window").css( this.getPlayerSize() );
 
+            this.setPrevNext();
             this.renderControls();
         },
 
@@ -37942,15 +37943,37 @@ function( app, ControlsView ) {
 
         resizeWindow: function() {
             // animate the window size in place
-            var css = this.getWindowSize();
-            this.$(".ZEEGA-player-window").animate( css );
+            var css = this.getWrapperSize();
+
+            this.$(".ZEEGA-player-wrapper").css( css );
+            this.$(".ZEEGA-player-window").css( this.getPlayerSize() );
+            
             this.model.trigger( "window_resized", css );
             app.trigger( "resize_window", css );
         },
 
+        getPlayerSize: function() {
+            var windowRatio, winHeight,
+                css = {
+                    width: 0,
+                    height: 0,
+                    top: 0,
+                    left: 0
+                };
+
+            windowRatio = this.model.get("windowRatio");
+            winHeight = app.$( this.model.get("target") ).find(".ZEEGA-player").height();
+
+            css.width = winHeight * windowRatio;
+            css.height = winHeight;
+            css.top = (winHeight - css.height) / 2;
+
+            return css;
+        },
+
         // calculate and return the correct window size for the player window
-        getWindowSize: function() {
-            var windowRatio, winWidth, winHeight, actualRatio,
+        getWrapperSize: function() {
+            var windowRatio, winWidth, winHeight, actualRatio, playerMaxWidth, playerMinWidth,
                 css = {
                     width: 0,
                     height: 0,
@@ -37963,42 +37986,60 @@ function( app, ControlsView ) {
             winHeight = app.$( this.model.get("target") ).find(".ZEEGA-player").height();
             actualRatio = winWidth / winHeight;
 
-            if ( this.model.get("cover") === true ) {
-                if ( actualRatio > windowRatio ) { // width > height // fit left & right
-                    css.width = winWidth;
-                    css.height = winWidth / windowRatio;
-                    css.top = (winHeight - css.height) / 2;
-                } else if ( this.model.get("cover") == "vertical" ) {
-                    css.width = winHeight * windowRatio;
-                    css.height = winHeight;
-                    css.left = (winWidth - css.width) / 2;
-                } else { // width < height
-                    css.width = winHeight * windowRatio;
-                    css.height = winHeight;
-                    css.left = (winWidth - css.width) / 2;
-                }
-            } else if ( this.model.get("cover") === false ) {
-                if ( actualRatio > windowRatio ) { // width > height
-                    css.width = winHeight * windowRatio;
-                    css.height = winHeight;
-                } else { // width < height
-                    css.width = winWidth;
-                    css.height = winWidth / windowRatio;
-                    css.top = (winHeight - css.height) / 2;
-                }
-            } else {
-                if ( this.model.get("cover") == "horizontal" ) { // width > height // fit left & right
-                    css.width = winWidth;
-                    css.height = winWidth / windowRatio;
-                    css.top = (winHeight - css.height) / 2;
-                } else if ( this.model.get("cover") == "vertical" ) {
-                    var left = ( winWidth - winHeight * windowRatio ) / 2;
+            playerMaxWidth = winHeight * (16/9);
+            playerMinWidth = winHeight * windowRatio;
 
-                    css.width = winHeight * windowRatio;
+
+            if ( this.model.get("mobile") ) {
+
+            } else {
+                // if ( actualRatio > windowRatio ) {           // width > height // fit left & right
+                    css.width = winWidth < playerMaxWidth ? winWidth : playerMaxWidth;
                     css.height = winHeight;
-                    css.left = left < 0 ? left : 0;
-                }
+                    css.top = (winHeight - css.height) / 2;
+                // } else {                                     // width < height
+                //     css.width = winHeight * windowRatio;
+                //     css.height = winHeight;
+                //     css.left = (winWidth - css.width) / 2;
+                // }
             }
+
+            // if ( this.model.get("cover") === true ) {
+            //     if ( actualRatio > windowRatio ) { // width > height // fit left & right
+            //         css.width = winWidth;
+            //         css.height = winWidth / windowRatio;
+            //         css.top = (winHeight - css.height) / 2;
+            //     } else if ( this.model.get("cover") == "vertical" ) {
+            //         css.width = winHeight * windowRatio;
+            //         css.height = winHeight;
+            //         css.left = (winWidth - css.width) / 2;
+            //     } else { // width < height
+            //         css.width = winHeight * windowRatio;
+            //         css.height = winHeight;
+            //         css.left = (winWidth - css.width) / 2;
+            //     }
+            // } else if ( this.model.get("cover") === false ) {
+            //     if ( actualRatio > windowRatio ) { // width > height
+            //         css.width = winHeight * windowRatio;
+            //         css.height = winHeight;
+            //     } else { // width < height
+            //         css.width = winWidth;
+            //         css.height = winWidth / windowRatio;
+            //         css.top = (winHeight - css.height) / 2;
+            //     }
+            // } else {
+            //     if ( this.model.get("cover") == "horizontal" ) { // width > height // fit left & right
+            //         css.width = winWidth;
+            //         css.height = winWidth / windowRatio;
+            //         css.top = (winHeight - css.height) / 2;
+            //     } else if ( this.model.get("cover") == "vertical" ) {
+            //         var left = ( winWidth - winHeight * windowRatio ) / 2;
+
+            //         css.width = winHeight * windowRatio;
+            //         css.height = winHeight;
+            //         css.left = left < 0 ? left : 0;
+            //     }
+            // }
 
             css.fontSize = ( css.width / 520 ) +'em';
 
@@ -38717,7 +38758,7 @@ define('modules/loader',[
     "app",
     // Libs
     "backbone",
-    "spin"
+    "engineVendor/spin"
 ],
 
 function( app, Backbone, Spinner ) {
@@ -39439,6 +39480,7 @@ function(app, Player, UI) {
             app.player = new Player.player({
                 // debugEvents: true,
                 // cover: false,
+                scalable: true,
                 endPage: true,
                 controls: false,
                 autoplay: false,
@@ -39616,8 +39658,7 @@ require.config({
         jqueryUI: ["jquery"],
 
         // Backbone.LayoutManager depends on Backbone.
-        "plugins/backbone.layoutmanager": ["backbone"],
-        "plugins/jquery-ui" : ["jquery"]
+        "plugins/backbone.layoutmanager": ["backbone"]
     }
 
 });
