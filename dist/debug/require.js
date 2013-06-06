@@ -38953,6 +38953,7 @@ function(app, Backbone) {
 
         toggleFavorite: function(){
             var url;
+
             this.$(".btnz").toggleClass("favorited");
 
             if(this.model.project.get("favorite")){
