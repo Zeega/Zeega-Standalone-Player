@@ -3033,15 +3033,20 @@ a:active {
   display: none;
 }
 .ZEEGA-chrome-metablock .favorite .btnz {
-  margin-top: 6px;
-  color: white;
-  background-color: grey;
+  background: transparent;
+  border: 1px solid #666;
+  box-shadow: none;
+  padding: 5px 20px;
+  bottom: 10px;
+  position: absolute;
+  color: #ddd;
 }
 .ZEEGA-chrome-metablock .favorite .btnz:hover {
-  background-color: #ff4500;
+  background-color: orangered;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 .ZEEGA-chrome-metablock .favorite .btnz.favorited {
-  background-color: #ff4500;
+  background-color: orangered;
   background-image: none;
 }
 .ZEEGA-chrome-metablock .citations {
