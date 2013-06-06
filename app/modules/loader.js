@@ -2,7 +2,7 @@ define([
     "app",
     // Libs
     "backbone",
-    "spin"
+    "engineVendor/spin"
 ],
 
 function( app, Backbone, Spinner ) {
