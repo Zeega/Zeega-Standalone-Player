@@ -1197,8 +1197,26 @@ table {
   margin: 0 auto;
   position: relative;
 }
-.ZEEGA-player-window {
+/*
+.transition( @property, @sec ) {
+    transition: @property @sec;
+    -webkit-transition: @property @sec;
+}
+*/
+.ZEEGA-player-wrapper {
   overflow: hidden;
+  margin: auto;
+  transition: height 0.5s;
+  -webkit-transition: height 0.5s;
+  transition: width 0.5s;
+  -webkit-transition: width 0.5s;
+}
+.ZEEGA-player-window {
+  height: 100%;
+  transition: height 0.5s;
+  -webkit-transition: height 0.5s;
+  transition: width 0.5s;
+  -webkit-transition: width 0.5s;
 }
 .ZEEGA-player-window > .visual-element {
   position: absolute;

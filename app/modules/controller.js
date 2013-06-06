@@ -26,6 +26,7 @@ function(app, Player, UI) {
             app.player = new Player.player({
                 // debugEvents: true,
                 // cover: false,
+                scalable: true,
                 endPage: true,
                 controls: false,
                 autoplay: false,
