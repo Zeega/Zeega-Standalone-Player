@@ -5,11 +5,8 @@ define([
 ],
 
 function(app, Backbone) {
-
-    // Create a new module
     var Citations = {};
 
-    // This will fetch the tutorial template and render it.
     Citations.View = Backbone.View.extend({
         
         timer: null,
@@ -18,7 +15,7 @@ function(app, Backbone) {
         hover: false,
         playing: false,
 
-        template: "menu-bar-bottom",
+        template: "app/templates/menu-bar-bottom",
 
         className: "ZEEGA-player-citations",
 
@@ -147,7 +144,7 @@ function(app, Backbone) {
 
     var CitationView = Backbone.View.extend({
         tagName: "li",
-        template: "citation",
+        template: "app/templates/citation",
 
         serialize: function() {
             var iconType;

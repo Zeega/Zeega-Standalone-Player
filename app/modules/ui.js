@@ -26,7 +26,6 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
     var FADE_OUT_DELAY = 3000;
 
-    // This will fetch the tutorial template and render it.
     UI.Layout = Backbone.Layout.extend({
 
         hasPlayed: false,

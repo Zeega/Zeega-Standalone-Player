@@ -9,7 +9,7 @@ function(app, Backbone) {
     return Backbone.View.extend({
         
         className: "pause-overlay",
-        template: "pause",
+        template: "app/templates/pause",
         
         serialize: function() {
             return this.model.project.toJSON();

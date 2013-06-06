@@ -6,28 +6,24 @@ the controller model should remove any non-route code from router.js
 define([
     "app",
     // Libs
-    "backbone",
+    "player/modules/player",
 
-    "modules/ui",
+    "modules/ui"
 
      // Plugins
-    'zeegaplayer'
 ],
 
-function(app, Backbone, UI) {
-
-    // Create a new module
+function(app, Player, UI) {
     var Controller = {};
 
-    // Does this need to be a model?? why not right?
-    Controller.Model = Backbone.Model.extend({
+    Controller.Model = app.Backbone.Model.extend({
 
         initialize: function() {
             this.initPlayer();
         },
 
         initPlayer: function() {
-            app.player = new Zeega.player({
+            app.player = new Player.player({
                 // debugEvents: true,
                 // cover: false,
                 endPage: true,

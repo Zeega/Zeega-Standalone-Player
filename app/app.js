@@ -22,25 +22,23 @@ function( $, _, Backbone, State ) {
       /*
         app.state stores information on the current state of the application
       */
-        state: new State()
+        state: new State(),
+
+        Backbone: Backbone,
+        $: $
     };
 
     // Localize or create a new JavaScript Template object.
     var JST = window.JST = window.JST || {};
 
-    Backbone.LayoutManager.configure({
+    Backbone.Layout.configure({
         // Allow LayoutManager to augment Backbone.View.prototype.
         manage: true,
-
-        paths: {
-            layout: "app/templates/layouts/",
-            template: "app/templates/"
-        },
 
         fetch: function( path ) {
             // Initialize done for use in async-mode
             var done;
-
+console.log("FETCH:", path)
             // Concatenate the file extension.
             path = path + ".html";
 

@@ -5,18 +5,15 @@ define([
 ],
 
 function(app, Backbone) {
-
-    // Create a new module
     var MenuBar = {};
 
-    // This will fetch the tutorial template and render it.
     MenuBar.View = Backbone.View.extend({
         
         visible: true,
         hover: false,
         sticky: false,
 
-        template: "menu-bar-top",
+        template: "app/templates/menu-bar-top",
 
         className: "ZEEGA-player-menu-bar",
 

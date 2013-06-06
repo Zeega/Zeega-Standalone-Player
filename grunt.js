@@ -186,9 +186,40 @@ module.exports = function(grunt) {
 		},
 
 		less: {
+
+			layers: {
+				files: {
+					"assets/css/layers.less" : "app/engine/plugins/layers/**/*.less"
+				}
+			},
+
+			controls: {
+				files: {
+					"assets/css/controls.less" : "app/engine/plugins/controls/**/*.less"
+				}
+			},
+
+			player: {
+				files: {
+					"assets/css/player.less" : "app/player/assets/css/less/_all.less"
+				}
+			},
+
+			app: {
+				files: {
+					"assets/css/app.less" : "assets/css/less/_all.less"
+				}
+			},
+
 			main: {
 				files: {
-					"assets/css/app.css" : "assets/css/less/_all.less"
+					"assets/css/style.css" : [
+						"assets/css/reset.less",
+						"assets/css/layers.less",
+						"assets/css/controls.less",
+						"assets/css/player.less",
+						"assets/css/app.less"
+					]
 				}
 			}
 		},

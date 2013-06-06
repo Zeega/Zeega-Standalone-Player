@@ -6,11 +6,8 @@ define([
 ],
 
 function( app, Backbone, Spinner ) {
-
-    // Create a new module
     var Loader = {};
 
-    // This will fetch the tutorial template and render it.
     Loader.View = Backbone.View.extend({
 
         MIN_LOAD_TIME: 3000,
@@ -22,7 +19,7 @@ function( app, Backbone, Spinner ) {
         spinner: null,
 
         className: "ZEEGA-loader-overlay",
-        template: "loader",
+        template: "app/templates/loader",
 
         initialize: function() {
             this.model.on("layer_loading", this.onLayerLoading, this );

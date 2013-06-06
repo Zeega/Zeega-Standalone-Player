@@ -5,14 +5,11 @@ define([
 ],
 
 function(app, Backbone) {
-
-    // Create a new module
     var Controls = {};
 
-    // This will fetch the tutorial template and render it.
     Controls.View = Backbone.View.extend({
         
-        template: "controls",
+        template: "app/templates/controls",
 
         className: "ZEEGA-player-controls",
 

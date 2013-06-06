@@ -2,31 +2,41 @@
 require.config({
 
     // Initialize the application with the main application file.
-    deps: ["zeegaplayer", "main"],
+    deps: ["main"],
 
     paths: {
         // JavaScript folders.
         libs: "../assets/js/libs",
         plugins: "../assets/js/plugins",
         vendor: "../assets/vendor",
+        engineVendor: "engine/vendor",
 
         // Libraries.
         jquery: "../assets/js/libs/jquery",
+        jqueryUI: "../assets/js/plugins/jquery-ui",
         lodash: "../assets/js/libs/lodash",
         backbone: "../assets/js/libs/backbone",
 
         zeega: "../assets/js/zeega",
 
-        zeegaplayer: "../assets/vendor/zeegaplayer/dist/debug/zeega",
-        spin: "../assets/js/libs/spin"
+        player: "player",
+        spin: "../assets/js/libs/spin",
+        swfObject: "engine/vendor/swfobject"
+
+        // // libs
+        // imagesLoaded: "engine/vendor/jquery.images."
+        // ddslick: "engine/vendor/ddslick"
     },
 
     shim: {
         // Backbone library depends on lodash and jQuery.
         backbone: {
-            deps: ["jquery", "lodash","zeegaplayer"],
+            deps: ["jquery", "lodash"],
             exports: "Backbone"
         },
+
+        player: ["jquery", "backbone"],
+        jqueryUI: ["jquery"],
 
         // Backbone.LayoutManager depends on Backbone.
         "plugins/backbone.layoutmanager": ["backbone"],
