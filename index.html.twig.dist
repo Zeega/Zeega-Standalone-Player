@@ -32,12 +32,19 @@
         <!-- END STYLESHEETS -->
 
 
-            <meta name="zeega" content="zeega-player"
-            data-user-thumbnail="image.png"
-            data-views="125"
-            data-directory=""
-            data-hostname=""
-             />
+            
+        <meta name="zeega" content="zeega-player"
+            data-user-thumbnail="{{project.user.thumbUrl}}"
+            data-views="{{project.views | default(0)}}"
+            data-directory="{{directory}}"
+            data-hostname="{{hostname}}"
+            data-user-id="{{project.user.id}}"
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            data-logged-in=true
+            {% else %}
+            data-logged-in=false
+            {% endif %}
+         />
         <script type="text/javascript" charset="utf-8" data-requirecontext="_" data-requiremodule="lib/swfobject" src="{{ asset('js/lib/swfobject.js') }}"></script>
 
         <script>

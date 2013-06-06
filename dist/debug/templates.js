@@ -33,7 +33,9 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="http://zeega.com/user/'+
+__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="';
+ path 
+;__p+='profile/'+
 ( userId )+
 '" ';
  if (window!=window.top) { 
@@ -43,7 +45,9 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( userThumbnail )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
-'</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
+'</div>\n            <div class="username">\n                <a class="profile-name" href="';
+ path 
+;__p+='profile/'+
 ( userId )+
 '" data-bypass="true" ';
  if (window!=window.top) { 
@@ -51,7 +55,19 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } 
 ;__p+=' >\n                    '+
 ( authors )+
-'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
+'\n                </a>\n                ';
+ if ( favorite_count > 0 ) {  
+;__p+=' \n                <span class="zeega-favorite_count"> ♥ '+
+( favorite_count )+
+' ';
+ if ( favorite_count == 1) {  
+;__p+=' favorite ';
+ } else {
+;__p+=' favorites ';
+ } 
+;__p+='</span>\n                ';
+ } 
+;__p+='\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
 ;__p+=''+
 ( views )+
@@ -61,7 +77,13 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
+ if ( favorite === true ) {  
+;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
+ } else {
+;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
+ } 
+;__p+='\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -69,22 +91,32 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="http://www.zeega.com" ';
+__p+='<a href="'+
+( path )+
+'" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="http://zeega.com/register/" ';
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+( path )+
+'register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
-( item_id )+
+;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
+( path )+
+''+
+( id )+
 '&text='+
 ( title )+
-' http://www.zeega.com/'+
-( item_id )+
-' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/'+
-( item_id )+
+' '+
+( path )+
+''+
+( id )+
+' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u='+
+( path )+
+''+
+( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
 ( tumblr_share )+
 '" target="blank"><i class="zsocial-tumblr"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';

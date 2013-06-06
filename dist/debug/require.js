@@ -371,7 +371,9 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="http://zeega.com/user/'+
+__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="';
+ path 
+;__p+='profile/'+
 ( userId )+
 '" ';
  if (window!=window.top) { 
@@ -381,7 +383,9 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( userThumbnail )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
-'</div>\n            <div class="username">\n                <a class="profile-name" href="http://zeega.com/user/'+
+'</div>\n            <div class="username">\n                <a class="profile-name" href="';
+ path 
+;__p+='profile/'+
 ( userId )+
 '" data-bypass="true" ';
  if (window!=window.top) { 
@@ -389,7 +393,19 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } 
 ;__p+=' >\n                    '+
 ( authors )+
-'\n                </a>\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
+'\n                </a>\n                ';
+ if ( favorite_count > 0 ) {  
+;__p+=' \n                <span class="zeega-favorite_count"> ♥ '+
+( favorite_count )+
+' ';
+ if ( favorite_count == 1) {  
+;__p+=' favorite ';
+ } else {
+;__p+=' favorites ';
+ } 
+;__p+='</span>\n                ';
+ } 
+;__p+='\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
 ;__p+=''+
 ( views )+
@@ -399,7 +415,13 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
+ if ( favorite === true ) {  
+;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
+ } else {
+;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
+ } 
+;__p+='\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -407,22 +429,32 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="http://www.zeega.com" ';
+__p+='<a href="'+
+( path )+
+'" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="http://zeega.com/register/" ';
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+( path )+
+'register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btns-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
-( item_id )+
+;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
+( path )+
+''+
+( id )+
 '&text='+
 ( title )+
-' http://www.zeega.com/'+
-( item_id )+
-' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/'+
-( item_id )+
+' '+
+( path )+
+''+
+( id )+
+' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u='+
+( path )+
+''+
+( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
 ( tumblr_share )+
 '" target="blank"><i class="zsocial-tumblr"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
@@ -38944,9 +38976,13 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-citations",
 
+        
         serialize: function() {
+            
             if ( this.model.project ) {
-                return _.extend({},
+                return _.extend({
+                    path: "http:" + app.metadata.hostname + app.metadata.directory
+                },
                     app.metadata,
                     this.model.project.toJSON()
                 );
@@ -38954,6 +38990,7 @@ function(app, Backbone) {
         },
 
         initialize: function() {
+
             /* update the arrow state whenever a frame is rendered */
             this.model.on("frame_play", this.updateCitations, this );
             this.model.on("data_loaded", this.render, this);
@@ -38961,6 +38998,29 @@ function(app, Backbone) {
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+        },
+
+        afterRender: function(){
+            if ( app.metadata.loggedIn ){
+                this.$(".favorite").show();
+            }
+        },
+
+        toggleFavorite: function(){
+            var url;
+            this.$(".btnz").toggleClass("favorited");
+
+            if(this.model.project.get("favorite")){
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
+                this.model.project.set({ "favorite": false });
+            } else {
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
+                this.model.project.set({ "favorite": true });
+            }
+            $.ajax({ url: url, type: 'POST', success: function(){  }  });
+
+            return false;
+
         },
 
         endPageEnter: function() {
@@ -39005,7 +39065,8 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click .ZEEGA-home": "home"
+            "click .ZEEGA-home": "home",
+            "click .favorite-btnz": "toggleFavorite"
         },
 
         fadeOut: function( stay ) {
@@ -39135,17 +39196,18 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http://zeega.com/" + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
-                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http://zeega.com/" +
+            tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
+                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
                              "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=" + encodeURIComponent( "http://zeega.com/" + this.model.project.get("item_id") );
-
+                            "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
+            //this.model.project.set({app_path: app.metadata.hostname + app.metadata.directory});
             if ( this.model.project ) {
                 return _.extend({
-                        tumblr_share: tumblr_share
+                        tumblr_share: tumblr_share,
+                        path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
                     this.model.project.toJSON()
                 );
@@ -39165,6 +39227,9 @@ function(app, Backbone) {
             if ( soundtrack ) {
                 this.$(".ZEEGA-sound-state").show();
             }
+            if( app.metadata.loggedIn ){
+                this.$(".btnz-join").hide();
+            }
         },
         endPageEnter: function() {
             this.sticky = true;
@@ -39182,7 +39247,7 @@ function(app, Backbone) {
         renderExplore: function() {
             if ( window == window.top ){
                 $("#overlays")
-                    .append("<a href='http://www.zeega.com/' class='btnz explore-zeega'>Explore More Zeegas</a>");
+                    .append("<a data-bypass='true' href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
             } else {
                 if( $("audio")[0] ){
                     $("audio")[0].pause();
