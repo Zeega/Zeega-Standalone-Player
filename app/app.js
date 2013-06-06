@@ -38,7 +38,6 @@ function( $, _, Backbone, State ) {
         fetch: function( path ) {
             // Initialize done for use in async-mode
             var done;
-console.log("FETCH:", path)
             // Concatenate the file extension.
             path = path + ".html";
 
