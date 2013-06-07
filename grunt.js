@@ -88,7 +88,7 @@ module.exports = function(grunt) {
 		// also minifies all the CSS as well.  This is named index.css, because we
 		// only want to load one stylesheet in index.html.
 		mincss: {
-			"dist/release/style.css": [
+			"dist/release/index.css": [
 				"assets/css/style.css"
 			]
 		},
