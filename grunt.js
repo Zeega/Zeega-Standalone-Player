@@ -239,6 +239,12 @@ module.exports = function(grunt) {
 		
 		copy: {
 
+			css: {
+				files: {
+					"dist/debug/index.css": "assets/css/style.css"
+				}
+			},
+
 			player: {
 				options: {
 					cwd: "/",
