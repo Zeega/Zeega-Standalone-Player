@@ -20,6 +20,42 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
+this["JST"]["app/templates/end-page.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='\n<div class="end-page-wrapper">\n    <h2>Explore More Zeegas</h2>\n\n    <article style="background-image: url('+
+(projects[0].cover_image )+
+');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a href="/profile/'+
+(projects[0].user.id )+
+'" >\n                    <div class="profile-token" style="background-image: url('+
+( projects[0].user.thumbnail_url )+
+');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
+( projects[0].title )+
+'</h1>\n                  \n                  <div class="profile-name">\n                    <a href="/profile/'+
+(projects[0].user.id)+
+'" >\n                      '+
+(projects[0].user.display_name)+
+'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="http://zeega.com/m/'+
+(id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n    <article style="background-image: url('+
+(projects[1].cover_image )+
+');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a href="/profile/'+
+(projects[1].user.id )+
+'" >\n                    <div class="profile-token" style="background-image: url('+
+( projects[1].user.thumbnail_url )+
+');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
+( projects[1].title )+
+'</h1>\n                  \n                  <div class="profile-name">\n                    <a href="/profile/'+
+(projects[1].user.id)+
+'" >\n                      '+
+(projects[1].user.display_name)+
+'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="http://zeega.com/m/'+
+(id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n    \n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){

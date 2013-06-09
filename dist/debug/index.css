@@ -2455,7 +2455,14 @@ a:active {
 .ZEEGA-sound-state.loading-2 {
   background-position: 0px -120px;
 }
-.btnz.explore-zeega {
+.ZEEGA-end-page {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 40%;
+  z-index: 10;
+}
+.ZEEGA-end-page .btnz.explore-zeega {
   background-image: url(../img/tiny-stripes-dark.png);
   position: fixed;
   margin: auto;
@@ -2470,9 +2477,107 @@ a:active {
   background-color: rgba(255, 69, 0, 0.5);
   font-size: 3em;
 }
-.btnz.explore-zeega:hover {
+.ZEEGA-end-page .btnz.explore-zeega:hover {
   color: white;
   background-color: #ff4500;
+}
+.ZEEGA-end-page h2 {
+  font-family: "futura", sans-serif;
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+.ZEEGA-end-page .end-page-wrapper {
+  margin: -117px auto 0 auto;
+  width: 620px;
+}
+.ZEEGA-end-page article:nth-child(2) {
+  margin-right: 20px;
+}
+.ZEEGA-end-page article {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  background-color: white;
+  background-image: url(../img/default_project_cover.png);
+  width: 300px;
+  height: 200px;
+  outline: 1px solid rgba(255, 255, 255, 0.6);
+  position: relative;
+  float: left;
+}
+.ZEEGA-end-page article .info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  overflow-x: hidden;
+  padding: 10px;
+  border-radius: 0 0 2px 2px;
+  color: white;
+  text-shadow: rgba(0, 0, 0, 0.498039) 2px 2px 12px;
+}
+.ZEEGA-end-page article .info-overlay .left-column {
+  float: left;
+  margin-right: 10px;
+}
+.ZEEGA-end-page article .info-overlay .left-column .profile-token {
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  border-radius: 28px;
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  float: left;
+  border: 3px solid orangered;
+}
+.ZEEGA-end-page article .info-overlay .right-column {
+  height: 46px;
+  width: 200px;
+  position: relative;
+  float: left;
+}
+.ZEEGA-end-page article .info-overlay .right-column .profile-name {
+  font-size: 0.7em;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+.ZEEGA-end-page article .info-overlay .right-column .profile-name a {
+  text-decoration: none;
+  color: orangered;
+}
+.ZEEGA-end-page article .info-overlay .right-column .profile-name .zeega-views {
+  padding-left: 10px;
+  display: none;
+}
+.ZEEGA-end-page article .info-overlay .right-column h1 {
+  font-size: 0.7em;
+  line-height: .85em;
+  margin: 0;
+}
+.ZEEGA-end-page article .mobile-play {
+  width: 100px;
+  height: 54px;
+  display: block;
+  top: 40px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50px;
+  padding: 5px 5px 3px 5px;
+  background-image: url(../img/start-button.png);
+  background-position: center;
+  background-size: 93%;
+  background-repeat: no-repeat;
 }
 .pause-overlay {
   color: white;
@@ -2565,7 +2670,7 @@ a:active {
 }
 .ZEEGA-chrome-metablock .right-col {
   float: left;
-  width: 360px;
+  width: 300px;
   min-height: 20px;
 }
 .ZEEGA-chrome-metablock .right-col .username {

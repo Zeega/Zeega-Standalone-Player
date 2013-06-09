@@ -358,6 +358,42 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
+this["JST"]["app/templates/end-page.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='\n<div class="end-page-wrapper">\n    <h2>Explore More Zeegas</h2>\n\n    <article style="background-image: url('+
+(projects[0].cover_image )+
+');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a href="/profile/'+
+(projects[0].user.id )+
+'" >\n                    <div class="profile-token" style="background-image: url('+
+( projects[0].user.thumbnail_url )+
+');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
+( projects[0].title )+
+'</h1>\n                  \n                  <div class="profile-name">\n                    <a href="/profile/'+
+(projects[0].user.id)+
+'" >\n                      '+
+(projects[0].user.display_name)+
+'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="http://zeega.com/m/'+
+(id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n    <article style="background-image: url('+
+(projects[1].cover_image )+
+');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a href="/profile/'+
+(projects[1].user.id )+
+'" >\n                    <div class="profile-token" style="background-image: url('+
+( projects[1].user.thumbnail_url )+
+');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
+( projects[1].title )+
+'</h1>\n                  \n                  <div class="profile-name">\n                    <a href="/profile/'+
+(projects[1].user.id)+
+'" >\n                      '+
+(projects[1].user.display_name)+
+'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="http://zeega.com/m/'+
+(id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n    \n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -55274,34 +55310,18 @@ function(app, Backbone) {
         endPageEnter: function() {
             this.sticky = true;
             this.show();
-
-            this.renderExplore();
+            if( this.model.getSoundtrack() ){
+                this.$(".ZEEGA-sound-state").addClass("muted");
+                this.model.getSoundtrack().visual.onPause();
+            }
         },
 
         endPageExit: function() {
             this.sticky = false;
             this.fadeOut( 0 );
-            this.unrenderExplore();
-        },
-
-        renderExplore: function() {
-            if ( window == window.top ){
-                $("#overlays")
-                    .append("<a data-bypass='true' href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].pause();
-                }
-            }
-        },
-
-        unrenderExplore: function() {
-            if ( window == window.top ){
-                $(".explore-zeega").remove();
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].play();
-                }
+            if( this.model.getSoundtrack() ){
+                this.$(".ZEEGA-sound-state").removeClass("muted");
+                this.model.getSoundtrack().visual.onPlay();
             }
         },
 
@@ -55326,6 +55346,7 @@ function(app, Backbone) {
             }
             return false;
         },
+
 
         toggleFullscreen: function() {
             if ( app.state.get("fullscreen") ) {
@@ -55434,6 +55455,70 @@ function(app, Backbone) {
     });
 
 });
+define('modules/end-page',[
+    "app",
+    // Libs
+    "backbone"
+],
+
+function(app, Backbone) {
+
+    // Create a new module
+    var EndPage = {};
+
+    // This will fetch the tutorial template and render it.
+    EndPage.View = Backbone.View.extend({
+        
+        visible: false,
+        hover: false,
+        sticky: false,
+
+        template: "end-page",
+
+        className: "ZEEGA-end-page",
+
+        initialize: function() {
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
+            this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
+            
+
+        },
+
+        serialize: function() {
+            if ( this.model.project ) {
+                return _.extend({
+                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        projects: this.relatedProjects
+                    },
+                    this.model.project.toJSON()
+                );
+            }
+        },
+
+        afterRender: function(){
+            if( app.metadata.loggedIn ){
+                this.$(".btnz-join").hide();
+            }
+        },
+        endPageEnter: function() {
+            this.show();
+        },
+
+        endPageExit: function() {
+            this.hide();
+        },
+        show: function(){
+            this.$el.fadeIn("fast");
+        },
+        hide: function(){
+            this.$el.fadeOut("fast");
+        }
+
+    });
+
+    return EndPage;
+});
 /*
 
   ui.js
@@ -55452,10 +55537,11 @@ define('modules/ui',[
     "modules/controls",
     "modules/menu-bar-bottom",
     "modules/menu-bar-top",
-    "modules/pause"
+    "modules/pause",
+    "modules/end-page"
 ],
 
-function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView, EndPage ) {
 
     // Create a new module
     var UI = {};
@@ -55478,12 +55564,14 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
             this.controls = new Controls.View({ model: app.player });
             this.citations = new MenuBarBottom.View({ model: app.player });
             this.menuBar = new MenuBarTop.View({ model: app.player });
+            this.endPage = new EndPage.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
 
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
+            this.insertView("#overlays", this.endPage );
             
             this.render();
 
