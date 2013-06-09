@@ -1,20 +1,20 @@
 
 <div class="end-page-wrapper">
     <h2>Explore More Zeegas</h2>
-
-    <article style="background-image: url(<%=projects[0].cover_image %>);" >
+<% _.each(projects, function( project ) { %>
+    <article style="background-image: url(<%=project.cover_image %>);" >
             <div class="info-overlay">
                 <div class="left-column">
-                  <a data-bypass="true" href="<%=path %>profile/<%=projects[0].user.id %>" >
-                    <div class="profile-token" style="background-image: url(<%= projects[0].user.thumbnail_url %>);"></div>
+                  <a data-bypass="true" href="<%=path %>profile/<%=project.user.id %>" >
+                    <div class="profile-token" style="background-image: url(<%= project.user.thumbnail_url %>);"></div>
                    </a>
                 </div>
                 <div class="right-column">
-                  <h1 class = "caption"><%= projects[0].title %></h1>
+                  <h1 class = "caption"><%= project.title %></h1>
                   
                   <div class="profile-name">
-                    <a data-bypass="true" href="<%=path %>profile/<%=projects[0].user.id%>" >
-                      <%=projects[0].user.display_name%>
+                    <a data-bypass="true" href="<%=path %>profile/<%=project.user.id%>" >
+                      <%=project.user.display_name%>
                     </a>
                    
                   </div>
@@ -23,30 +23,8 @@
                   
             
             </div>
-            <a href="<%=path %><%=id %>" class="mobile-play" data-bypass="true"></a>
+            <a href="<%=path %><%=project.id %>" class="mobile-play" data-bypass="true"></a>
     </article>
-    <article style="background-image: url(<%=projects[1].cover_image %>);" >
-            <div class="info-overlay">
-                <div class="left-column">
-                  <a data-bypass="true" href="<%=path %>profile/<%=projects[1].user.id %>" >
-                    <div class="profile-token" style="background-image: url(<%= projects[1].user.thumbnail_url %>);"></div>
-                   </a>
-                </div>
-                <div class="right-column">
-                  <h1 class = "caption"><%= projects[1].title %></h1>
-                  
-                  <div class="profile-name">
-                    <a data-bypass="true" href="<%=path %>profile/<%=projects[1].user.id%>" >
-                      <%=projects[1].user.display_name%>
-                    </a>
-                   
-                  </div>
-                  
-                </div>
-                  
-            
-            </div>
-            <a href="<%=path %><%=id %>" class="mobile-play" data-bypass="true"></a>
-    </article>
+<% }); %>
 
 </div>

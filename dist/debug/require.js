@@ -361,47 +361,31 @@ return __p;
 this["JST"]["app/templates/end-page.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='\n<div class="end-page-wrapper">\n    <h2>Explore More Zeegas</h2>\n\n    <article style="background-image: url('+
-(projects[0].cover_image )+
+__p+='\n<div class="end-page-wrapper">\n    <h2>Explore More Zeegas</h2>\n';
+ _.each(projects, function( project ) { 
+;__p+='\n    <article style="background-image: url('+
+(project.cover_image )+
 ');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a data-bypass="true" href="'+
 (path )+
 'profile/'+
-(projects[0].user.id )+
+(project.user.id )+
 '" >\n                    <div class="profile-token" style="background-image: url('+
-( projects[0].user.thumbnail_url )+
+( project.user.thumbnail_url )+
 ');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
-( projects[0].title )+
+( project.title )+
 '</h1>\n                  \n                  <div class="profile-name">\n                    <a data-bypass="true" href="'+
 (path )+
 'profile/'+
-(projects[0].user.id)+
+(project.user.id)+
 '" >\n                      '+
-(projects[0].user.display_name)+
+(project.user.display_name)+
 '\n                    </a>\n                   \n                  </div>\n                 \n                </div>\n                  \n            \n            </div>\n            <a href="'+
 (path )+
 ''+
-(id )+
-'" class="mobile-play" data-bypass="true"></a>\n    </article>\n    <article style="background-image: url('+
-(projects[1].cover_image )+
-');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a data-bypass="true" href="'+
-(path )+
-'profile/'+
-(projects[1].user.id )+
-'" >\n                    <div class="profile-token" style="background-image: url('+
-( projects[1].user.thumbnail_url )+
-');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
-( projects[1].title )+
-'</h1>\n                  \n                  <div class="profile-name">\n                    <a data-bypass="true" href="'+
-(path )+
-'profile/'+
-(projects[1].user.id)+
-'" >\n                      '+
-(projects[1].user.display_name)+
-'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="'+
-(path )+
-''+
-(id )+
-'" class="mobile-play" data-bypass="true"></a>\n    </article>\n\n</div>';
+(project.id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n';
+ }); 
+;__p+='\n\n</div>';
 }
 return __p;
 };
