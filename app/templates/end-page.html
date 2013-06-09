@@ -1,0 +1,52 @@
+
+<div class="end-page-wrapper">
+    <h2>Explore More Zeegas</h2>
+
+    <article style="background-image: url(<%=projects[0].cover_image %>);" >
+            <div class="info-overlay">
+                <div class="left-column">
+                  <a href="/profile/<%=projects[0].user.id %>" >
+                    <div class="profile-token" style="background-image: url(<%= projects[0].user.thumbnail_url %>);"></div>
+                   </a>
+                </div>
+                <div class="right-column">
+                  <h1 class = "caption"><%= projects[0].title %></h1>
+                  
+                  <div class="profile-name">
+                    <a href="/profile/<%=projects[0].user.id%>" >
+                      <%=projects[0].user.display_name%>
+                    </a>
+                   
+                  </div>
+                  
+                </div>
+                  
+            
+            </div>
+            <a href="http://zeega.com/m/<%=id %>" class="mobile-play" data-bypass="true"></a>
+    </article>
+    <article style="background-image: url(<%=projects[1].cover_image %>);" >
+            <div class="info-overlay">
+                <div class="left-column">
+                  <a href="/profile/<%=projects[1].user.id %>" >
+                    <div class="profile-token" style="background-image: url(<%= projects[1].user.thumbnail_url %>);"></div>
+                   </a>
+                </div>
+                <div class="right-column">
+                  <h1 class = "caption"><%= projects[1].title %></h1>
+                  
+                  <div class="profile-name">
+                    <a href="/profile/<%=projects[1].user.id%>" >
+                      <%=projects[1].user.display_name%>
+                    </a>
+                   
+                  </div>
+                  
+                </div>
+                  
+            
+            </div>
+            <a href="http://zeega.com/m/<%=id %>" class="mobile-play" data-bypass="true"></a>
+    </article>
+    
+</div>

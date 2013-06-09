@@ -1,0 +1,133 @@
+.ZEEGA-end-page{
+    display: none;
+    position: absolute;
+    width: 100%;
+    top:40%;
+    z-index: 10;
+    .btnz.explore-zeega {
+        background-image: url(../img/tiny-stripes-dark.png);
+        position: fixed;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        height: 1em;
+        width: 550px;
+        text-align: center;
+        background-color: rgba(255,69,0, 0.5);
+        font-size: 3em;
+
+        &:hover {
+            color: white;
+            background-color: rgba(255,69,0, 1);
+        }
+    }
+    h2 {
+        font-family: "futura", sans-serif;
+        color:white;
+        text-align:center;
+        font-size: 2em;
+        margin-bottom: 20px;
+
+    }
+
+    .end-page-wrapper{
+        margin: -117px auto 0 auto;
+        width: 620px;
+    }
+
+    article:nth-child(2){
+        margin-right:20px;
+    }
+
+    article {
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        background-size: cover;
+        background-color: white;
+        background-image: url(../img/default_project_cover.png);
+        width: 300px;
+        height: 200px;
+        outline: 1px solid rgba(255,255,255,0.6);
+        position: relative;
+        float:left;
+
+         .info-overlay{
+
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            overflow-x:hidden;
+            padding: 10px;
+            border-radius: 0 0 2px 2px;
+            color: white;
+            text-shadow: rgba(0, 0, 0, 0.498039) 2px 2px 12px;
+
+            .left-column{
+                float:left;
+                margin-right: 10px;
+                .profile-token{
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    -webkit-background-size: cover;
+                    -moz-background-size: cover;
+                    -o-background-size: cover;
+                    background-size: cover;
+                    border-radius: 28px;
+                    height: 40px;
+                    width: 40px;
+                    overflow: hidden;
+                    float: left;
+                    border: 3px solid orangered;
+                }
+            }
+            .right-column{
+                height: 46px;
+                width: 200px;
+                position: relative;
+                float:left;
+                
+                .profile-name{
+                    font-size: 0.7em;
+                    position: absolute;
+                    width: 100%;
+                    bottom: 0;
+                    a{
+                        text-decoration: none;
+                        color: orangered;
+                    }
+                    .zeega-views{
+                        padding-left: 10px;
+                        display: none;
+                    }
+                }    
+                h1{
+                    font-size: 0.7em;
+                    line-height: .85em;
+                    margin: 0;
+                }
+            }
+        }
+        .mobile-play{
+            width: 100px;
+            height: 54px;
+            display: block;
+            top: 40px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50px;
+            padding: 5px 5px 3px 5px;
+            background-image: url(../img/start-button.png);
+            background-position: center;
+            background-size: 93%;
+            background-repeat: no-repeat;
+        }
+    }
+}
