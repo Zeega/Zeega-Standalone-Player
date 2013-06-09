@@ -35,7 +35,7 @@ __p+='\n<div class="end-page-wrapper">\n    <h2>Explore More Zeegas</h2>\n\n    
 (projects[0].user.id)+
 '" >\n                      '+
 (projects[0].user.display_name)+
-'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="http://zeega.com/m/'+
+'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="/'+
 (id )+
 '" class="mobile-play" data-bypass="true"></a>\n    </article>\n    <article style="background-image: url('+
 (projects[1].cover_image )+
@@ -49,9 +49,9 @@ __p+='\n<div class="end-page-wrapper">\n    <h2>Explore More Zeegas</h2>\n\n    
 (projects[1].user.id)+
 '" >\n                      '+
 (projects[1].user.display_name)+
-'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="http://zeega.com/m/'+
+'\n                    </a>\n                   \n                  </div>\n                  \n                </div>\n                  \n            \n            </div>\n            <a href="/'+
 (id )+
-'" class="mobile-play" data-bypass="true"></a>\n    </article>\n    \n</div>';
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n\n</div>';
 }
 return __p;
 };
