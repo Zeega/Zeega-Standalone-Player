@@ -55560,15 +55560,20 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView,
             this.controls = new Controls.View({ model: app.player });
             this.citations = new MenuBarBottom.View({ model: app.player });
             this.menuBar = new MenuBarTop.View({ model: app.player });
-            this.endPage = new EndPage.View({ model: app.player });
+            
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
 
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
-            this.insertView("#overlays", this.endPage );
             
+            if( window == window.top ){
+                this.endPage = new EndPage.View({ model: app.player });
+                this.insertView("#overlays", this.endPage );
+            }
+            
+
             this.render();
 
             $( window ).resize(function() {
