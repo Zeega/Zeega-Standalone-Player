@@ -123,13 +123,17 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="'+
+__p+='\n';
+ if ( !window.frameElement || !window.frameElement.getAttribute("hidechrome") ) { 
+;__p+='\n\n<a href="'+
 ( path )+
 '" ';
- if (window!=window.top) { 
+ if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n';
+ } 
+;__p+='\n\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
