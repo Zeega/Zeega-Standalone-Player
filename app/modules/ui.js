@@ -50,8 +50,8 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView,
 
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
-            
-            if( window == window.top || window.endPage ){
+            console.log("the window: ",window);
+            if( window == window.top || window.endpage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
             }

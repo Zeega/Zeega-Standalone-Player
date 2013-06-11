@@ -462,7 +462,7 @@ this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='\n';
- if ( !window.hideChrome ) { 
+ if ( !window.hidechrome ) { 
 ;__p+='\n\n<a href="'+
 ( path )+
 '" ';
@@ -55571,8 +55571,8 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView,
 
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
-            
-            if( window == window.top || window.endPage ){
+            console.log("the window: ",window);
+            if( window == window.top || window.endpage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
             }
