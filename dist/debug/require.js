@@ -462,7 +462,7 @@ this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='\n';
- if ( window.frameElement && !window.frameElement.getAttribute("hidechrome") ) { 
+ if ( !window.frameElement && !window.frameElement.getAttribute("hidechrome") ) { 
 ;__p+='\n\n<a href="'+
 ( path )+
 '" ';
