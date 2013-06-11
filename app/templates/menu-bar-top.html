@@ -1,5 +1,5 @@
 
-<% if ( !window.frameElement && !window.frameElement.getAttribute("hidechrome") ) { %>
+<% if ( _.isNull(window.frameElement) || !window.frameElement.getAttribute("hidechrome") ) { %>
 
 <a href="<%= path %>" <% if (window!=window.top) { %> target="blank" <% } %> data-bypass="true" >
     <div class="ZEEGA-tab">
