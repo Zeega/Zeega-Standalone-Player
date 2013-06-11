@@ -358,6 +358,38 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
+this["JST"]["app/templates/endpage.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
+ _.each(projects, function( project ) { 
+;__p+='\n    <article style="background-image: url('+
+(project.cover_image )+
+');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a data-bypass="true" href="'+
+(path )+
+'profile/'+
+(project.user.id )+
+'" >\n                    <div class="profile-token" style="background-image: url('+
+( project.user.thumbnail_url )+
+');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
+( project.title )+
+'</h1>\n                  \n                  <div class="profile-name">\n                    <a data-bypass="true" href="'+
+(path )+
+'profile/'+
+(project.user.id)+
+'" >\n                      '+
+(project.user.display_name)+
+'\n                    </a>\n                   \n                  </div>\n                 \n                </div>\n                  \n            \n            </div>\n            <a href="'+
+(path )+
+''+
+(project.id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n';
+ }); 
+;__p+='\n\n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -32683,7 +32715,7 @@ function( Zeega, ControlView ) {
                 var attr = {};
 
                 attr[ this.propertyName ] = this.$("input").is(":checked");
-                if ( this._userOptions ) this.update( attr );
+                if ( this._userOptions.save ) this.update( attr );
 
                 if ( this._userOptions.triggerEvent ) {
                     this.model.trigger( this._userOptions.triggerEvent, attr );
@@ -34156,10 +34188,13 @@ function( app, Layer, Visual, Asker ){
         },
 
         makePageBackground: function() {
-            _.each( this.model.pageBackgroundPositioning, function( val, key ) {
+            var vals = _.extend({}, this.model.pageBackgroundPositioning );
+            
+            _.each( vals, function( val, key ) {
                 this.$el.css( key, val +"%" );
             }, this );
-            this.model.saveAttr( this.model.pageBackgroundPositioning );
+
+            this.model.saveAttr(_.extend({ page_background: true }, vals ));
         },
 
         fitToWorkspace: function() {
@@ -34966,7 +35001,7 @@ function( app, LayerModel, Visual ) {
             _.each( this.model.pageBackgroundPositioning, function( val, key ) {
                 this.$el.css( key, val +"%" );
             }, this );
-            this.model.saveAttr( this.model.pageBackgroundPositioning );
+            this.model.saveAttr( _.extend({ page_background: true }, this.model.pageBackgroundPositioning ));
         },
 
         fitToWorkspace: function() {
@@ -34991,7 +35026,7 @@ function( app, LayerModel, Visual ) {
                 top: top,
                 left: left
             });
-        },
+        }
 
   });
 
@@ -39450,35 +39485,11 @@ function(app, Backbone) {
         endPageEnter: function() {
             this.sticky = true;
             this.show();
-
-            this.renderExplore();
         },
 
         endPageExit: function() {
             this.sticky = false;
             this.fadeOut( 0 );
-            this.unrenderExplore();
-        },
-
-        renderExplore: function() {
-            if ( window == window.top ){
-                $("#overlays")
-                    .append("<a data-bypass='true' href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].pause();
-                }
-            }
-        },
-
-        unrenderExplore: function() {
-            if ( window == window.top ){
-                $(".explore-zeega").remove();
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].play();
-                }
-            }
         },
 
         events: {
@@ -39583,6 +39594,74 @@ function(app, Backbone) {
 
     return MenuBar;
 });
+define('modules/endpage',[
+    "app",
+    // Libs
+    "backbone"
+],
+
+function(app, Backbone) {
+
+    // Create a new module
+    var EndPage = {};
+
+    // This will fetch the tutorial template and render it.
+    EndPage.View = Backbone.View.extend({
+        
+        visible: false,
+        hover: false,
+        sticky: false,
+
+        template: "end-page",
+
+        className: "ZEEGA-end-page",
+
+        initialize: function() {
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
+            this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
+            
+
+        },
+
+        serialize: function() {
+            if ( this.model.project ) {
+                return _.extend({
+                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        projects: this.relatedProjects
+                    },
+                    this.model.project.toJSON()
+                );
+            }
+        },
+
+        afterRender: function(){
+            if( app.metadata.loggedIn ){
+                this.$(".btnz-join").hide();
+            }
+        },
+        endPageEnter: function() {
+            console.log("endpage enter")
+            this.show();
+        },
+
+        endPageExit: function() {
+            this.hide();
+        },
+        show: function(){
+            this.$el.fadeIn("fast");
+        },
+        hide: function(){
+            this.$el.fadeOut("fast");
+        }
+
+    });
+
+    return EndPage;
+});
+
+
+
 define('modules/pause',[
     "app",
     // Libs
@@ -39628,10 +39707,11 @@ define('modules/ui',[
     "modules/controls",
     "modules/menu-bar-bottom",
     "modules/menu-bar-top",
+    "modules/endpage",
     "modules/pause"
 ],
 
-function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, PauseView ) {
 
     // Create a new module
     var UI = {};
@@ -39659,6 +39739,11 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
+
+            if( window == window.top || (window.frameElement && window.frameElement.getAttribute("endpage")) ){
+                this.endPage = new EndPage.View({ model: app.player });
+                this.insertView("#overlays", this.endPage );
+            }
             
             this.render();
 
