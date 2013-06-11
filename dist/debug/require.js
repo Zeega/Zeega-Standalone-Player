@@ -461,13 +461,17 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="'+
+__p+='\n';
+ if ( !window.hideChrome ) { 
+;__p+='\n\n<a href="'+
 ( path )+
 '" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n';
+ } 
+;__p+='\n\n\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
@@ -55568,7 +55572,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView,
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
             
-            if( window == window.top ){
+            if( window == window.top || window.endPage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
             }
