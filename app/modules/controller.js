@@ -31,6 +31,7 @@ function(app, Player, UI) {
                 controls: false,
                 autoplay: false,
                 target: '#player',
+                preview: false,
                 data: $.parseJSON( window.projectJSON ) || null,
                 url: window.projectJSON ? null :
                     app.state.get("projectID") !== null ? app.metadata.api + "/items/" + app.state.get("projectID") :

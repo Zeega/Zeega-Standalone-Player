@@ -381,9 +381,9 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<a href="#" class="size-toggle">\n    ';
  if ( previewMode == "mobile" ) { 
-;__p+='\n        <i class="size-toggle-mobile"></i>\n    ';
+;__p+='\n        <i class="size-toggle-mobile"\n            title="Switch to laptop view"\n            data-gravity="w"\n        ></i>\n    ';
  } else { 
-;__p+='\n        <i class="size-toggle-laptop"></i>\n    ';
+;__p+='\n        <i class="size-toggle-laptop"\n            title="Switch to mobile view"\n            data-gravity="w"\n        ></i>\n    ';
  } 
 ;__p+='\n</a>';
 }
