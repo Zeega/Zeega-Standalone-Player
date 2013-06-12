@@ -55315,19 +55315,11 @@ function(app, Backbone) {
         endPageEnter: function() {
             this.sticky = true;
             this.show();
-            if( this.model.getSoundtrack() ){
-                this.$(".ZEEGA-sound-state").addClass("muted");
-                this.model.getSoundtrack().visual.onPause();
-            }
         },
 
         endPageExit: function() {
             this.sticky = false;
             this.fadeOut( 0 );
-            if( this.model.getSoundtrack() ){
-                this.$(".ZEEGA-sound-state").removeClass("muted");
-                this.model.getSoundtrack().visual.onPlay();
-            }
         },
 
         events: {
