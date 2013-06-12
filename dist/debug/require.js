@@ -54865,7 +54865,7 @@ function( app, Backbone, Spinner ) {
     // This will fetch the tutorial template and render it.
     Loader.View = Backbone.View.extend({
 
-        MIN_LOAD_TIME: 3000,
+        MIN_LOAD_TIME: 2000,
         loadTimer: null,
         isReady: false,
         /* variables keeping track of generic layer states */
