@@ -25,6 +25,11 @@ function( app, Backbone, Spinner ) {
         template: "loader",
 
         initialize: function() {
+
+            if( window != window.top ){
+                this.MIN_LOAD_TIME =0;
+            }
+
             this.model.on("layer_loading", this.onLayerLoading, this );
             this.model.on("layer_ready", this.onLayerReady, this );
         },
