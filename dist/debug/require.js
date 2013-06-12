@@ -39483,16 +39483,19 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
-            
+            this.model.on("sequence_enter", this.onSequenceEnter, this);
         },
 
         afterRender: function(){
+
+            if( app.metadata.loggedIn ){
+                this.$(".btnz-join").hide();
+            }
+        },
+        onSequenceEnter: function(){
             var soundtrack = this.model.getSoundtrack();
             if ( soundtrack ) {
                 this.$(".ZEEGA-sound-state").show();
-            }
-            if( app.metadata.loggedIn ){
-                this.$(".btnz-join").hide();
             }
         },
         endPageEnter: function() {
