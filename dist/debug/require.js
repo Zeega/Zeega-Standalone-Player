@@ -15859,6 +15859,10 @@ function( app, Backbone ) {
             frameID: null,
             windowWidth: 0,
             windowHeight: 0
+        },
+
+        emit: function() {
+            // empty fxn
         }
     });
 
@@ -36315,7 +36319,7 @@ function( app, Layers ) {
         initSoundtrackModel: function( layers ) {
             if ( this.get("attr").soundtrack ) {
                 this.soundtrackModel = app.soundtrack = layers.get( this.get("attr").soundtrack );
-                this.soundtrackModel.status = app.player.status;
+                this.soundtrackModel.status = app.player ? app.player.status : app.state;
             }
         },
 

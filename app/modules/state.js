@@ -16,6 +16,10 @@ function( app, Backbone ) {
             frameID: null,
             windowWidth: 0,
             windowHeight: 0
+        },
+
+        emit: function() {
+            // empty fxn
         }
     });
 
