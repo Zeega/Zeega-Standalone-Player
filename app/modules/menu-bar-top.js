@@ -60,35 +60,11 @@ function(app, Backbone) {
         endPageEnter: function() {
             this.sticky = true;
             this.show();
-
-            this.renderExplore();
         },
 
         endPageExit: function() {
             this.sticky = false;
             this.fadeOut( 0 );
-            this.unrenderExplore();
-        },
-
-        renderExplore: function() {
-            if ( window == window.top ){
-                $("#overlays")
-                    .append("<a data-bypass='true' href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].pause();
-                }
-            }
-        },
-
-        unrenderExplore: function() {
-            if ( window == window.top ){
-                $(".explore-zeega").remove();
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].play();
-                }
-            }
         },
 
         events: {

@@ -20,6 +20,38 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
+this["JST"]["app/templates/endpage.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
+ _.each(projects, function( project ) { 
+;__p+='\n    <article style="background-image: url('+
+(project.cover_image )+
+');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a data-bypass="true" href="'+
+(path )+
+'profile/'+
+(project.user.id )+
+'" >\n                    <div class="profile-token" style="background-image: url('+
+( project.user.thumbnail_url )+
+');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
+( project.title )+
+'</h1>\n                  \n                  <div class="profile-name">\n                    <a data-bypass="true" href="'+
+(path )+
+'profile/'+
+(project.user.id)+
+'" >\n                      '+
+(project.user.display_name)+
+'\n                    </a>\n                   \n                  </div>\n                 \n                </div>\n                  \n            \n            </div>\n            <a href="'+
+(path )+
+''+
+(project.id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n';
+ }); 
+;__p+='\n\n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -91,19 +123,23 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="'+
+__p+='\n';
+ if ( !window.frameElement || !window.frameElement.getAttribute("hidechrome") ) { 
+;__p+='\n\n<a href="'+
 ( path )+
 '" ';
- if (window!=window.top) { 
+ if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n\n\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
+;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
+ } 
+;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
 ( path )+
 ''+
 ( id )+

@@ -358,6 +358,38 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
+this["JST"]["app/templates/endpage.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
+ _.each(projects, function( project ) { 
+;__p+='\n    <article style="background-image: url('+
+(project.cover_image )+
+');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a data-bypass="true" href="'+
+(path )+
+'profile/'+
+(project.user.id )+
+'" >\n                    <div class="profile-token" style="background-image: url('+
+( project.user.thumbnail_url )+
+');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
+( project.title )+
+'</h1>\n                  \n                  <div class="profile-name">\n                    <a data-bypass="true" href="'+
+(path )+
+'profile/'+
+(project.user.id)+
+'" >\n                      '+
+(project.user.display_name)+
+'\n                    </a>\n                   \n                  </div>\n                 \n                </div>\n                  \n            \n            </div>\n            <a href="'+
+(path )+
+''+
+(project.id )+
+'" class="mobile-play" data-bypass="true"></a>\n    </article>\n';
+ }); 
+;__p+='\n\n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -429,19 +461,23 @@ return __p;
 this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<a href="'+
+__p+='\n';
+ if ( !window.frameElement || !window.frameElement.getAttribute("hidechrome") ) { 
+;__p+='\n\n<a href="'+
 ( path )+
 '" ';
- if (window!=window.top) { 
+ if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n\n\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
+;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
+ } 
+;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
 ( path )+
 ''+
 ( id )+
@@ -39030,6 +39066,9 @@ function( app, Backbone, Spinner ) {
         template: "app/templates/loader",
 
         initialize: function() {
+            if( window != window.top ){
+                this.MIN_LOAD_TIME =0;
+            }
             this.model.on("layer_loading", this.onLayerLoading, this );
             this.model.on("layer_ready", this.onLayerReady, this );
         },
@@ -39455,35 +39494,11 @@ function(app, Backbone) {
         endPageEnter: function() {
             this.sticky = true;
             this.show();
-
-            this.renderExplore();
         },
 
         endPageExit: function() {
             this.sticky = false;
             this.fadeOut( 0 );
-            this.unrenderExplore();
-        },
-
-        renderExplore: function() {
-            if ( window == window.top ){
-                $("#overlays")
-                    .append("<a data-bypass='true' href='" +  app.metadata.hostname + app.metadata.directory + "' class='btnz explore-zeega'>Explore More Zeegas</a>");
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].pause();
-                }
-            }
-        },
-
-        unrenderExplore: function() {
-            if ( window == window.top ){
-                $(".explore-zeega").remove();
-            } else {
-                if( $("audio")[0] ){
-                    $("audio")[0].play();
-                }
-            }
         },
 
         events: {
@@ -39588,6 +39603,73 @@ function(app, Backbone) {
 
     return MenuBar;
 });
+define('modules/endpage',[
+    "app",
+    // Libs
+    "backbone"
+],
+
+function(app, Backbone) {
+
+    // Create a new module
+    var EndPage = {};
+
+    // This will fetch the tutorial template and render it.
+    EndPage.View = Backbone.View.extend({
+        
+        visible: false,
+        hover: false,
+        sticky: false,
+
+        template: "app/templates/endpage",
+
+        className: "ZEEGA-end-page",
+
+        initialize: function() {
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
+            this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
+            
+
+        },
+
+        serialize: function() {
+            if ( this.model.project ) {
+                return _.extend({
+                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        projects: this.relatedProjects
+                    },
+                    this.model.project.toJSON()
+                );
+            }
+        },
+
+        afterRender: function(){
+            if( app.metadata.loggedIn ){
+                this.$(".btnz-join").hide();
+            }
+        },
+        endPageEnter: function() {
+            this.show();
+        },
+
+        endPageExit: function() {
+            this.hide();
+        },
+        show: function(){
+            this.$el.fadeIn("fast");
+        },
+        hide: function(){
+            this.$el.fadeOut("fast");
+        }
+
+    });
+
+    return EndPage;
+});
+
+
+
 define('modules/pause',[
     "app",
     // Libs
@@ -39633,10 +39715,11 @@ define('modules/ui',[
     "modules/controls",
     "modules/menu-bar-bottom",
     "modules/menu-bar-top",
+    "modules/endpage",
     "modules/pause"
 ],
 
-function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, PauseView ) {
 
     // Create a new module
     var UI = {};
@@ -39664,6 +39747,11 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView 
 
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
+
+            if( window == window.top || (window.frameElement && window.frameElement.getAttribute("endpage")) ){
+                this.endPage = new EndPage.View({ model: app.player });
+                this.insertView("#overlays", this.endPage );
+            }
             
             this.render();
 
