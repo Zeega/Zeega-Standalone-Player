@@ -48,8 +48,8 @@ function(app, Backbone) {
                         directory: app.directory,
                         hostname: app.hostname,
                         user_thumbnail: app.userThumbnail,
-                        user_id: app.userId,
-                        views: views,
+                        userId: app.userId,
+                        projectViews: views,
                         tumblr_share: tumblr_share
                     }
                     );
