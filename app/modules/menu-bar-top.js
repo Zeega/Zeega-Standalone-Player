@@ -42,14 +42,15 @@ function(app, Backbone) {
             views = app.views == 1 ? app.views + " view" : app.views + " views";
             
             if ( this.model.project ) {
-                return _.extend({
+                return _.extend(
+                    this.model.project.toJSON(),
+                    {
                         directory: app.directory,
                         hostname: app.hostname,
                         user_thumbnail: app.userThumbnail,
                         views: views,
                         tumblr_share: tumblr_share
-                    },
-                    this.model.project.toJSON()
+                    }
                     );
             }
         },
