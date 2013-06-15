@@ -6,7 +6,7 @@
         <span class="project-title"><%= title %></span>
         <span class="sequence-description"></span>
         <span class="sequence-author">
-            <a href="http:<%= hostname %><%= directory %>profile/<%= user_id %>" data-bypass="true" <% if (window!=window.top)  {  %>target="blank" <% } %> >
+            <a href="http:<%= hostname %><%= directory %>profile/<%= userId %>" data-bypass="true" <% if (window!=window.top)  {  %>target="blank" <% } %> >
             <img class = "profile-thumb" src="<%= user_thumbnail %>" />
                 <span class="username"> <%= authors %> </span>
             </a>
@@ -17,8 +17,8 @@
     <li class="project-views"><%= views %></li>
     <li><a id="project-share" href="#">share</a></li>
     <li class="slide-menu">
-        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/<%= item_id %>&text=Zeega%20Project%3A%20<%= title %> &url=http://www.zeega.com/<%= item_id %>" target="blank"><i class="zsocial-twitter"></i></a>
-        <a href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/<%= item_id %>" target="blank"><i class="zsocial-facebook"></i></a>
+        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/<%= id %>&text=Zeega%20Project%3A%20<%= title %> &url=http://www.zeega.com/<%= id %>" target="blank"><i class="zsocial-twitter"></i></a>
+        <a href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/<%= id %>" target="blank"><i class="zsocial-facebook"></i></a>
         <a href="http://www.tumblr.com/share/photo?<%= tumblr_share %>" target="blank"><i class="zsocial-tumblr"></i></a>
     </li>
     <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->

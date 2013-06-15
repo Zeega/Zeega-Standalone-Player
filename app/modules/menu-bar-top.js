@@ -27,14 +27,14 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http:" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+            tumblr_caption = "<p><a href='http:" + app.hostname + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http:" +
-                            app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+                            app.hostname + "profile/" + app.userId + "'>" + this.model.project.get("authors") + "</a></p>";
 
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
+                            "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("id");
 
 
 
@@ -48,6 +48,7 @@ function(app, Backbone) {
                         directory: app.directory,
                         hostname: app.hostname,
                         user_thumbnail: app.userThumbnail,
+                        user_id: app.userId,
                         views: views,
                         tumblr_share: tumblr_share
                     }

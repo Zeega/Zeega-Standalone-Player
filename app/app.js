@@ -23,6 +23,7 @@ function( $, _, Backbone, State ) {
         hostname: meta.data("hostname") || "",
         directory: meta.data("directory") || "",
         userThumbnail: meta.data("userThumbnail"),
+        userId: meta.data("userId"),
         views: meta.data("views"),
       /*
         app.state stores information on the current state of the application

@@ -396,7 +396,7 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ''+
 ( directory )+
 'profile/'+
-( user_id )+
+( userId )+
 '" data-bypass="true" ';
  if (window!=window.top)  {  
 ;__p+='target="blank" ';
@@ -408,13 +408,13 @@ __p+='<ul class="ZEEGA-menu-bar menu-bar-left">\n    <li>\n        <a href="http
 ' </span>\n            </a>\n        </span>\n    </li>\n</ul>\n<ul class="ZEEGA-menu-bar menu-bar-right">\n    <li class="project-views">'+
 ( views )+
 '</li>\n    <li><a id="project-share" href="#">share</a></li>\n    <li class="slide-menu">\n        <a href="https://twitter.com/intent/tweet?original_referer=http://www.zeega.com/'+
-( item_id )+
+( id )+
 '&text=Zeega%20Project%3A%20'+
 ( title )+
 ' &url=http://www.zeega.com/'+
-( item_id )+
+( id )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        <a href="http://www.facebook.com/sharer.php?u=http://www.zeega.com/'+
-( item_id )+
+( id )+
 '" target="blank"><i class="zsocial-facebook"></i></a>\n        <a href="http://www.tumblr.com/share/photo?'+
 ( tumblr_share )+
 '" target="blank"><i class="zsocial-tumblr"></i></a>\n    </li>\n    <!--<li><a id="project-credits" href="#"><i class="icon-align-justify icon-white"></i></a></li>-->\n    <li><a id="project-fullscreen-toggle" href="#"><i class="icon-resize-full icon-white"></i></a></li>\n</ul>\n';
@@ -66869,6 +66869,7 @@ function( $, _, Backbone, State ) {
         hostname: meta.data("hostname") || "",
         directory: meta.data("directory") || "",
         userThumbnail: meta.data("userThumbnail"),
+        userId: meta.data("userId"),
         views: meta.data("views"),
       /*
         app.state stores information on the current state of the application
@@ -67300,14 +67301,14 @@ function(app, Backbone) {
                 tumblr_caption,
                 views;
 
-            tumblr_caption = "<p><a href='http:" + app.hostname + this.model.project.get("item_id") + "'><strong>Play&nbsp;► " +
+            tumblr_caption = "<p><a href='http:" + app.hostname + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
                             this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='http:" +
-                            app.hostname + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+                            app.hostname + "profile/" + app.userId + "'>" + this.model.project.get("authors") + "</a></p>";
 
 
             tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
                             "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("item_id");
+                            "&click_thru=http:"+ encodeURIComponent( app.hostname ) + this.model.project.get("id");
 
 
 
@@ -67321,6 +67322,7 @@ function(app, Backbone) {
                         directory: app.directory,
                         hostname: app.hostname,
                         user_thumbnail: app.userThumbnail,
+                        user_id: app.userId,
                         views: views,
                         tumblr_share: tumblr_share
                     }
