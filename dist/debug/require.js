@@ -665,17 +665,7 @@ return __p;
 this["JST"]["app/engine/plugins/layers/rectangle/rectangle.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="visual-target"></div>\n<div class="controls-inline"></div>';
-}
-return __p;
-};
-
-this["JST"]["app/engine/plugins/layers/text/text.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div class="visual-target">'+
-( attr.content )+
-'</div>\n<div class="controls-inline"></div>';
+__p+='<div class="visual-target"></div>';
 }
 return __p;
 };
@@ -685,7 +675,7 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<div class="visual-target">'+
 ( attr.content )+
-'</div>\n<div class="controls-inline"></div>';
+'</div>';
 }
 return __p;
 };
@@ -693,7 +683,7 @@ return __p;
 this["JST"]["app/engine/plugins/layers/text_v2/textmodal.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</div>\n    <div class="modal-body">\n\n        <div class="top-box clearfix">\n            <textarea rows="4" cols="59" maxlength="140">'+
+__p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</div>\n    <div class="modal-body">\n\n        <div class="top-box clearfix">\n            <textarea rows="4" cols="59" maxlength="140" placeholder="Type your text here">'+
 ( attr.content )+
 '</textarea>\n            <select class="font-list" id="font-list-'+
 ( id )+
@@ -706,22 +696,6 @@ __p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</
 ;__p+='hide';
  } 
 ;__p+='">\n                <a href="#" class="link-new-page"><i class="icon-plus icon-white"></i></br>New Page</a>\n                <div class="divider">or</div>\n                <ul class="page-chooser-list clearfix"></ul>\n                <a href="#" class="unlink-text action"><i class="icon-minus-sign"></i> remove link</a>\n            </div>\n        </div>\n\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="text-modal-save btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
-}
-return __p;
-};
-
-this["JST"]["app/engine/plugins/layers/youtube/youtube.html"] = function(obj){
-var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
-with(obj||{}){
-__p+='<div   class="youtube-player"  class="visual-target">\n    \n\n    <iframe id="yt-player-'+
-( id )+
-'" type="text/html" width="100%" height="100%"\n        src="http://www.youtube.com/embed/'+
-( attr.uri )+
-'?enablejsapi=1&iv_load_policy=3&showinfo=0';
- if ( !/iPad/i.test(navigator.userAgent) ) { 
-;__p+='&controls=0';
- } 
-;__p+='&modestbranding=1&disablekb=1&rel=0&wmode=opaque"\n        frameborder="0">\n    </iframe>\n</div>\n<div class="play-button"></div>\n<div class="ipad-cover"> pause video to return to Zeega </div>\n<div class="controls-inline"></div>\n\n';
 }
 return __p;
 };
@@ -32867,10 +32841,6 @@ function( Zeega, ControlView ) {
 
     // Figure out the cell dimensions
     options.totalWidth = options.columns * (options.cellWidth + (2 * options.cellMargin));
-    if ($.browser.msie) {
-      options.totalWidth += 2;
-    }
-
     options.totalHeight = Math.ceil(options.colors.length / options.columns) * (options.cellHeight + (2 * options.cellMargin));
 
     // Store these options so they'll be available to the other functions
@@ -34745,11 +34715,11 @@ function( app, _Layer, Visual ){
             },
 
             onExit: function() {
-                this.audio.pause();
+                this.onPause();
             },
 
             destroy: function() {
-
+                this.onPause();
             },
 
             editor_onLayerEnter: function() {
@@ -34757,15 +34727,15 @@ function( app, _Layer, Visual ){
             },
 
             editor_onLayerExit: function() {
-
+                this.onPause();
             },
 
             playPause: function() {
                 
                 if ( this.paused ) {
-                    this.audio.play();
+                    this.onPlay();
                 } else {
-                    this.audio.pause();
+                    this.onPause();
                 }
             },
 
@@ -34773,33 +34743,39 @@ function( app, _Layer, Visual ){
                 var flashvars,
                     params,
                     attributes,
-                    containerId = "flash-" + this.model.id,
-                    _this = this;
+                    containerId = "flash-" + this.model.id;
 
 
-                jQuery("#audio-"+containerId).on("player-loaded", function(){
-                    _this.onPlayerLoaded();
-                }).on("loading", function( event, value ){
-                    _this.onLoading(value);
-                }).on("state-change", function( event, event_id, value ){
-                    _this.onStateChange(event_id,value);
-                });
+
+                $("#audio-"+containerId).on("player-loaded", 
+                        $.proxy(function(){
+                            this.onPlayerLoaded();
+                        }, this)
+                    ).on("loading",
+                        $.proxy(function( event, value ){
+                            this.onLoading( value );
+                        }, this)
+                    ).on("state-change", 
+                        $.proxy(function( event, event_id, value  ){
+                            this.onStateChange( event_id, value );
+                        }, this)
+                    );
 
                 // expose a callback to this scope, that is called from the global callback youtube calls
                 onPlayerLoaded[ containerId ] = function() {
                     
-                    jQuery("#audio-"+containerId).trigger( "player-loaded" );
+                    $("#audio-"+containerId).trigger( "player-loaded" );
 
-                    var src = jQuery("#audio-"+containerId).data("src"),
-                        cue_in = jQuery("#audio-"+containerId).data("cue_in");
+                    var src = $("#audio-"+containerId).data("src"),
+                        cue_in = $("#audio-"+containerId).data("cue_in");
 
                     flashvideoObject = document.getElementById (containerId);
                     onLoading[ containerId ] = function (value){
-                        jQuery("#audio-"+containerId).trigger( "loading", [ value ] );
+                        $("#audio-"+containerId).trigger( "loading", [ value ] );
                     };
 
                     onStateChange[ containerId ] = function (event_id, value){
-                        jQuery("#audio-"+containerId).trigger( "state-change", [ event_id, value ] );
+                        $("#audio-"+containerId).trigger( "state-change", [ event_id, value ] );
                     };
                     
                     flashvideoObject.sendToFlash("load", src + ',' + cue_in );
@@ -35038,170 +35014,6 @@ function( app, LayerModel, Visual ) {
             });
         }
 
-  });
-
-  return Layer;
-});
-
-define('engine/plugins/layers/text/text',[
-    "app",
-    "engine/modules/layer.model",
-    "engine/modules/layer.visual.view"
-],
-function( app, _Layer, Visual ) {
-
-    var Layer = app.module();
-
-    Layer.Text = _Layer.extend({
-        // TODO: is the redundant naming necessary? If this program knows
-        // this is a Layer, wouldn't "type" be sufficient?
-        layerType: "Text",
-
-        attr: {
-            citation: false,
-            color: "#FFF",
-            content: "text",
-            fontSize: 200,
-            fontFamily: "Archivo Black",
-            default_controls: true,
-            left: 30,
-            opacity: 1,
-            title: "Text Layer",
-            top: 40,
-            width: 25,
-            dissolve: true
-        },
-
-        controls: [
-            {
-                type: "resize",
-                options: {
-                    aspectRatio: false,
-                    handles: "e"
-                }
-            },
-            "rotate",
-            { type: "slider",
-                options: {
-                    title: "<i class='icon-eye-open icon-white'></i>",
-                    propertyName: "opacity",
-                    min: 0,
-                    max: 1,
-                    step: 0.001,
-                    css: true
-                }
-            },
-            { type: "color",
-                options: {
-                    title: "color",
-                    propertyName: "color"
-                }
-            },
-            "textbar"
-        ]
-    });
-
-    Layer.Text.Visual = Visual.extend({
-
-        template: "text/text",
-
-        visualProperties: [
-            "top",
-            "left",
-            "width",
-            "opacity"
-        ],
-
-        serialize: function() {
-            return this.model.toJSON();
-        },
-
-        saveContent: null,
-
-        init: function() {
-            this.saveContent = _.debounce(function() {
-                this.model.saveAttr({
-                    title: this.$(".visual-target").text(),
-                    content: this.$(".visual-target").html()
-                });
-            }.bind( this ), 1000);
-        },
-
-        afterEditorRender: function() {
-            this.$el.css({
-                color: this.model.get("attr").color,
-                fontSize: this.model.get("attr").fontSize + "%",
-                fontFamily: this.model.get("attr").fontFamily
-            });
-
-            this.$(".visual-target").attr("contenteditable", "true");
-
-            this.$el.append(
-                "<a class='drag-handle drag-handle-nw'><span class='icon-area'><i class='icon-move'></i></span></a>" +
-                "<a class='drag-handle drag-handle-ne'><span class='icon-area'><i class='icon-move'></i></span></a>" +
-                "<a class='drag-handle drag-handle-se'><span class='icon-area'><i class='icon-move'></i></span></a>" +
-                "<a class='drag-handle drag-handle-sw'><span class='icon-area'><i class='icon-move'></i></span></a>"
-            );
-            this.makeDraggable();
-            this.listen();
-        },
-
-        makeDraggable: function() {
-            this.$el.draggable({
-                handle: ".drag-handle",
-                stop: function( e, ui ) {
-                    var top, left, workspace;
-
-                    workspace = this.$el.closest(".ZEEGA-workspace");
-                    top = ui.position.top / workspace.height() * 100;
-                    left = ui.position.left / workspace.width() * 100;
-
-                    this.model.saveAttr({
-                        top: top,
-                        left: left
-                    });
-
-                    this.convertToPercents( top, left );
-                }.bind( this )
-            });
-        },
-
-        convertToPercents: function( top, left ) {
-            this.$el.css({
-                top: top + "%",
-                left: left + "%"
-            });
-        },
-
-        listen: function() {
-            this.$(".visual-target")
-                .keyup(function(e){
-                    if ( e.which == 27 ) {
-                        this.$(".visual-target").blur();
-                    }
-                    this.saveContent();
-                }.bind( this ))
-
-                .bind("paste", function(e){
-                    _.delay(function() {
-                        this.$(".visual-target").html( this.$(".visual-target").text() );
-                        this.lazyUpdate({ content: this.$(".visual-target").text() });
-                    }, 500);
-                }.bind( this ));
-
-            this.$(".visual-target").blur(function() {
-                this.saveContent();
-            }.bind( this ));
-        },
-
-        
-
-        lazyUpdate: _.debounce(function( value ) {
-            var attr = {};
-            
-            attr[ this.propertyName ] = value;
-            this.model.saveAttr( attr );
-        }, 500 )
   });
 
   return Layer;
@@ -35571,7 +35383,7 @@ function( app ) {
 
     return app.Backbone.View.extend({
 
-        template: "text_v2/textmodal",
+        template: "app/engine/plugins/layers/text_v2/textmodal",
         serialize: function() {
             return this.model.toJSON();
         },
@@ -35654,20 +35466,27 @@ function( app ) {
         },
 
         submit: function() {
-            this.model.setAttr({ content: this.$("textarea").val() });
             this.closeThis();
-            this.updateVisualElement();
 
-            if ( this.selectedFrame !== null && this.selectedFrame == "NEW_FRAME" ) {
-                this.linkToNewPage();
-                this.closeThis();
-                this.model.visual.$el.addClass("linked-layer");
-                this.model.save();
-            } else if ( this.selectedFrame !== null && !_.isUndefined( this.selectedFrame )) {
-                this.model.saveAttr({ to_frame: this.selectedFrame });
-                this.model.trigger("change:to_frame", this.model, this.selectedFrame );
-                this.closeThis();
-                this.model.visual.$el.addClass("linked-layer");
+            if ( this.$("textarea").val() !== "" ) {
+                this.model.setAttr({ content: this.$("textarea").val() });
+                this.updateVisualElement();
+
+                if ( this.selectedFrame !== null && this.selectedFrame == "NEW_FRAME" ) {
+                    this.linkToNewPage();
+                    this.closeThis();
+                    this.model.visual.$el.addClass("linked-layer");
+                    this.model.save();
+                } else if ( this.selectedFrame !== null && !_.isUndefined( this.selectedFrame )) {
+                    this.model.saveAttr({ to_frame: this.selectedFrame });
+                    this.model.trigger("change:to_frame", this.model, this.selectedFrame );
+                    this.closeThis();
+                    this.model.visual.$el.addClass("linked-layer");
+                }
+            } else {
+                this.model.collection.remove( this.model );
+                app.emit("layer_deleted", this.model );
+                $(".ZEEGA-control-floater").remove();
             }
         },
 
@@ -35731,29 +35550,6 @@ function( app ) {
         onNewFrameSave: function( newFrame ) {
             this.model.saveAttr({ to_frame: newFrame.id });
             this.model.trigger("change:to_frame", this.model, newFrame.id );
-        },
-
-        fetch: function( path ) {
-            // Initialize done for use in async-mode
-            var done;
-            // Concatenate the file extension.
-            path = app.parserPath + "plugins/layers/" + path + ".html";
-            // remove app/templates/ via regexp // hacky? yes. probably.
-            path = path.replace("app/templates/","");
-
-            // If cached, use the compiled template.
-            if ( JST[ path ] ) {
-                return JST[ path ];
-            } else {
-                // Put fetch into `async-mode`.
-                done = this.async();
-                // Seek out the template asynchronously.
-                return app.$.ajax({ url: app.root + path }).then(function( contents ) {
-                    done(
-                      JST[ path ] = _.template( contents )
-                    );
-                });
-            }
         }
     });
 
@@ -35776,7 +35572,7 @@ function( app, _Layer, Visual, TextModal ) {
         attr: {
             citation: false,
             color: "#FFF",
-            content: "text",
+            content: "",
             fontSize: 375,
             fontFamily: "Archivo Black",
             default_controls: true,
@@ -35955,7 +35751,7 @@ function( app, _Layer, Visual, TextModal ) {
         afterEditorRender: function() {
             if ( this.textModal === null ) {
                 this.textModal = new TextModal({ model: this.model });
-                if ( this.model.get("attr").content == "text" ) {
+                if ( this.model.get("attr").content == "" ) {
                     this.launchTextModal();
                 }
             }
@@ -36032,159 +35828,6 @@ function( app, _Layer, Visual, TextModal ) {
   return Layer;
 });
 
-define('engine/plugins/layers/youtube/youtube',[
-    "app",
-    "engine/modules/layer.model",
-    "engine/modules/layer.visual.view"
-],
-
-function( Zeega, LayerModel, Visual ) {
-
-
-    window.onYouTubeIframeAPIReady = function() {
-        window.jQuery(".youtube-player").trigger("api-ready");
-    };
-
-    var Layer = Zeega.module();
-
-    Layer.Youtube = LayerModel.extend({
-
-        layerType: "Youtube",
-
-        attr: {
-            title: "Youtube Layer",
-            url: "none",
-            left: 0,
-            top: 0,
-            height: 100,
-            width: 100,
-            citation: true
-        },
-        controls: [
-        
-        ]
-    });
-
-    Layer.Youtube.Visual = Visual.extend({
-
-        template: "youtube/youtube",
-        ignoreFirst: true,
-
-        afterRender: function(){
-            
-            if( /iPhone|iPod/i.test(navigator.userAgent) ) {
-                this.$(".youtube-player").addClass( "mobile" );
-            } else if( /iPad/i.test(navigator.userAgent) ) {
-                this.$(".youtube-player").addClass( "ipad" );
-            }
-
-            if (Zeega.mode == "editor" ){
-                this.$el.addClass("editor");
-                this.$el.css({"top": "46%", "left": "46%", "width": "16%", "height": "16%"});
-            }
-
-            this.ytInit();
-        },
-        events: {
-            "click .play-button": "playVideo",
-            "tap .play-button": "playVideo"
-        },
-
-        ytInit: function(){
-            window.jQuery(this.$(".youtube-player" )).on("api-ready", jQuery.proxy( this.onApiReady, this) );
-
-            if ( _.isUndefined( window.YT ) ){
-                var tag = document.createElement('script');
-                tag.src = "//www.youtube.com/iframe_api";
-                var firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            } else {
-                this.onApiReady();
-            }
-        },
-
-        onPlayerReady: function(e){
-            this.model.trigger( "visual_ready", this.model.id );
-        },
-
-        onStateChange: function(e){
-            var currentSequence;
-
-            if( this.model.status.get("current_sequence_model")){
-                currentSequence = this.model.status.get("current_sequence_model");
-            } else {
-                currentSequence = this.model.status.get("currentSequence");
-            }
-
-            if( currentSequence.get("attr").soundtrack && /iPad/i.test(navigator.userAgent) && e.data ==2 && this.ignoreFirst ) {
-                this.ignoreFirst = false;
-                this.ytPlayer.playVideo();
-            } else if (e.data == 2 || e.data == 5){
-                if( /iPad/i.test(navigator.userAgent) ) {
-                    this.$(".ipad-cover").removeClass("visible");
-                }
-                if( Zeega.mode == "player"){
-                    this.model.status.get("project").play();
-                } else if (Zeega.mode == "editor" ){
-                    this.$el.addClass("editor");
-                    this.$el.css({"top": "46%", "left": "46%", "width": "16%", "height": "16%"});
-                }
-
-                this.$(".youtube-player").removeClass("active");
-                this.$(".play-button").fadeIn("fast");
-                
-            } else if ( e.data == 1 ){
-                if( Zeega.mode == "player"){
-                    this.model.status.get("project").suspend();
-                }
-                this.$(".play-button").fadeOut("fast");
-                this.$(".youtube-player").addClass("active");
-               
-                if( /iPad/i.test(navigator.userAgent) ) {
-                    this.$(".ipad-cover").addClass("visible");
-                }
-            }
-        },
-
-        onApiReady: function(){
-            var onPlayerReady = jQuery.proxy( this.onPlayerReady, this),
-                onStateChange = jQuery.proxy( this.onStateChange, this);
-
-            this.$("#yt-player-" + this.model.id).attr("id", "yt-player-" + this.model.id + "-" + this.model.cid );
-
-            this.ytPlayer = new YT.Player("yt-player-" + this.model.id + "-" + this.model.cid, {
-                    events:{
-                        'onReady': onPlayerReady,
-                        'onStateChange': onStateChange
-                    }
-                });
-        },
-
-        playVideo: function(){
-
-            if( Zeega.mode == "player"){
-                this.model.status.get("project").suspend();
-            } else if ( Zeega.mode == "editor" ){
-                this.$el.removeClass("editor");
-                this.$el.css({"top": "0", "left": "0", "width": "100%", "height": "100%"}, 1000);
-            }
-
-            this.$(".play-button").fadeOut("fast");
-            this.$(".youtube-player").addClass("active");
-            this.ytPlayer.playVideo();
-        },
-
-        onExit: function(){
-            this.ytPlayer.pauseVideo();
-            if( Zeega.mode == "player"){
-                this.model.status.get("project").play();
-            }
-        }
-
-    });
-
-    return Layer;
-});
 define('engine/plugins/layers/end_page/endpage',[
     "player/app",
     "engine/modules/layer.model",
@@ -36247,9 +35890,7 @@ define('engine/plugins/layers/_all',[
     "engine/plugins/layers/link/link",
     "engine/plugins/layers/audio/audio",
     "engine/plugins/layers/rectangle/rectangle",
-    "engine/plugins/layers/text/text",
     "engine/plugins/layers/text_v2/text",
-    "engine/plugins/layers/youtube/youtube",
     "engine/plugins/layers/end_page/endpage"
 ],
 function(
@@ -36257,9 +35898,7 @@ function(
     link,
     audio,
     rectangle,
-    text,
     textV2,
-    youtube,
     endpage
 ) {
     var Plugins = {};
@@ -36270,9 +35909,7 @@ function(
         link,
         audio,
         rectangle,
-        text,
         textV2,
-        youtube,
         endpage
     );
 });
@@ -36318,8 +35955,14 @@ function( app, Layers ) {
 
         initSoundtrackModel: function( layers ) {
             if ( this.get("attr").soundtrack ) {
+
                 this.soundtrackModel = app.soundtrack = layers.get( this.get("attr").soundtrack );
-                this.soundtrackModel.status = app.player ? app.player.status : app.state;
+
+                if ( app.mode == "editor" ) {
+                    this.soundtrackModel.status = app;
+                } else {
+                    this.soundtrackModel.status = app.player ? app.player.status : app.state;
+                }
             }
         },
 
