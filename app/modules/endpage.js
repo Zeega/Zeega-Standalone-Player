@@ -24,8 +24,6 @@ function(app, Backbone) {
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
             this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
-            
-
         },
 
         serialize: function() {
