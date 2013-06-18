@@ -1,6 +1,30 @@
 @image-folder: '../img';
 
 
+[class^="itemz-"] {
+  
+  background-image: url('@{image-folder}/sprite-item-citations-white.png');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  background-size: 15px 135px;
+}
+
+.itemz-mixin(@position) {
+  background-position: (0px) (@position*-15px);
+}
+.itemz-twitter        { .itemz-mixin(1) }
+.itemz-facebook       { .itemz-mixin(2) }
+.itemz-instagram         { .itemz-mixin(3) }
+.itemz-flickr          { .itemz-mixin(4) }
+.itemz-soundcloud          { .itemz-mixin(5) }
+.itemz-tumblr          { .itemz-mixin(6) }
+.itemz-giphy          { .itemz-mixin(7) }
+.itemz-youtube          { .itemz-mixin(8) }
+
+
 [class^="zsocial-"] {
   
   background-image: url('@{image-folder}/social-sprites-33px.png');

@@ -33557,8 +33557,8 @@ function( app, Controls ) {
 
         // when the parent collection is resorted as in a layer shuffle
         onSort: function( collection ) {
-
             var zIndex = this.order[ collection.frame.id ];
+
             this.updateZIndex( zIndex );
         },
 
@@ -38019,6 +38019,8 @@ function( app, ArrowView, CloseView, PlayPauseView, SizeToggle ) {
             this.model.on("frame_play", this.onFramePlay, this );
             this.model.on("play", this.onPlay, this );
             this.model.on("pause", this.onPause, this );
+
+            this.model.on("player_destroyed", this.cleanup, this );
         },
 
         beforeRender: function() {
@@ -38108,6 +38110,10 @@ function( app, ArrowView, CloseView, PlayPauseView, SizeToggle ) {
 
         disableArrow: function(className) {
             this.$("."+ className).addClass("disabled");
+        },
+
+        cleanup: function() {
+            $(".tipsy").remove();
         }
 
     });
