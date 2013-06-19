@@ -5,9 +5,9 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<a href="'+
 ( attr.attribution_uri )+
-'" target="blank">\n    <i class="icon-'+
-( iconType )+
-' icon-white"></i>\n</a>';
+'" target="blank">\n    <i class="itemz-'+
+( attr.archive.toLowerCase() )+
+'"></i>\n</a>';
 }
 return __p;
 };
