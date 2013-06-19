@@ -477,23 +477,15 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
-( path )+
-''+
-( id )+
-'&text='+
-( title )+
-' '+
-( path )+
-''+
-( id )+
-' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u='+
-( path )+
-''+
-( id )+
-'" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
-( tumblr_share )+
-'" target="blank"><i class="zsocial-tumblr"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
+;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="'+
+( share_links.twitter )+
+'" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="'+
+( share_links.facebook )+
+'" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="'+
+( share_links.tumblr )+
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n    <a class="social-share-icon" href="'+
+( share_links.reddit )+
+'" target="blank"><i class="zsocial-reddit"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
 }
 return __p;
 };
@@ -39107,26 +39099,48 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
-            var tumblr_share,
-                tumblr_caption,
-                views;
-
-            tumblr_caption = "<p><a href='" +  app.metadata.hostname + app.metadata.directory + this.model.project.get("id") + "'><strong>Play&nbsp;► " +
-                            this.model.project.get("title") + "</strong></a></p><p>A Zeega by&nbsp;<a href='"  + app.metadata.hostname + app.metadata.directory +
-                             "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
-
-            tumblr_share = "source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
-                            "&caption=" + encodeURIComponent( tumblr_caption ) +
-                            "&click_thru=" + encodeURIComponent( app.metadata.hostname + app.metadata.directory + this.model.project.get("id") );
-            //this.model.project.set({app_path: app.metadata.hostname + app.metadata.directory});
             if ( this.model.project ) {
                 return _.extend({
-                        tumblr_share: tumblr_share,
+                        share_links: this.getShareLinks(),
                         path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
                     this.model.project.toJSON()
                 );
             }
+        },
+
+         getShareLinks: function() {
+            var html,
+                links = {},
+                webRoot = "http:" + app.metadata.hostname + app.metadata.directory;
+                
+
+            if( !_.isUndefined(this.model.project.get("title"))){
+                title = this.model.project.get("title");
+            } else {
+                title = "";
+            }
+            
+
+            html = "<p>" + title + "</p>" +
+                "<p><a href='" + webRoot + this.model.project.get("id") + "'>" +
+                "<strong>►&nbsp;Play&nbsp;Zeega&nbsp;►</strong></a>" +
+                "</p><p>by&nbsp;<a href='" + webRoot + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+
+            links.tumblr = "http://www.tumblr.com/share/photo?source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
+                "&caption=" + encodeURIComponent( html ) +
+                "&click_thru="+ encodeURIComponent( webRoot ) + this.model.project.get("id");
+
+            links.reddit = "http://www.reddit.com/submit?url=" + encodeURIComponent( webRoot ) + this.model.project.get("id") +
+                "&title=" + encodeURIComponent( title );
+
+            links.twitter = "https://twitter.com/intent/tweet?original_referer=" + encodeURIComponent( webRoot ) + this.model.project.get("id") +
+                "&text=" + encodeURIComponent( title  + " made w/ @zeega") +
+                "&url=" + encodeURIComponent( webRoot ) + this.model.project.get("id");
+
+            links.facebook = "http://www.facebook.com/sharer.php?u=" + encodeURIComponent( webRoot ) + this.model.project.get("id");
+
+            return links;
         },
 
         initialize: function() {
@@ -39200,6 +39214,8 @@ function(app, Backbone) {
 
             this.$("#project-fullscreen-toggle").text("exit fullscreen");
         },
+
+
 
         leaveFullscreen : function() {
             app.state.set("fullscreen", false );
