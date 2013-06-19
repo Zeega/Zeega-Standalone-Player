@@ -139,23 +139,15 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="https://twitter.com/intent/tweet?original_referer='+
-( path )+
-''+
-( id )+
-'&text='+
-( title )+
-' '+
-( path )+
-''+
-( id )+
-' made w/ @zeega" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="http://www.facebook.com/sharer.php?u='+
-( path )+
-''+
-( id )+
-'" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="http://www.tumblr.com/share/photo?'+
-( tumblr_share )+
-'" target="blank"><i class="zsocial-tumblr"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
+;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="'+
+( share_links.twitter )+
+'" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="'+
+( share_links.facebook )+
+'" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="'+
+( share_links.tumblr )+
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n    <a class="social-share-icon" href="'+
+( share_links.reddit )+
+'" target="blank"><i class="zsocial-reddit"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
 }
 return __p;
 };
