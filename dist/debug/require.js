@@ -383,7 +383,9 @@ __p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
 (path )+
 ''+
 (project.id )+
-'" class="mobile-play" data-bypass="true"></a>\n    </article>\n';
+'" class="play-next" data-id="'+
+(project.id )+
+'" data-bypass="true"></a>\n    </article>\n';
  }); 
 ;__p+='\n\n</div>';
 }
@@ -403,7 +405,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="';
+__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
@@ -415,7 +417,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( userThumbnail )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
-'</div>\n            <div class="username">\n                <a class="profile-name" href="';
+'</div>\n            <div class="username">\n                <a class="profile-name profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
@@ -477,15 +479,15 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="'+
+;__p+='\n\n<div class="menu-right">\n    <span class ="share-network">\n        <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
-'" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-twitter"></i></a>\n        <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
-'" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-facebook"></i></a>\n        <a name="tumblr" class="social-share-icon" href="'+
 ( share_links.tumblr )+
-'" target="blank"><i class="zsocial-tumblr"></i></a>\n    <a class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a name="reddit" class="social-share-icon" href="'+
 ( share_links.reddit )+
-'" target="blank"><i class="zsocial-reddit"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
+'" target="blank"><i class="zsocial-reddit"></i></a>\n    </span>\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
 }
 return __p;
 };
@@ -17097,7 +17099,11 @@ function( $, _, Backbone, State, Spinner ) {
         state: new State(),
 
         Backbone: Backbone,
-        $: $
+        $: $,
+        emit: function( event, args ) {
+            // other things can be done here as well
+            this.trigger( event, args );
+        }
     };
 
     var opts = {
@@ -38937,15 +38943,18 @@ function(app, Backbone) {
 
         toggleFavorite: function(){
             var url;
-
             this.$(".btnz").toggleClass("favorited");
 
             if(this.model.project.get("favorite")){
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
                 this.model.project.set({ "favorite": false });
+                app.emit("unfavorite");
+
+
             } else {
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
                 this.model.project.set({ "favorite": true });
+                app.emit("favorite");
             }
             $.ajax({ url: url, type: 'POST', success: function(){  }  });
 
@@ -38995,8 +39004,9 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click .ZEEGA-home": "home",
-            "click .favorite-btnz": "toggleFavorite"
+            "click .ZEEGA-home": "startOver",
+            "click .favorite-btnz": "toggleFavorite",
+            "click .profile-link": "onProfile"
         },
 
         fadeOut: function( stay ) {
@@ -39040,6 +39050,10 @@ function(app, Backbone) {
             this.fadeOut();
         },
 
+        onProfile: function(){
+            app.emit("to_profile");
+        },
+
         playpause: function() {
             if ( this.model.state == "paused") {
                 this.model.play();
@@ -39049,11 +39063,11 @@ function(app, Backbone) {
             return false;
         },
 
-        home: function() {
+        startOver: function() {
             
             this.model.status.set("frameHistory",[]);
             this.model.cueFrame( this.model.get("startFrame") );
-            
+            app.emit("start_over", {source: "button"});
             return false;
         }
     });
@@ -39097,6 +39111,7 @@ function(app, Backbone) {
         onMouseLeave: function() {
             this.options.parent.$(".citation-title").empty();
         }
+
   
     });
 
@@ -39200,8 +39215,10 @@ function(app, Backbone) {
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
-            "click .project-title": "home",
-            "click .ZEEGA-sound-state": "toggleMute"
+            "click .project-title": "startOver",
+            "click .ZEEGA-sound-state": "toggleMute",
+            "click .share-network a": "onShareLinkClick",
+            "click .ZEEGA-tab": "onHome"
         },
 
         toggleMute: function(){
@@ -39210,9 +39227,11 @@ function(app, Backbone) {
                 if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
                     this.$(".ZEEGA-sound-state").removeClass("muted");
                     soundtrack.visual.onPlay();
+                    app.emit("mute_toggle", { state: "unmuted" });
                 } else {
                     this.$(".ZEEGA-sound-state").addClass("muted");
                     soundtrack.visual.onPause();
+                    app.emit("mute_toggle", { state: "muted" });
                 }
             }
             return false;
@@ -39221,8 +39240,10 @@ function(app, Backbone) {
         toggleFullscreen: function() {
             if ( app.state.get("fullscreen") ) {
                 this.leaveFullscreen();
+                app.emit("fullscreen_toggle", { state: "noFullscreen" });
             } else {
                 this.goFullscreen();
+                app.emit("fullscreen_toggle", { state: "fullscreen" });
             }
             return false;
         },
@@ -39290,10 +39311,20 @@ function(app, Backbone) {
             this.fadeOut();
         },
 
-        home: function() {
+        startOver: function() {
             this.model.cueFrame( this.model.get("startFrame") );
-            
+            app.emit("start_over", {source: "title"});
             return false;
+        },
+
+        onShareLinkClick: function( event ){
+            app.emit( "share", {
+                "type": event.currentTarget.name
+            });
+        },
+
+        onHome: function( ){
+            app.emit("to_home");
         }
 
     });
@@ -39314,6 +39345,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     EndPage.View = Backbone.View.extend({
         
+        viewed: false,
         visible: false,
         hover: false,
         sticky: false,
@@ -39353,6 +39385,10 @@ function(app, Backbone) {
         },
         show: function(){
             this.$el.fadeIn("fast");
+            if( !this.viewed ){
+                this.viewed = true;
+                app.emit("viewed_to_end");
+            }
         },
         hide: function(){
             this.$el.fadeOut("fast");
@@ -39521,6 +39557,148 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
     // Required, return the module for AMD compliance
     return UI;
 });
+define('analytics/analytics',[
+    "app",
+
+    "backbone"
+],
+
+function( app ) {
+
+    return Backbone.Model.extend({
+
+        loggingEnabled: true,
+
+        initialize: function() {
+            app.on( "all", this.onEvent, this );
+            if( !window.mixpanel ){
+                this.generateConsole();
+            }
+        },
+
+        onEvent: function( event, args ){
+            if(_.contains( this.plainEvents, event )){
+                this.trackEvent (event, args);
+            } else if( _.contains( this.modelEvents, event ) ) {
+                this.parseModelEvent (event, args);
+            } else {
+                //console.log("untracked event:: ", event, args );
+            }
+        },
+
+        parseModelEvent: function ( event, model ){
+            var params = {};
+            if( model.modelType == "frame" ){
+                params.layerCount = model.layers.length;
+            } else if ( model.modelType == "layer" ){
+                params = {
+                    type: model.get("type"),
+                    source: model.get("attr").archive ?  model.get("attr").archive : "none"
+                }
+            } else if ( model.modelType == "sequence" ){
+                params = {
+                    pageCount: model.frames.length
+                }
+            } else if ( model.modelType == "item" ){
+                params = {
+                    type: model.get("media_type"),
+                    source: model.get("archive") ?  model.get("archive") : "none"
+                }
+            }
+            
+            params = _.extend( params, model.eventData );
+
+            this.trackEvent( event, params );
+
+
+        },
+
+        setGlobals: function ( args ){
+
+            _.each(args, function (value, key){
+                var param = {};
+                param[ key ] = value;
+                mixpanel.register( param );
+            });
+        },
+
+        trackEvent: function ( event, args ){
+            mixpanel.track( event, args );
+        },
+
+        plainEvents: [
+        //editor
+            "project_preview",
+            "media_search",
+            "page_added",
+            "layer_font_change",
+            "toggle_help",
+            "help",
+            "preview_toggle_view",
+            "toggle_page_background",
+            "new_zeega",
+            "advance_toggle",
+          
+           // "view_item",
+
+            //player
+            
+            // "start_over",
+            // "mute_toggle",
+            // "fullscreen_toggle",
+            "zeega_view",
+            "favorite",
+            "unfavorite",
+            "viewed_to_end",
+
+
+
+        //shared
+
+            "share",
+            "to_profile",
+            "to_home"
+
+        ],
+
+        modelEvents: [
+        //editor
+            "page_delete",
+            "layer_added_success",
+            "layer_deleted",
+            "soundtrack_added_success",
+            "soundtrack_delete",
+            "pages_reordered",
+            "layers_reordered",
+            "select_link_page",
+            "link_new_page",
+            "unlink",
+            "init_link"
+
+
+        ],
+
+        generateConsole: function(){
+
+            var debug = this.loggingEnabled;
+
+            window.mixpanel = {
+                register: function (obj){
+                    if( debug ){
+                        console.log("registering global property::  " + _.keys(obj) + " : " + _.values(obj) );
+                    }
+                },                
+                track: function ( event, params ){
+                    if( debug ){
+                        console.log( "tracking event:: " + event, params );
+                    }
+                }
+            }
+        }
+
+    });
+
+});
 /*
 
 the controller model should remove any non-route code from router.js
@@ -39531,12 +39709,13 @@ define('modules/controller',[
     // Libs
     "player/modules/player",
 
-    "modules/ui"
+    "modules/ui",
+    "analytics/analytics"
 
      // Plugins
 ],
 
-function(app, Player, UI) {
+function(app, Player, UI, Analytics) {
     var Controller = {};
 
     Controller.Model = app.Backbone.Model.extend({
@@ -39546,6 +39725,8 @@ function(app, Player, UI) {
         },
 
         initPlayer: function() {
+            var context;
+
             app.player = new Player.player({
                 // debugEvents: true,
                 // cover: false,
@@ -39562,6 +39743,35 @@ function(app, Player, UI) {
                 startFrame: app.state.get("frameID")
             });
 
+            //initialize analytics
+            app.analytics = new Analytics();
+
+
+            //detect context
+
+            if( window==window.top ){
+                context = "web";
+            } else if ( window.frameElement && window.frameElement.getAttribute("hidechrome") ) {
+                context = "homepage";
+            } else {
+                context = "embed";
+            }
+
+            app.analytics.setGlobals({
+                projectId: app.player.project.get("id"),
+                projectPageCount: app.player.project.sequences.at(0).frames.length,
+                userId: app.metadata.userId,
+                userName: app.metadata.userName,
+                app: "player",
+                context: context
+            });
+
+            app.analytics.trackEvent("zeega_view");
+
+
+
+
+
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
@@ -39569,6 +39779,7 @@ function(app, Player, UI) {
             }
             app.player.on('frame_play', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
+           
         },
 
         onDataLoaded: function() {

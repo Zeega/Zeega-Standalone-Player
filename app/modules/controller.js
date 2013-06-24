@@ -8,12 +8,13 @@ define([
     // Libs
     "player/modules/player",
 
-    "modules/ui"
+    "modules/ui",
+    "analytics/analytics"
 
      // Plugins
 ],
 
-function(app, Player, UI) {
+function(app, Player, UI, Analytics) {
     var Controller = {};
 
     Controller.Model = app.Backbone.Model.extend({
@@ -23,6 +24,8 @@ function(app, Player, UI) {
         },
 
         initPlayer: function() {
+            var context;
+
             app.player = new Player.player({
                 // debugEvents: true,
                 // cover: false,
@@ -39,6 +42,35 @@ function(app, Player, UI) {
                 startFrame: app.state.get("frameID")
             });
 
+            //initialize analytics
+            app.analytics = new Analytics();
+
+
+            //detect context
+
+            if( window==window.top ){
+                context = "web";
+            } else if ( window.frameElement && window.frameElement.getAttribute("hidechrome") ) {
+                context = "homepage";
+            } else {
+                context = "embed";
+            }
+
+            app.analytics.setGlobals({
+                projectId: app.player.project.get("id"),
+                projectPageCount: app.player.project.sequences.at(0).frames.length,
+                userId: app.metadata.userId,
+                userName: app.metadata.userName,
+                app: "player",
+                context: context
+            });
+
+            app.analytics.trackEvent("zeega_view");
+
+
+
+
+
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
@@ -46,6 +78,7 @@ function(app, Player, UI) {
             }
             app.player.on('frame_play', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
+           
         },
 
         onDataLoaded: function() {

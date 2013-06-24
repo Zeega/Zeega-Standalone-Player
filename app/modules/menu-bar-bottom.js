@@ -51,15 +51,18 @@ function(app, Backbone) {
 
         toggleFavorite: function(){
             var url;
-
             this.$(".btnz").toggleClass("favorited");
 
             if(this.model.project.get("favorite")){
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
                 this.model.project.set({ "favorite": false });
+                app.emit("unfavorite");
+
+
             } else {
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
                 this.model.project.set({ "favorite": true });
+                app.emit("favorite");
             }
             $.ajax({ url: url, type: 'POST', success: function(){  }  });
 
@@ -109,8 +112,9 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click #project-play-pause": "playpause",
-            "click .ZEEGA-home": "home",
-            "click .favorite-btnz": "toggleFavorite"
+            "click .ZEEGA-home": "startOver",
+            "click .favorite-btnz": "toggleFavorite",
+            "click .profile-link": "onProfile"
         },
 
         fadeOut: function( stay ) {
@@ -154,6 +158,10 @@ function(app, Backbone) {
             this.fadeOut();
         },
 
+        onProfile: function(){
+            app.emit("to_profile");
+        },
+
         playpause: function() {
             if ( this.model.state == "paused") {
                 this.model.play();
@@ -163,11 +171,11 @@ function(app, Backbone) {
             return false;
         },
 
-        home: function() {
+        startOver: function() {
             
             this.model.status.set("frameHistory",[]);
             this.model.cueFrame( this.model.get("startFrame") );
-            
+            app.emit("start_over", {source: "button"});
             return false;
         }
     });
@@ -211,6 +219,7 @@ function(app, Backbone) {
         onMouseLeave: function() {
             this.options.parent.$(".citation-title").empty();
         }
+
   
     });
 
