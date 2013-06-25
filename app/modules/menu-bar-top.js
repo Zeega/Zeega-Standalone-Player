@@ -96,8 +96,10 @@ function(app, Backbone) {
             "click #project-fullscreen-toggle": "toggleFullscreen",
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
-            "click .project-title": "home",
-            "click .ZEEGA-sound-state": "toggleMute"
+            "click .project-title": "startOver",
+            "click .ZEEGA-sound-state": "toggleMute",
+            "click .share-network a": "onShare",
+            "click .ZEEGA-tab": "onHome"
         },
 
         toggleMute: function(){
@@ -106,9 +108,11 @@ function(app, Backbone) {
                 if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
                     this.$(".ZEEGA-sound-state").removeClass("muted");
                     soundtrack.visual.onPlay();
+                    app.emit("mute_toggle", { state: "unmuted" });
                 } else {
                     this.$(".ZEEGA-sound-state").addClass("muted");
                     soundtrack.visual.onPause();
+                    app.emit("mute_toggle", { state: "muted" });
                 }
             }
             return false;
@@ -117,8 +121,10 @@ function(app, Backbone) {
         toggleFullscreen: function() {
             if ( app.state.get("fullscreen") ) {
                 this.leaveFullscreen();
+                app.emit("fullscreen_toggle", { state: "noFullscreen" });
             } else {
                 this.goFullscreen();
+                app.emit("fullscreen_toggle", { state: "fullscreen" });
             }
             return false;
         },
@@ -186,10 +192,20 @@ function(app, Backbone) {
             this.fadeOut();
         },
 
-        home: function() {
+        startOver: function() {
             this.model.cueFrame( this.model.get("startFrame") );
-            
+            app.emit("start_over", {source: "title"});
             return false;
+        },
+
+        onShare: function( event ){
+            app.emit( "share", {
+                "type": event.currentTarget.name
+            });
+        },
+
+        onHome: function( ){
+            app.emit("to_home");
         }
 
     });

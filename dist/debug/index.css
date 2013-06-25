@@ -2945,7 +2945,7 @@ a:active {
   line-height: .85em;
   margin: 0;
 }
-.ZEEGA-end-page article .mobile-play {
+.ZEEGA-end-page article .play-next {
   opacity: 0.8;
   width: 100px;
   height: 54px;
@@ -2963,7 +2963,7 @@ a:active {
   background-size: 93%;
   background-repeat: no-repeat;
 }
-.ZEEGA-end-page article .mobile-play:hover {
+.ZEEGA-end-page article .play-next:hover {
   opacity: 1;
 }
 .pause-overlay {

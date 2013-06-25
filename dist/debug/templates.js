@@ -45,7 +45,9 @@ __p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
 (path )+
 ''+
 (project.id )+
-'" class="mobile-play" data-bypass="true"></a>\n    </article>\n';
+'" class="play-next" data-id="'+
+(project.id )+
+'" data-bypass="true"></a>\n    </article>\n';
  }); 
 ;__p+='\n\n</div>';
 }
@@ -65,7 +67,7 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a href="';
+__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
@@ -77,7 +79,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ( userThumbnail )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
-'</div>\n            <div class="username">\n                <a class="profile-name" href="';
+'</div>\n            <div class="username">\n                <a class="profile-name profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
@@ -139,15 +141,15 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n    <a class="social-share-icon" href="'+
+;__p+='\n\n<div class="menu-right">\n    <span class ="share-network">\n        <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
-'" target="blank"><i class="zsocial-twitter"></i></a>\n    <a class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-twitter"></i></a>\n        <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
-'" target="blank"><i class="zsocial-facebook"></i></a>\n    <a class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-facebook"></i></a>\n        <a name="tumblr" class="social-share-icon" href="'+
 ( share_links.tumblr )+
-'" target="blank"><i class="zsocial-tumblr"></i></a>\n    <a class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a name="reddit" class="social-share-icon" href="'+
 ( share_links.reddit )+
-'" target="blank"><i class="zsocial-reddit"></i></a>\n\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
+'" target="blank"><i class="zsocial-reddit"></i></a>\n    </span>\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
 }
 return __p;
 };

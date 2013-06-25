@@ -12,6 +12,7 @@ function(app, Backbone) {
     // This will fetch the tutorial template and render it.
     EndPage.View = Backbone.View.extend({
         
+        viewed: false,
         visible: false,
         hover: false,
         sticky: false,
@@ -51,6 +52,10 @@ function(app, Backbone) {
         },
         show: function(){
             this.$el.fadeIn("fast");
+            if( !this.viewed ){
+                this.viewed = true;
+                app.emit("viewed_to_end");
+            }
         },
         hide: function(){
             this.$el.fadeOut("fast");
