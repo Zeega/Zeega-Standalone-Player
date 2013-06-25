@@ -98,7 +98,7 @@ function(app, Backbone) {
             "mouseleave": "onMouseleave",
             "click .project-title": "startOver",
             "click .ZEEGA-sound-state": "toggleMute",
-            "click .share-network a": "onShareLinkClick",
+            "click .share-network a": "onShare",
             "click .ZEEGA-tab": "onHome"
         },
 
@@ -198,7 +198,7 @@ function(app, Backbone) {
             return false;
         },
 
-        onShareLinkClick: function( event ){
+        onShare: function( event ){
             app.emit( "share", {
                 "type": event.currentTarget.name
             });
