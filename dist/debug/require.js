@@ -32860,10 +32860,6 @@ function( Zeega, ControlView ) {
 
     // Figure out the cell dimensions
     options.totalWidth = options.columns * (options.cellWidth + (2 * options.cellMargin));
-    if ($.browser.msie) {
-      options.totalWidth += 2;
-    }
-
     options.totalHeight = Math.ceil(options.colors.length / options.columns) * (options.cellHeight + (2 * options.cellMargin));
 
     // Store these options so they'll be available to the other functions
@@ -33486,6 +33482,7 @@ function( app, Controls ) {
         order: [],
         controls: [],
         visual: null,
+        modelType: "layer",
 
         editorProperties: {
             draggable: true
@@ -33926,103 +33923,6 @@ function( app, Controls ) {
 
 });
 
-define('engine/modules/askers/asker.view',[
-    "app",
-    "backbone"
-],
-
-function( app ) {
-
-    return Backbone.View.extend({
-
-        template: "app/engine/modules/askers/asker",
-        className: "ZEEGA-asker asker-overlay",
-
-        serialize: function() {
-            return this.model.toJSON();
-        },
-
-        start: function() {
-            $("body").append( this.el );
-            $("#main").addClass("modal");
-            this.render();
-            this.$el.fadeIn("fast");
-        },
-
-        afterRender: function() {
-            $("body").bind("keyup.asker", function( e ) {
-                if ( e.which == 13 ) { //enter
-                    this.okay();
-                } else if ( e.which == 27 ) { // esc
-                    this.cancel();
-                }
-            }.bind( this ));
-        },
-
-        events: {
-            "click .ask-cancel": "cancel",
-            "click .ask-okay": "okay"
-        },
-
-        cancel: function() {
-            this.model.set("response", false );
-            this.close();
-        },
-
-        okay: function() {
-            this.model.set("response", true );
-            this.close();
-        },
-
-        close: function() {
-            $("#main").removeClass("modal");
-            this.$el.fadeOut( 250, function() {
-                this.remove();
-            }.bind( this ));
-            $("body").unbind("keyup.asker");
-        }
-
-    });
-
-});
-
-define('engine/modules/askers/asker',[
-    "app",
-    "engine/modules/askers/asker.view",
-    "backbone"
-],
-
-function( app, AskerView ) {
-
-    return Backbone.Model.extend({
-
-        defaults: {
-            question: "",
-            description: "",
-            response: null,
-            okay: null,
-            cancel: null
-        },
-
-        initialize: function() {
-            this.view = new AskerView({ model: this });
-            this.view.start();
-
-            this.on("change:response", this.onAnswer, this );
-        },
-
-        onAnswer: function( model, answer ) {
-            this.off("change:response");
-            if ( answer && _.isFunction( this.get("okay"))) {
-                this.get("okay")( answer );
-            } else if ( !answer && _.isFunction( this.get("cancel"))) {
-                this.get("cancel")( answer );
-            }
-        }
-
-    });
-});
-
 (function(c,n){var k="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";c.fn.imagesLoaded=function(l){function m(){var b=c(h),a=c(g);d&&(g.length?d.reject(e,b,a):d.resolve(e));c.isFunction(l)&&l.call(f,e,b,a)}function i(b,a){b.src===k||-1!==c.inArray(b,j)||(j.push(b),a?g.push(b):h.push(b),c.data(b,"imagesLoaded",{isBroken:a,src:b.src}),o&&d.notifyWith(c(b),[a,e,c(h),c(g)]),e.length===j.length&&(setTimeout(m),e.unbind(".imagesLoaded")))}var f=this,d=c.isFunction(c.Deferred)?c.Deferred():
 0,o=c.isFunction(d.notify),e=f.find("img").add(f.filter("img")),j=[],h=[],g=[];e.length?e.bind("load.imagesLoaded error.imagesLoaded",function(b){i(b.target,"error"===b.type)}).each(function(b,a){var e=a.src,d=c.data(a,"imagesLoaded");if(d&&d.src===e)i(a,d.isBroken);else if(a.complete&&a.naturalWidth!==n)i(a,0===a.naturalWidth||0===a.naturalHeight);else if(a.readyState||a.complete)a.src=k,a.src=e}):m();return d?d.promise(f):f}})(jQuery);
 define("engineVendor/jquery.imagesloaded.min", function(){});
@@ -34031,13 +33931,12 @@ define('engine/plugins/layers/image/image',[
     "app",
     "engine/modules/layer.model",
     "engine/modules/layer.visual.view",
-    "engine/modules/askers/asker",
 
     //plugins
     "engineVendor/jquery.imagesloaded.min"
 ],
 
-function( app, Layer, Visual, Asker ){
+function( app, Layer, Visual ){
 
     var L = {};
 
@@ -34118,7 +34017,10 @@ function( app, Layer, Visual, Asker ){
         afterEditorRender: function() {
             // add height attribute if not already there
             // this may break if the aspect ratio changes
-            if ( _.isNull( this.getAttr("aspectRatio") ) ) {
+
+            this.aspectRatio = this.getAttr("aspectRatio")
+
+            if ( _.isNull( this.aspectRatio ) ) {
                 this.determineAspectRatio();
             }
 
@@ -34150,6 +34052,7 @@ function( app, Layer, Visual, Asker ){
                 this.model.saveAttr({
                     aspectRatio: $img.width()/ $img.height()
                 });
+                this.aspectRatio = $img.width()/ $img.height();
 
                 $img.remove();
             }.bind( this ));
@@ -34161,16 +34064,20 @@ function( app, Layer, Visual, Asker ){
             this.$el.bind("mousedown.imageDrag", function() {
                 if ( this.getAttr("aspectRatio") ) {
                     this.fitToWorkspace();
+                    app.emit("toggle_page_background", { type:"image", state: "fit-to-page", action: "drag" });
                 }
             }.bind( this ));
         },
 
         togglePageBackgroundState: function( state ) {
+
             if ( state.page_background ) {
                 this.disableDrag();
                 this.makePageBackground();
+                app.emit("toggle_page_background", { type:"image", state: "background", action: "toggle-button" });
             } else {
                 this.fitToWorkspace();
+                app.emit("toggle_page_background", { type:"image", state: "fit-to-page", action: "toggle-button" });
             }
         },
 
@@ -34192,12 +34099,12 @@ function( app, Layer, Visual, Asker ){
 
             workspaceRatio = this.$workspace().width() / this.$workspace().height();
 
-            if ( this.getAttr("aspectRatio") > workspaceRatio ) {
+            if ( this.aspectRatio > workspaceRatio ) {
                 width = this.$workspace().width();
-                height = width / this.getAttr("aspectRatio");
+                height = width / this.aspectRatio;
             } else {
                 height = this.$workspace().height();
-                width = height * this.getAttr("aspectRatio");
+                width = height * this.aspectRatio;
             }
 
             width = width / this.$workspace().width() * 100;
@@ -34212,6 +34119,7 @@ function( app, Layer, Visual, Asker ){
                 left: left + "%"
             });
             this.model.saveAttr({
+                aspectRatio: this.aspectRatio,
                 page_background: false,
                 height: height,
                 width: width,
@@ -34240,7 +34148,8 @@ function( app, Layer, Visual, Asker ){
 
             $img.fail(function() {
                 $img.remove();
-                this.model.trigger( "visual_error", this.model.id );
+                this.model.trigger("visual_error", this.model.id );
+                this.model.trigger("visual_ready", this.model.id );
             }.bind(this));
         }
     });
@@ -34516,6 +34425,7 @@ function( app, _Layer, Visual ){
     Layer.Audio = _Layer.extend({
 
         layerType: "Audio",
+        modelType: "layer",
 
         canplay: false,
 
@@ -34896,8 +34806,8 @@ function( app, LayerModel, Visual ) {
             // height: 100,
             // left: 0,
             linkable: false,
-            opacity: 0.75,
-            title: "Color Layer",
+            opacity: 1,
+            title: "Color Filter",
             // top: 0,
             // width: 100,
             dissolve: true,
@@ -34997,8 +34907,10 @@ function( app, LayerModel, Visual ) {
             if ( state.page_background ) {
                 this.disableDrag();
                 this.makePageBackground();
+                app.emit("toggle_page_background", { type:"filter", state: "fit-to-page", action: "toggle-button" });
             } else {
                 this.fitToWorkspace();
+                app.emit("toggle_page_background", { type:"filter", state: "fit-to-page", action: "toggle-button" });
             }
         },
 
@@ -35468,8 +35380,10 @@ function( app ) {
         },
 
         openLinkDrawer: function() {
+
             this.$(".page-chooser-wrapper").slideDown();
             this.$(".link-page-open").hide();
+            app.emit("init_link", this.model );
         },
 
         unlink: function() {
@@ -35481,6 +35395,7 @@ function( app ) {
             this.$(".page-chooser-wrapper").slideUp(function(){
                 $(this).parent().find(".link-page-open").show();
             });
+            app.emit("unlink", this.model );
             
         },
 
@@ -35495,13 +35410,14 @@ function( app ) {
                     this.linkToNewPage();
                     this.closeThis();
                     this.model.visual.$el.addClass("linked-layer");
-                    this.model.save();
+                    // this.model.save();
                 } else if ( this.selectedFrame !== null && !_.isUndefined( this.selectedFrame )) {
-                    this.model.saveAttr({ to_frame: this.selectedFrame });
+                    this.model.setAttr({ to_frame: this.selectedFrame });
                     this.model.trigger("change:to_frame", this.model, this.selectedFrame );
                     this.closeThis();
                     this.model.visual.$el.addClass("linked-layer");
                 }
+                this.model.save();
             } else {
                 this.model.collection.remove( this.model );
                 app.emit("layer_deleted", this.model );
@@ -35524,8 +35440,17 @@ function( app ) {
             $('#font-list-' + this.model.id ).ddslick({
                 height: "200px",
                 onSelected: function(data){
+                    if(this.model.getAttr("fontFamily") != data.selectedData.value ){
+                        console.log(this.model.getAttr("fontFamily"),data.selectedData.value )
+                        app.emit("layer_font_change", {
+                            font: data.selectedData.value
+                        });
+                    }
+
                     this.model.setAttr({ fontFamily: data.selectedData.value });
+
                     this.updateSample();
+
                 }.bind( this )
             });
         },
@@ -35534,6 +35459,9 @@ function( app ) {
             this.$("textarea").css({
                 fontFamily: this.model.getAttr("fontFamily")
             });
+            app.emit("layer_font_change", {
+                font: this.model.getAttr("fontFamily")
+            });
         },
 
         updateVisualElement: function() {
@@ -35541,6 +35469,7 @@ function( app ) {
         },
 
         selectPage: function( e ) {
+            app.emit("select_link_page", this.model );
             var $frameLI = $(e.target).closest("li");
 
             if ( !$frameLI.hasClass("inactive") ) {
@@ -35560,6 +35489,7 @@ function( app ) {
         },
 
         linkToNewPage: function() {
+            app.emit("link_new_page", this.model );
             var newFrame = app.status.get("currentSequence").frames.addFrame( "auto", false );
 
             newFrame.once("sync", this.onNewFrameSave, this );
@@ -35943,6 +35873,7 @@ function( app, Layers ) {
     return app.Backbone.Model.extend({
 
         soundtrackModel: null,
+        modelType: "sequence",
 
         defaults: {
             advance_to: null,
@@ -35992,7 +35923,7 @@ function( app, Layers ) {
             this.frames.sort();
         },
 
-        setSoundtrack: function( item, view ) {
+        setSoundtrack: function( item, view, eventData ) {
             var newLayer, oldlayer;
 
             oldLayer = app.project.getLayer( this.get("attr").soundtrack );
@@ -36013,29 +35944,30 @@ function( app, Layers ) {
                 item.toJSON())
             );
 
-
+            newLayer.eventData = eventData;
             newLayer.save().success(function( response ) {
                 var attr = this.get("attr");
 
                 if ( _.isArray( attr ) ) {
                     attr = {};
                 }
-
+                app.emit("soundtrack_added_success", newLayer);
                 this.soundtrackModel = newLayer;
                 attr.soundtrack = newLayer.id;
                 this.set("attr", attr );
                 view.setSoundtrackLayer( newLayer );
-
                 this.lazySave();
+
             }.bind( this ));
         },
 
         removeSoundtrack: function( layer ) {
             var attr = this.get("attr");
-
+            app.emit("soundtrack_delete", layer);
             layer.destroy();
             attr.soundtrack = false;
             this.set("attr", attr );
+
         },
 
         persistLayer: function( layer ) {
@@ -36103,6 +36035,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
         state: "waiting",
         hasPlayed: false,
         elapsed: 0,
+        modelType: "frame",
 
         // frame render as soon as it's loaded. used primarily for the initial frame
         renderOnReady: null,
@@ -36205,14 +36138,12 @@ function( app, Backbone, Layers, ThumbWorker ) {
 
             this.set("attr", this.defaults.attr );
 
-            /*
-            // initially set images as background images
-            if ( type == "Image") {
-
-            }
-            */
-
             newLayer.order[ this.id ] = this.layers.length;
+
+            // set image layer opacity to 0.5 for layers on top of other layers
+            if ( this.layers.length && newLayer.get("type") != "TextV2") {
+                newLayer.setAttr({ opacity: 0.5 });
+            }
 
             app.emit("layer_added_start", newLayer );
             newLayer.save().success(function( response ) {
@@ -36222,28 +36153,20 @@ function( app, Backbone, Layers, ThumbWorker ) {
             }.bind( this ));
         },
 
-        addLayerByItem: function( item ) {
+        addLayerByItem: function( item, eventData ) {
             var newLayer = new Layers[ item.get("layer_type") ]({
                 type: item.get("layer_type"),
                 attr: _.extend({}, item.toJSON() )
             });
-            var oldYoutube = this.layers.find(function(layer){ return layer.get("type") == "Youtube"; });
-                
 
-            if ( newLayer.get("type") == "Youtube" ){
-                if( oldYoutube ){
-                    oldYoutube.trigger("remove");
-                    this.layers.remove( oldYoutube, { silent: true } );
-                }
-                newLayer.order [ this.id ] = 100;
-                newLayer.status = this.status;
-            } else{
-                if( oldYoutube ){
-                    oldYoutube.order[ this.id ] = 100;
-                }
-                newLayer.order[ this.id ] = this.layers.length;
+            // set image layer opacity to 0.5 for layers on top of other layers
+            if ( this.layers.length && newLayer.get("type") != "TextV2") {
+                newLayer.setAttr({ opacity: 0.5 });
             }
+
+            newLayer.order[ this.id ] = this.layers.length;
             
+            newLayer.eventData = eventData;
             app.emit("layer_added_start", newLayer );
 
             newLayer.save().success(function( response ) {
@@ -36691,6 +36614,7 @@ function( app, SequenceCollection ) {
 
         updated: false,
         frameKey: {},
+        modelType: "project",
 
         defaults: {
             aspect_ratio: 0.751174,
