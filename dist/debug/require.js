@@ -427,19 +427,9 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } 
 ;__p+=' >\n                    '+
 ( authors )+
-'\n                </a>\n                ';
- if ( favorite_count > 0 ) {  
-;__p+=' \n                <span class="zeega-favorite_count"> ♥ '+
-( favorite_count )+
-' ';
- if ( favorite_count == 1) {  
-;__p+=' favorite ';
- } else {
-;__p+=' favorites ';
- } 
-;__p+='</span>\n                ';
- } 
-;__p+='\n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
+'\n                </a>\n\n                \n                \n                <span class="zeega-favorite_count">'+
+( favorites )+
+'</span>\n               \n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
 ;__p+=''+
 ( views )+
@@ -38837,15 +38827,36 @@ function(app, Backbone) {
 
         
         serialize: function() {
-            
+
             if ( this.model.project ) {
                 return _.extend({
-                    path: "http:" + app.metadata.hostname + app.metadata.directory
+                    path: "http:" + app.metadata.hostname + app.metadata.directory,
+                    favorites: this.getFavorites()
                 },
                     app.metadata,
                     this.model.project.toJSON()
                 );
             }
+        },
+
+        getFavorites: function(){
+            
+            var count = this.model.project.get("favorite_count"),
+                html = "";
+
+            if ( count == 1){
+                html = "♥ " + count + " favorite";
+            } else if ( count > 1 ){
+                html = "♥ " + count + " favorites";
+            }
+
+            return html;
+
+        },
+
+        incFavorites: function( inc ){
+            this.model.project.set( "favorite_count", this.model.project.get("favorite_count") + inc );
+            this.$(".zeega-favorite_count").html( this.getFavorites() );
         },
 
         initialize: function() {
@@ -38872,12 +38883,14 @@ function(app, Backbone) {
             if(this.model.project.get("favorite")){
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
                 this.model.project.set({ "favorite": false });
+                this.incFavorites(-1);
                 app.emit("unfavorite");
 
 
             } else {
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
                 this.model.project.set({ "favorite": true });
+                this.incFavorites(1);
                 app.emit("favorite");
             }
             $.ajax({ url: url, type: 'POST', success: function(){  }  });
