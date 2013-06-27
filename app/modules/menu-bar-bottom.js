@@ -21,15 +21,36 @@ function(app, Backbone) {
 
         
         serialize: function() {
-            
+
             if ( this.model.project ) {
                 return _.extend({
-                    path: "http:" + app.metadata.hostname + app.metadata.directory
+                    path: "http:" + app.metadata.hostname + app.metadata.directory,
+                    favorites: this.getFavorites()
                 },
                     app.metadata,
                     this.model.project.toJSON()
                 );
             }
+        },
+
+        getFavorites: function(){
+            
+            var count = this.model.project.get("favorite_count"),
+                html = "";
+
+            if ( count == 1){
+                html = "♥ " + count + " favorite";
+            } else if ( count > 1 ){
+                html = "♥ " + count + " favorites";
+            }
+
+            return html;
+
+        },
+
+        incFavorites: function( inc ){
+            this.model.project.set( "favorite_count", this.model.project.get("favorite_count") + inc );
+            this.$(".zeega-favorite_count").html( this.getFavorites() );
         },
 
         initialize: function() {
@@ -56,12 +77,14 @@ function(app, Backbone) {
             if(this.model.project.get("favorite")){
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
                 this.model.project.set({ "favorite": false });
+                this.incFavorites(-1);
                 app.emit("unfavorite");
 
 
             } else {
                 url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
                 this.model.project.set({ "favorite": true });
+                this.incFavorites(1);
                 app.emit("favorite");
             }
             $.ajax({ url: url, type: 'POST', success: function(){  }  });

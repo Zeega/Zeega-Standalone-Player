@@ -16,9 +16,11 @@
                 <a class="profile-name profile-link" href="<% path %>profile/<%= userId %>" data-bypass="true" <% if (window!=window.top) { %> target="blank" <% } %> >
                     <%= authors %>
                 </a>
-                <% if ( favorite_count > 0 ) {  %> 
-                <span class="zeega-favorite_count"> ♥ <%= favorite_count %> <% if ( favorite_count == 1) {  %> favorite <% } else {%> favorites <% } %></span>
-                <% } %>
+
+                
+                
+                <span class="zeega-favorite_count"><%= favorites %></span>
+               
                 <span class="zeega-views"> <i class="icon-play icon-white"></i> <% if ( !_.isNumber( views ) ) { views = 0 ;} %><%= views %> <% if ( views != 1 ) { %>views<% } else { %>view<% } %></span>
             </div>
         </div>
