@@ -14,7 +14,7 @@
             <div class="caption"><%= title %></div>
             <div class="username">
                 <a class="profile-name profile-link" href="<% path %>profile/<%= userId %>" data-bypass="true" <% if (window!=window.top) { %> target="blank" <% } %> >
-                    <%= authors %>
+                    <%= user.display_name %>
                 </a>
 
                 

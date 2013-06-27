@@ -426,7 +426,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ;__p+=' target="blank" ';
  } 
 ;__p+=' >\n                    '+
-( authors )+
+( user.display_name )+
 '\n                </a>\n\n                \n                \n                <span class="zeega-favorite_count">'+
 ( favorites )+
 '</span>\n               \n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
