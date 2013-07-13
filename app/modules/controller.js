@@ -46,21 +46,31 @@ function(app, Player, UI, Analytics) {
             app.analytics = new Analytics();
 
 
-            //detect context
+            
             try{
 
-                showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+                app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
 
             } catch ( err ){
 
-                showChrome = false;
+                app.showChrome = false;
             
             }
 
+            try{
 
+                app.showEndPage = window == window.top || (window.frameElement && window.frameElement.getAttribute("endpage"));
+
+            } catch ( err ){
+
+                app.showChrome = true;
+            
+            }
+
+            //detect context
             if( window==window.top ){
                 context = "web";
-            } else if ( !showChrome ) {
+            } else if ( !app.showChrome ) {
                 context = "homepage";
             } else {
                 context = "embed";

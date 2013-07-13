@@ -39077,20 +39077,9 @@ function(app, Backbone) {
 
             var showChrome;
 
-            try{
-
-                showChrome =  !window.frameElement || !window.frameElement.getAttribute("hidechrome");
-
-            } catch ( err ){
-
-                showChrome = false;
-            
-            }
-
-
             if ( this.model.project ) {
                 return _.extend({
-                        show_chrome: showChrome,
+                        show_chrome: app.showChrome,
                         share_links: this.getShareLinks(),
                         path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
@@ -39431,7 +39420,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
 
-            if( window == window.top || (window.frameElement && window.frameElement.getAttribute("endpage")) ){
+            if( app.showEndpage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
             }
@@ -39705,21 +39694,31 @@ function(app, Player, UI, Analytics) {
             app.analytics = new Analytics();
 
 
-            //detect context
+            
             try{
 
-                showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+                app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
 
             } catch ( err ){
 
-                showChrome = false;
+                app.showChrome = false;
             
             }
 
+            try{
 
+                app.showEndPage = window == window.top || (window.frameElement && window.frameElement.getAttribute("endpage"));
+
+            } catch ( err ){
+
+                app.showChrome = true;
+            
+            }
+
+            //detect context
             if( window==window.top ){
                 context = "web";
-            } else if ( !showChrome ) {
+            } else if ( !app.showChrome ) {
                 context = "homepage";
             } else {
                 context = "embed";
