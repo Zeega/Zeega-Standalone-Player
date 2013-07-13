@@ -41,6 +41,27 @@ function(app, Backbone, UI) {
                 startFrame: app.state.get("frameID")
             });
 
+            try{
+
+                app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+
+            } catch ( err ){
+
+                app.showChrome = false;
+            
+            }
+
+            try{
+
+                app.showEndPage = ( window == window.top ) || (window.frameElement && window.frameElement.getAttribute("endpage"));
+
+            } catch ( err ){
+
+                app.showEndpage = true;
+            
+            }
+
+
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {

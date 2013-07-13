@@ -462,7 +462,7 @@ this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='\n';
- if ( _.isNull(window.frameElement) || !window.frameElement.getAttribute("hidechrome") ) { 
+ if ( show_chrome ) { 
 ;__p+='\n\n<a href="'+
 ( path )+
 '" ';
@@ -55290,6 +55290,7 @@ function(app, Backbone) {
             //this.model.project.set({app_path: app.metadata.hostname + app.metadata.directory});
             if ( this.model.project ) {
                 return _.extend({
+                        show_chrome: app.showChrome,
                         tumblr_share: tumblr_share,
                         path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
@@ -55572,7 +55573,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, PauseView,
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
             
-            if( window == window.top || (window.frameElement && window.frameElement.getAttribute("endpage")) ){
+            if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
             }
@@ -55693,6 +55694,27 @@ function(app, Backbone, UI) {
                     "testproject.json",
                 startFrame: app.state.get("frameID")
             });
+
+            try{
+
+                app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+
+            } catch ( err ){
+
+                app.showChrome = false;
+            
+            }
+
+            try{
+
+                app.showEndPage = ( window == window.top ) || (window.frameElement && window.frameElement.getAttribute("endpage"));
+
+            } catch ( err ){
+
+                app.showEndpage = true;
+            
+            }
+
 
             if( window.projectJSON ) {
                 this.onDataLoaded();

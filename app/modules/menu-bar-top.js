@@ -35,6 +35,7 @@ function(app, Backbone) {
             //this.model.project.set({app_path: app.metadata.hostname + app.metadata.directory});
             if ( this.model.project ) {
                 return _.extend({
+                        show_chrome: app.showChrome,
                         tumblr_share: tumblr_share,
                         path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
