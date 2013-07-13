@@ -454,7 +454,7 @@ this["JST"]["app/templates/menu-bar-top.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='\n';
- if ( !window.frameElement || !window.frameElement.getAttribute("hidechrome") ) { 
+ if ( show_chrome ) { 
 ;__p+='\n\n<a href="'+
 ( path )+
 '" ';
@@ -39074,8 +39074,23 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
+
+            var showChrome;
+
+            try{
+
+                showChrome =  !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+
+            } catch ( err ){
+
+                showChrome = false;
+            
+            }
+
+
             if ( this.model.project ) {
                 return _.extend({
+                        show_chrome: showChrome,
                         share_links: this.getShareLinks(),
                         path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
@@ -39668,7 +39683,7 @@ function(app, Player, UI, Analytics) {
         },
 
         initPlayer: function() {
-            var context;
+            var context, showChrome;
 
             app.player = new Player.player({
                 // debugEvents: true,
@@ -39691,10 +39706,20 @@ function(app, Player, UI, Analytics) {
 
 
             //detect context
+            try{
+
+                showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+
+            } catch ( err ){
+
+                showChrome = false;
+            
+            }
+
 
             if( window==window.top ){
                 context = "web";
-            } else if ( window.frameElement && window.frameElement.getAttribute("hidechrome") ) {
+            } else if ( !showChrome ) {
                 context = "homepage";
             } else {
                 context = "embed";

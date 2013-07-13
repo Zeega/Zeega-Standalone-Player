@@ -18,8 +18,23 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
+
+            var showChrome;
+
+            try{
+
+                showChrome =  !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+
+            } catch ( err ){
+
+                showChrome = false;
+            
+            }
+
+
             if ( this.model.project ) {
                 return _.extend({
+                        show_chrome: showChrome,
                         share_links: this.getShareLinks(),
                         path: "http:" + app.metadata.hostname + app.metadata.directory
                     },

@@ -24,7 +24,7 @@ function(app, Player, UI, Analytics) {
         },
 
         initPlayer: function() {
-            var context;
+            var context, showChrome;
 
             app.player = new Player.player({
                 // debugEvents: true,
@@ -47,10 +47,20 @@ function(app, Player, UI, Analytics) {
 
 
             //detect context
+            try{
+
+                showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+
+            } catch ( err ){
+
+                showChrome = false;
+            
+            }
+
 
             if( window==window.top ){
                 context = "web";
-            } else if ( window.frameElement && window.frameElement.getAttribute("hidechrome") ) {
+            } else if ( !showChrome ) {
                 context = "homepage";
             } else {
                 context = "embed";
