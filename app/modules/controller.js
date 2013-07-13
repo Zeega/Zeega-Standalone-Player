@@ -59,11 +59,11 @@ function(app, Player, UI, Analytics) {
 
             try{
 
-                app.showEndPage = window == window.top || (window.frameElement && window.frameElement.getAttribute("endpage"));
+                app.showEndPage = ( window == window.top ) || (window.frameElement && window.frameElement.getAttribute("endpage"));
 
             } catch ( err ){
 
-                app.showChrome = true;
+                app.showEndpage = true;
             
             }
 
