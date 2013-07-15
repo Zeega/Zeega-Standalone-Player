@@ -57,7 +57,7 @@ function(app, Backbone, UI) {
 
             } catch ( err ){
 
-                app.showEndpage = true;
+                app.showEndPage = true;
             
             }
 
