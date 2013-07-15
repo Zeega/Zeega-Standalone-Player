@@ -63,7 +63,7 @@ function(app, Player, UI, Analytics) {
 
             } catch ( err ){
 
-                app.showEndpage = true;
+                app.showEndPage = true;
             
             }
 

@@ -39420,7 +39420,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
             this.insertView("#overlays", this.citations );
             this.insertView("#overlays", this.menuBar );
 
-            if( app.showEndpage ){
+            if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
             }
@@ -39711,7 +39711,7 @@ function(app, Player, UI, Analytics) {
 
             } catch ( err ){
 
-                app.showEndpage = true;
+                app.showEndPage = true;
             
             }
 
