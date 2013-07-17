@@ -11,38 +11,16 @@ function( app, Initializer ) {
 
         routes: {
             "": "base",
-            "f/:frameID": 'goToFrame',
-            "frame/:frameID": "goToFrame",
             "*path": "base"
         },
 
-        /*
-        when no route is present.
-
-        player could wait for user input or rely on bootstrapped data
-        */
-        base: function() {
-            initialize();
+        initialize: function() {
+            new Initializer();
+            app.state.set("initialized", true );
         },
 
-        goToFrame: function( frameID ) {
-            app.state.set({
-                frameID: frameID
-            });
-            if(app.state.get("initialized")) {
-                app.player.cueFrame( frameID );
-            }
-            initialize();
-        }
-
+        base: function() {}
     });
 
-    /* create init fxn that can only run once per load */
-    var init = function() {
-        new Initializer();
-        app.state.set("initialized", true );
-    };
-    var initialize = _.once( init );
-    
     return Router;
 });

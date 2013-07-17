@@ -58,6 +58,11 @@ function( $, _, Backbone, State, Spinner ) {
 
     // events that trigger the save indicator on the editor interface
     Backbone.Model.prototype.initSaveEvents = function() { /* empty for player */ };
+    Backbone.Model.prototype.put = function() {
+        var args = [].slice.call( arguments ).concat([ { silent: true } ]);
+        return this.set.apply( this, args );
+    };
+
 
     Backbone.Layout.configure({
         // Allow LayoutManager to augment Backbone.View.prototype.

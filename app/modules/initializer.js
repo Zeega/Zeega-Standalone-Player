@@ -9,13 +9,14 @@ define([
     "player/modules/player",
 
     "modules/ui",
-    "analytics/analytics"
+    "analytics/analytics",
+    "remixer/remixer"
 
      // Plugins
 ],
 
-function(app, Player, UI, Analytics) {
-    
+function( app, Player, UI, Analytics, Remixer ) {
+
     return app.Backbone.Model.extend({
 
         initialize: function() {
@@ -46,9 +47,22 @@ function(app, Player, UI, Analytics) {
             } else {
                 app.player.on('data_loaded', this.onDataLoaded, this);
             }
-            app.player.on('frame_play', this.onFrameRender, this);
             app.player.on('sequence_enter', this.updateWindowTitle, this);
            
+        },
+
+        onDataLoaded: function() {
+            /*
+            render base layout
+            the base layout contains the logic for the player skin (citations, ui, etc)
+            */
+            // this.initAnalytics();
+            app.layout = new UI.Layout();
+            // console.log("player:", app.player)
+            // if ( app.player.project.get("remix").remix ) {
+            //     app.remixer = new Remixer();
+            //     app.remixer.add( app.player.project.get("remix") );
+            // }
         },
 
         initAnalytics: function() {
@@ -61,7 +75,7 @@ function(app, Player, UI, Analytics) {
             }
 
             try {
-                app.showEndPage = ( window == window.top ) || (window.frameElement && window.frameElement.getAttribute("endpage"));
+                app.showEndPage = ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
             } catch ( err ) {
                 app.showEndPage = true;
             }
@@ -85,19 +99,6 @@ function(app, Player, UI, Analytics) {
             });
 
             app.analytics.trackEvent("zeega_view");
-        },
-
-        onDataLoaded: function() {
-            /*
-            render base layout
-            the base layout contains the logic for the player skin (citations, ui, etc)
-            */
-            this.initAnalytics();
-            app.layout = new UI.Layout();
-        },
-
-        onFrameRender: function( info ) {
-            // app.router.navigate( 'f/'+ info.id );
         },
 
         updateWindowTitle: function( info ) {
