@@ -671,7 +671,7 @@ __p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</
 ( attr.content )+
 '</textarea>\n            <select class="font-list" id="font-list-'+
 ( id )+
-'"></select>\n            <div class="textarea-info">max 140 characters</div>\n        </div>\n\n        <div class="bottom-box clearfix">\n            <a href="#" class="link-page-open action ';
+'"></select>\n            <div class="textarea-info">max 140 characters</div>\n        </div>\n\n<!--\n        <div class="bottom-box clearfix">\n            <a href="#" class="link-page-open action ';
  if ( attr.to_frame ) { 
 ;__p+='hide';
  } 
@@ -679,7 +679,7 @@ __p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</
  if ( !attr.to_frame ) { 
 ;__p+='hide';
  } 
-;__p+='">\n                <a href="#" class="link-new-page"><i class="icon-plus icon-white"></i></br>New Page</a>\n                <div class="divider">or</div>\n                <ul class="page-chooser-list clearfix"></ul>\n                <a href="#" class="unlink-text action"><i class="icon-minus-sign"></i> remove link</a>\n            </div>\n        </div>\n\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="text-modal-save btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
+;__p+='">\n                <a href="#" class="link-new-page"><i class="icon-plus icon-white"></i></br>New Page</a>\n                <div class="divider">or</div>\n                <ul class="page-chooser-list clearfix"></ul>\n                <a href="#" class="unlink-text action"><i class="icon-minus-sign"></i> remove link</a>\n            </div>\n        </div>\n-->\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="text-modal-save btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
 }
 return __p;
 };
@@ -33468,7 +33468,7 @@ function( app, Controls ) {
         ready: false,
         state: "waiting", // waiting, loading, ready, destroyed, error
 
-        mode: "player",
+        mode: "editor",
         order: [],
         controls: [],
         visual: null,
@@ -33493,16 +33493,17 @@ function( app, Controls ) {
             }
         },
 
-        initialize: function() {
+        initialize: function( attr, opt ) {
             var augmentAttr = _.extend({}, this.attr, this.toJSON().attr );
 
-            this.mode = "player",
+            this.mode = opt?  opt.mode : this.mode;
             
             this.set("attr", augmentAttr );
             this.order = {};
         
-            this.on( "visual_ready", this.onVisualReady, this );
-            this.on( "visual_error", this.onVisualError, this );
+            this.once( "visual_ready", this.onVisualReady, this );
+            this.once( "visual_error", this.onVisualError, this );
+            this.initSaveEvents();
         },
 
         getAttr: function( attrName ) {
@@ -33531,8 +33532,10 @@ function( app, Controls ) {
         },
 
         addCollection: function( collection ) {
-            this.collection = collection;
-            this.collection.on("sort", this.onSort, this );
+            if ( this.mode == "editor" ) {
+                this.collection = collection;
+                this.collection.on("sort", this.onSort, this );
+            }
         },
 
         // when the parent collection is resorted as in a layer shuffle
@@ -33664,14 +33667,17 @@ function( app, Controls ) {
 
         initialize: function() {
             this.init();
-            this.model.off("blur focus");
-            this.model.on("focus", this.onFocus, this );
-            this.model.on("blur", this.onBlur, this );
 
-            this.listenToFrame = _.once(function() {
-                this.model.collection.frame.on("focus", this.editor_onLayerEnter, this );
-                this.model.collection.frame.on("blur", this.editor_onLayerExit, this );
-            }.bind( this ));
+            if ( this.model.mode == "editor" ) {
+                this.model.off("blur focus");
+                this.model.on("focus", this.onFocus, this );
+                this.model.on("blur", this.onBlur, this );
+
+                this.listenToFrame = _.once(function() {
+                    this.model.collection.frame.on("focus", this.editor_onLayerEnter, this );
+                    this.model.collection.frame.on("blur", this.editor_onLayerExit, this );
+                }.bind( this ));
+            }
         },
 
         events: {},
@@ -34527,7 +34533,7 @@ function( app, _Layer, Visual ){
                 this.audio = this.$("#audio-el-" + this.model.id )[0];
 
                 this.audio.load();
-                this.audio.addEventListener("canplaythrough", function() {
+                this.audio.addEventListener("canplay", function() {
                     this.onCanPlay();
                 }.bind( this ));
             },
@@ -35887,6 +35893,7 @@ function( app, Layers ) {
             this.lazySave = _.debounce(function() {
                 this.save();
             }.bind( this ), 1000 );
+            this.initSaveEvents();
         },
 
         initSoundtrackModel: function( layers ) {
@@ -36022,6 +36029,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
         hasPlayed: false,
         elapsed: 0,
         modelType: "frame",
+        mode: "editor",
 
         // frame render as soon as it's loaded. used primarily for the initial frame
         renderOnReady: null,
@@ -36066,7 +36074,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
         startThumbWorker: null,
 
         initialize: function() {
-
+            this.mode = this.collection ? this.collection.mode : this.mode;
             this.lazySave = _.debounce(function() {
                 this.save();
             }.bind( this ), 1000 );
@@ -36095,13 +36103,17 @@ function( app, Backbone, Layers, ThumbWorker ) {
                 });
 
             }, 1000);
+
+            this.initSaveEvents();
         },
 
-// editor
+        // editor
         listenToLayers: function() {
-            this.stopListening( this.layers );
-            this.layers.on("sort", this.onLayerSort, this );
-            this.layers.on("add remove", this.onLayerAddRemove, this );
+            if ( this.mode == "editor") {
+                this.stopListening( this.layers );
+                this.layers.on("sort", this.onLayerSort, this );
+                this.layers.on("add remove", this.onLayerAddRemove, this );
+            }
         },
 
         onLayerAddRemove: function() {
@@ -36144,7 +36156,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
                 type: item.get("layer_type"),
                 attr: _.extend({}, item.toJSON() )
             });
-
+console.log("add layer", item, eventData)
             // set image layer opacity to 0.5 for layers on top of other layers
             if ( this.layers.length && newLayer.get("type") != "TextV2") {
                 newLayer.setAttr({ opacity: 0.5 });
@@ -36155,7 +36167,8 @@ function( app, Backbone, Layers, ThumbWorker ) {
             newLayer.eventData = eventData;
             app.emit("layer_added_start", newLayer );
 
-            newLayer.save().success(function( response ) {
+            newLayer.save()
+                .success(function( response ) {
                     this.layers.add( newLayer );
                     app.status.setCurrentLayer( newLayer );
                     app.emit("layer_added_success", newLayer );
@@ -36222,7 +36235,7 @@ function( app, Backbone, Layers, ThumbWorker ) {
             } else if ( !this.ready && !isFrameReady ) {
                 this.layers.each(function( layer ) {
                     if ( layer.state === "waiting" || layer.state === "loading" ) {
-                        layer.on( "layer_ready", this.onLayerReady, this );
+                        layer.once( "layer_ready", this.onLayerReady, this );
                         layer.render();
                     }
                 }, this );
@@ -36374,7 +36387,8 @@ function( app, Layers ) {
         },
 
         onAdd: function( layer ) {
-            if( app.mode != "player" ){
+
+            if( layer.mode == "editor" ){
                 if ( layer ) {
                     layer.addCollection( this );
                     layer.initVisual( Layers[ layer.get("type") ]);
@@ -36421,11 +36435,17 @@ function( app, FrameModel, LayerCollection ) {
     return app.Backbone.Collection.extend({
         model: FrameModel,
 
-        initialize: function() {
-            if ( app.mode != "player") {
-                this.on("add", this.onFrameAdd, this );
-                this.on("remove", this.onFrameRemove, this );
-            }
+        mode: "editor",
+        remixPageMax: 5,
+
+        setMode: function( mode ) {
+            this.mode = mode;
+            if ( mode == "editor") this.initEditor();
+        },
+
+        initEditor: function() {
+            this.on("add", this.onFrameAdd, this );
+            this.on("remove", this.onFrameRemove, this );
         },
 
         initLayers: function( layerCollection, options ) {
@@ -36464,38 +36484,43 @@ function( app, FrameModel, LayerCollection ) {
         // add frame at a specified index.
         // omit index to append frame
         addFrame: function( index, skipTo ) {
-            var newFrame, continuingLayers = [];
 
-            skipTo = !_.isUndefined( skipTo ) ? skipTo : true;
-            index = index == "auto" ? undefined : index;
+            if ( !app.project.get("remix").remix || ( app.project.get("remix").remix && this.length < this.remixPageMax )) {
+                var newFrame, continuingLayers = [];
 
-            newFrame = new FrameModel({
-                _order: index
-            });
+                skipTo = !_.isUndefined( skipTo ) ? skipTo : true;
+                index = index == "auto" ? undefined : index;
 
-            newFrame.status = app.status;
-            newFrame.layers = new LayerCollection( _.compact( continuingLayers ) );
-            newFrame.layers.frame = newFrame;
-            newFrame.listenToLayers();
-            newFrame.editorAdvanceToPage = skipTo;
-
-            newFrame.save().success(function() {
-                app.project.addFrameToKey( newFrame.id, this.sequence.id );
-
-                if ( _.isUndefined( index ) ) {
-                    this.push( newFrame );
-                } else {
-                    this.add( newFrame, { at: index });
-                }
-
-                this.each(function( frame, i ) {
-                    frame.set("_order", i );
+                newFrame = new FrameModel({
+                    _order: index
                 });
 
-                app.trigger("frame_add", newFrame );
-            }.bind( this ));
+                newFrame.status = app.status;
+                newFrame.layers = new LayerCollection( _.compact( continuingLayers ) );
+                newFrame.layers.frame = newFrame;
+                newFrame.listenToLayers();
+                newFrame.editorAdvanceToPage = skipTo;
 
-            return newFrame;
+                newFrame.save().success(function() {
+                    app.project.addFrameToKey( newFrame.id, this.sequence.id );
+
+                    if ( _.isUndefined( index ) ) {
+                        this.push( newFrame );
+                    } else {
+                        this.add( newFrame, { at: index });
+                    }
+
+                    this.each(function( frame, i ) {
+                        frame.set("_order", i );
+                    });
+
+                    app.trigger("frame_add", newFrame );
+                }.bind( this ));
+
+                return newFrame;
+            } else {
+                // too many pages. do nothing
+            }
         },
 
         onFrameAdd: function( frame ) {
@@ -36547,6 +36572,8 @@ function( app, SequenceModel, FrameCollection, LayerCollection, LayerModels ) {
     return app.Backbone.Collection.extend({
         model: SequenceModel,
 
+        mode: "editor",
+
         initFrames: function( frames, layers, options ) {
             var layerCollection, classedLayers;
 
@@ -36554,13 +36581,13 @@ function( app, SequenceModel, FrameCollection, LayerCollection, LayerModels ) {
             classedLayers = _.map( layers, function( layer ) {
 
                 if ( LayerModels[ layer.type ]) {
-                    var layerModel = new LayerModels[ layer.type ]( layer );
+                    var layerModel = new LayerModels[ layer.type ]( layer, { mode: this.mode } );
 
                     layerModel.initVisual( LayerModels[ layer.type ] );
 
                     return layerModel;
                 }
-            });
+            }.bind(this));
 
             layerCollection = new LayerCollection( _.compact( classedLayers ));
 
@@ -36578,10 +36605,12 @@ function( app, SequenceModel, FrameCollection, LayerCollection, LayerModels ) {
                     return false;
                 });
 
-                sequence.frames = new FrameCollection( seqFrames );
+                sequence.frames = new FrameCollection();
+                sequence.frames.setMode( this.mode );
+                sequence.frames.reset( seqFrames );
                 sequence.frames.sequence = sequence;
                 sequence.frames.initLayers( layerCollection, options );
-            });
+            }, this );
 
             this.at(0).initSoundtrackModel( layerCollection );
             // at this point, all frames should be loaded with layers and layer classes
@@ -36611,13 +36640,16 @@ function( app, SequenceCollection ) {
             date_updated: null,
             description: null,
             enabled: true,
-            estimated_time: null,
             frames: [],
             id: null,
             item_id: null,
             layers: [],
             location: null,
+            mode: "editor",
             published: true,
+
+            remix: { remix: false }, // default
+
             sequences: [],
             tags: "",
             title: "Untitled",
@@ -36637,10 +36669,12 @@ function( app, SequenceCollection ) {
             this.options = _.defaults( options, this.defaultOptions );
             this.parser = options.parser;
             this.parseSequences();
+            this.initSaveEvents();
         },
 
         parseSequences: function() {
             this.sequences = new SequenceCollection( this.get("sequences") );
+            this.sequences.mode = this.options.mode;
 
             this.sequences.initFrames( this.get("frames"), this.get("layers"), this.options );
 
@@ -36978,7 +37012,6 @@ function() {
         return false;
     };
 
-
     // cleanses bad data from legacy projects
     var removeDupeSoundtrack = function( response ) {
         
@@ -36991,7 +37024,6 @@ function() {
 
     Parser[type].parse = function( response, opts ) {
         response = response.items[0].text;
-
         removeDupeSoundtrack( response );
 
         if ( opts.endPage ) {
@@ -37284,11 +37316,10 @@ function( Zeega, _, ProjectModel, DataParser ) {
         // determine which parser to use
         _.each( DataParser, function( p ) {
             if ( p.validate( data ) ) {
-                if ( options.debugEvents ) {
-                    console.log( "parsed using: " + p.name );
-                }
-                options.parser = p.name;
 
+                if ( options.debugEvents ) console.log( "parsed using: " + p.name );
+
+                options.parser = p.name;
                 // parse the data
                 parsed = p.parse( data, options );
                 return false;
@@ -37743,7 +37774,7 @@ function( app, ControlsView ) {
             if ( this.model.get("preview") ) this.$el.addClass("preview-player");
             // correctly size the player window
             if ( this.mobileView ) {
-                this.$(".ZEEGA-player-wrapper").css( this.getPlayerSize() );
+                this.$(".ZEEGA-player-wrapper").css( this.getWrapperSize() );
                 this.$el.addClass("mobile-player");
             } else {
 
@@ -37822,7 +37853,6 @@ function( app, ControlsView ) {
         },
 
         resizeWindow: function() {
-            // animate the window size in place
             var css = this.getWrapperSize();
 
             this.$(".ZEEGA-player-wrapper").css( css );
@@ -38057,7 +38087,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
             @type Collection
             @default null
             **/
-            preloadRadius: 2,
+            preloadRadius: 4,
 
             /**
             the beginning state of the preview. vertical or fullscreen mode
@@ -38264,6 +38294,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                 _.extend({},
                     this.toJSON(),
                     {
+                        mode: "player",
                         attach: {
                             status: this.status,
                             relay: this.relay
