@@ -15,9 +15,8 @@ define([
 ],
 
 function(app, Player, UI, Analytics) {
-    var Controller = {};
-
-    Controller.Model = app.Backbone.Model.extend({
+    
+    return app.Backbone.Model.extend({
 
         initialize: function() {
             this.initPlayer();
@@ -42,33 +41,33 @@ function(app, Player, UI, Analytics) {
                 startFrame: app.state.get("frameID")
             });
 
-            //initialize analytics
+            if( window.projectJSON ) {
+                this.onDataLoaded();
+            } else {
+                app.player.on('data_loaded', this.onDataLoaded, this);
+            }
+            app.player.on('frame_play', this.onFrameRender, this);
+            app.player.on('sequence_enter', this.updateWindowTitle, this);
+           
+        },
+
+        initAnalytics: function() {
             app.analytics = new Analytics();
-
-
             
-            try{
-
+            try {
                 app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
-
-            } catch ( err ){
-
+            } catch ( err ) {
                 app.showChrome = false;
-            
             }
 
-            try{
-
+            try {
                 app.showEndPage = ( window == window.top ) || (window.frameElement && window.frameElement.getAttribute("endpage"));
-
-            } catch ( err ){
-
+            } catch ( err ) {
                 app.showEndPage = true;
-            
             }
 
             //detect context
-            if( window==window.top ){
+            if( window == window.top ) {
                 context = "web";
             } else if ( !app.showChrome ) {
                 context = "homepage";
@@ -86,19 +85,6 @@ function(app, Player, UI, Analytics) {
             });
 
             app.analytics.trackEvent("zeega_view");
-
-
-
-
-
-            if( window.projectJSON ) {
-                this.onDataLoaded();
-            } else {
-                app.player.on('data_loaded', this.onDataLoaded, this);
-            }
-            app.player.on('frame_play', this.onFrameRender, this);
-            app.player.on('sequence_enter', this.updateWindowTitle, this);
-           
         },
 
         onDataLoaded: function() {
@@ -106,6 +92,7 @@ function(app, Player, UI, Analytics) {
             render base layout
             the base layout contains the logic for the player skin (citations, ui, etc)
             */
+            this.initAnalytics();
             app.layout = new UI.Layout();
         },
 
@@ -121,6 +108,4 @@ function(app, Player, UI, Analytics) {
 
   });
 
-    // Required, return the module for AMD compliance
-    return Controller;
 });

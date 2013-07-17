@@ -2,10 +2,10 @@ define([
     // Application.
     "app",
     // Modules.
-    "modules/controller"
+    "modules/initializer"
 ],
 
-function( app, Controller ) {
+function( app, Initializer ) {
     // Defining the application router, you can attach sub routers here.
     var Router = Backbone.Router.extend({
 
@@ -39,7 +39,7 @@ function( app, Controller ) {
 
     /* create init fxn that can only run once per load */
     var init = function() {
-        new Controller.Model();
+        new Initializer();
         app.state.set("initialized", true );
     };
     var initialize = _.once( init );
