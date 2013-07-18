@@ -10,12 +10,11 @@ define([
 
     "modules/ui",
     "analytics/analytics",
-    "remixer/remixer"
 
      // Plugins
 ],
 
-function( app, Player, UI, Analytics, Remixer ) {
+function( app, Player, UI, Analytics ) {
 
     return app.Backbone.Model.extend({
 
@@ -26,14 +25,16 @@ function( app, Player, UI, Analytics, Remixer ) {
         initPlayer: function() {
             var context, showChrome;
 
-            app.player = new Player.player({
+            app.player = new Player({
                 // debugEvents: true,
                 // cover: false,
+
                 scalable: true,
                 endPage: true,
                 controls: false,
-                autoplay: false,
-                target: '#player',
+                autoplay: true, // for testing
+                preloadRadius: 1,
+                target: "#player",
                 preview: false,
                 data: $.parseJSON( window.projectJSON ) || null,
                 url: window.projectJSON ? null :
@@ -58,11 +59,7 @@ function( app, Player, UI, Analytics, Remixer ) {
             */
             // this.initAnalytics();
             app.layout = new UI.Layout();
-            // console.log("player:", app.player)
-            // if ( app.player.project.get("remix").remix ) {
-            //     app.remixer = new Remixer();
-            //     app.remixer.add( app.player.project.get("remix") );
-            // }
+
         },
 
         initAnalytics: function() {

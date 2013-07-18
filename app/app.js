@@ -24,6 +24,7 @@ function( $, _, Backbone, State, Spinner ) {
 
         Backbone: Backbone,
         $: $,
+        
         emit: function( event, args ) {
             // other things can be done here as well
             this.trigger( event, args );
