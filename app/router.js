@@ -16,7 +16,6 @@ function( app, Initializer ) {
 
         initialize: function() {
             new Initializer();
-            app.state.set("initialized", true );
         },
 
         base: function() {}

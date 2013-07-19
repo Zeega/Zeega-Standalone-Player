@@ -14,7 +14,7 @@ define([
      // Plugins
 ],
 
-function( app, Player, UI, Analytics ) {
+function( app, Player, PlayerUI, Analytics ) {
 
     return app.Backbone.Model.extend({
 
@@ -32,8 +32,8 @@ function( app, Player, UI, Analytics ) {
                 scalable: true,
                 endPage: true,
                 controls: false,
-                autoplay: true, // for testing
-                preloadRadius: 1,
+                autoplay: false, // for testing
+                preloadRadius: 2,
                 target: "#player",
                 preview: false,
                 data: $.parseJSON( window.projectJSON ) || null,
@@ -46,7 +46,7 @@ function( app, Player, UI, Analytics ) {
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
-                app.player.on('data_loaded', this.onDataLoaded, this);
+                app.player.once('player:ready', this.onDataLoaded, this);
             }
             app.player.on('sequence_enter', this.updateWindowTitle, this);
            
@@ -58,7 +58,8 @@ function( app, Player, UI, Analytics ) {
             the base layout contains the logic for the player skin (citations, ui, etc)
             */
             // this.initAnalytics();
-            app.layout = new UI.Layout();
+            console.log("player layout", app)
+            app.layout = new PlayerUI();
 
         },
 

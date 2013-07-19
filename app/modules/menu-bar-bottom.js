@@ -22,20 +22,19 @@ function(app, Backbone) {
         
         serialize: function() {
 
-            if ( this.model.project ) {
+            if ( this.model.zeega ) {
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites()
                 },
                     app.metadata,
-                    this.model.project.toJSON()
+                    this.model.zeega.projects.at(0).toJSON()
                 );
             }
         },
 
         getFavorites: function(){
-            
-            var count = this.model.project.get("favorite_count"),
+            var count = this.model.zeega.projects.at(0).get("favorite_count"),
                 html = "";
 
             if ( count == 1){
@@ -195,9 +194,8 @@ function(app, Backbone) {
         },
 
         startOver: function() {
-            
-            this.model.status.set("frameHistory",[]);
-            this.model.cueFrame( this.model.get("startFrame") );
+            console.log('start over', this)
+            this.model.cuePage( this.model.zeega.getFirstPage() );
             app.emit("start_over", {source: "button"});
             return false;
         }

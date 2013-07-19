@@ -14,8 +14,7 @@ function(app, Backbone) {
         className: "ZEEGA-player-controls",
 
         initialize: function() {
-            /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.updateArrowState, this);
+            this.model.on("page:play", this.updateArrowState, this);
         },
 
         events: {
@@ -29,27 +28,22 @@ function(app, Backbone) {
         },
 
         prev: function() {
-            this.model.cueBack();
+            this.model.cuePrev();
             return false;
         },
 
-        updateArrowState: function( info ) {
+        updateArrowState: function( page ) {
+            var next = page.getNextPage(),
+                prev = page.getPrevPage();
 
-            if( this.model.status.get("frameHistory").length > 1 ){
-                this.activateArrow("prev");
-            } else {
-                this.disableArrow("prev");
-            }
-
-
-            if( info._connections == "r" || info._connections == "lr" ){
-                this.activateArrow("next");
-            } else {
-                this.disableArrow("next");
-            }
+            if( next ) this.enableArrow("next");
+            else this.disableArrow("next");
+            
+            if ( prev ) this.enableArrow("prev");
+            else this.disableArrow("prev")
         },
 
-        activateArrow: function(className) {
+        enableArrow: function(className) {
             this.$("."+ className +".disabled").removeClass("disabled");
         },
 

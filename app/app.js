@@ -50,6 +50,14 @@ function( $, _, Backbone, State, Spinner ) {
             left: 'auto' // Left position relative to parent in px
         });
 
+    app.spin = function() {
+        app.spinner.spin( app.layout.el );
+    }
+
+    app.spinStop = function() {
+        app.spinner.stop();
+    }
+
     // Localize or create a new JavaScript Template object.
     var JST = window.JST = window.JST || {};
 

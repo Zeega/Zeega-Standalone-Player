@@ -22,12 +22,9 @@ define([
 
 function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, PauseView ) {
 
-    // Create a new module
-    var UI = {};
-
     var FADE_OUT_DELAY = 3000;
 
-    UI.Layout = Backbone.Layout.extend({
+    return Backbone.Layout.extend({
 
         hasPlayed: false,
         el: "#main",
@@ -40,14 +37,13 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
-            this.citations = new MenuBarBottom.View({ model: app.player });
-            this.menuBar = new MenuBarTop.View({ model: app.player });
+            this.bottomBar = new MenuBarBottom.View({ model: app.player });
+            this.topBar = new MenuBarTop.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
-
-            this.insertView("#overlays", this.citations );
-            this.insertView("#overlays", this.menuBar );
+            this.insertView("#overlays", this.bottomBar );
+            this.insertView("#overlays", this.topBar );
 
             if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
@@ -96,16 +92,16 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
         },
 
         fadeOutChrome: function() {
-            this.menuBar.fadeOut();
-            this.citations.fadeOut();
+            this.topBar.fadeOut();
+            this.bottomBar.fadeOut();
         },
 
         showMenubar: _.debounce(function() {
-            this.menuBar.fadeIn();
+            this.topBar.fadeIn();
         }, 500, true ),
 
         showCitationbar: _.debounce(function() {
-            this.citations.fadeIn();
+            this.bottomBar.fadeIn();
         }, 500, true ),
 
         onPause: function() {
@@ -115,15 +111,12 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
         },
 
         onPlay: function() {
-            this.menuBar.fadeOut();
-            this.citations.fadeOut();
+            this.topBar.fadeOut();
+            this.bottomBar.fadeOut();
             if ( this.pause ) {
                 this.pause.remove();
             }
         }
 
     });
-
-    // Required, return the module for AMD compliance
-    return UI;
 });
