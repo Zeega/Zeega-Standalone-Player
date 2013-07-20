@@ -28,12 +28,12 @@ function(app, Backbone) {
         },
 
         serialize: function() {
-            if ( this.model.project ) {
+            if ( this.model.zeega.getCurrentProject() ) {
                 return _.extend({
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
                         projects: this.relatedProjects
                     },
-                    this.model.project.toJSON()
+                    this.model.zeega.getCurrentProject().toJSON()
                 );
             }
         },

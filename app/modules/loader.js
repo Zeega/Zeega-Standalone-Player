@@ -28,8 +28,6 @@ function( app, Backbone, Spinner ) {
             }
 
             this.model.once("player:canplay", this.onPlayerCanplay, this );
-            // this.model.on("all", function(e){console.log("e:",e)})
-//            console.log("")
         },
 
         serialize: function() {
@@ -54,7 +52,6 @@ function( app, Backbone, Spinner ) {
         },
 
         onPlayerCanplay: function() {
-            console.log('       player can play')
             this.playerCanplay = true;
             if ( this.loadTimer == "done" ) {
                 this.onCanPlay();
@@ -62,8 +59,6 @@ function( app, Backbone, Spinner ) {
         },
 
         onCanPlay: _.once(function() {
-
-            console.log('   ### on can play', this)
             app.spinStop();
             this.$el.fadeOut(function() {
                 this.remove();

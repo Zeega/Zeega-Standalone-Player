@@ -427,7 +427,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } 
 ;__p+=' >\n                    '+
 ( user.display_name )+
-'\n                </a>\n\n                \n                \n                <span class="zeega-favorite_count">'+
+'\n                </a>\n\n                <span class="zeega-favorite_count">'+
 ( favorites )+
 '</span>\n               \n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
@@ -603,11 +603,7 @@ __p+='<audio id="audio-el-'+
 ( id )+
 '" src="'+
 ( attr.uri )+
-'"\n    ';
- if ( attr.loop ) { 
-;__p+='\n        loop\n    ';
- } 
-;__p+='\n    preload\n></audio>';
+'" loop preload ></audio>';
 }
 return __p;
 };
@@ -725,7 +721,7 @@ return __p;
 this["JST"]["app/player/templates/layouts/player-layout.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-player-wrapper">\n    <div class="ZEEGA-player-window"></div>\n</div>';
+__p+='<div class="ZEEGA-soundtrack"></div>\n<div class="ZEEGA-player-wrapper">\n    <div class="ZEEGA-player-window"></div>\n</div>';
 }
 return __p;
 };;
@@ -17113,6 +17109,14 @@ function( $, _, Backbone, State, Spinner ) {
             left: 'auto' // Left position relative to parent in px
         });
 
+    app.spin = function() {
+        app.spinner.spin( app.layout.el );
+    }
+
+    app.spinStop = function() {
+        app.spinner.stop();
+    }
+
     // Localize or create a new JavaScript Template object.
     var JST = window.JST = window.JST || {};
 
@@ -17177,7 +17181,7 @@ function( app, Layers ) {
         },
 
         initPlayerListeners: function() {
-            this.on("visual_ready", this.onVisualReady, this );
+            this.on("layer:visual_ready", this.onVisualReady, this );
         },
 
         initEditorListeners: function() {
@@ -17196,16 +17200,17 @@ function( app, Layers ) {
             var allReady = this.every(function( layer ) { return layer.state == "ready" });
 
             if ( allReady ) {
-                this.off("visual_ready");
+                this.off("layer:visual_ready");
                 this.state = "ready";
-                this.page.trigger("layers_ready", this );
+                this.page.trigger("layers layers:ready", this );
             }
         },
 
         play: function() {
-            this.each(function( layer ) {
+            this.each(function( layer, i ) {
+                layer.updateZIndex( this.length - i );
                 layer.play();
-            });
+            }, this );
         },
 
 
@@ -33475,6 +33480,7 @@ function( app, Controls ) {
         },
 
         defaults: {
+            _target: false,
             attr: {},
             id: null,
             project_id: null,
@@ -33495,9 +33501,18 @@ function( app, Controls ) {
             this.set("attr", augmentAttr );
             this.order = {};
         
-            this.once( "visual_ready", this.onVisualReady, this );
-            this.once( "visual_error", this.onVisualError, this );
+            this.once( "layer:visual_ready", this.onVisualReady, this );
+            this.once( "layer:visual_error", this.onVisualError, this );
             this.initSaveEvents();
+        },
+
+        getTarget: function() {
+            if ( this.get("_target") ) {
+                return this.get("_target")
+            } else {
+                return app.player.get("target") ? app.player.get("target").find(".ZEEGA-player-window") :
+                                            $(".ZEEGA-workspace")[0] ? $(".ZEEGA-workspace") : $(".ZEEGA-player-window");
+            }
         },
 
         getAttr: function( attrName ) {
@@ -33541,7 +33556,7 @@ function( app, Controls ) {
                 // if the layer is ready, then just show it
                 if ( this.state == "waiting") {
                     this.state = "loading";
-                    // this.zeega.emit("layer_loading", this.toJSON());
+                    this.zeega.emit("layer layer:loading", this.toJSON());
                     this.visual.player_onPreload();
                 } else if( this.state == "ready" ) {
                     this.visual.play();
@@ -33582,14 +33597,14 @@ function( app, Controls ) {
         onVisualReady: function() {
             this.ready = true;
             this.state = "ready";
-            // this.zeega.emit("layer_ready", this );
-            // this.trigger("layer_ready", this.toJSON());
+            this.zeega.emit("layer layer:ready", this );
+            this.trigger("layer layer:ready", this );
         },
 
         onVisualError: function() {
             this.ready = true;
             this.state = "error";
-            this.trigger("layer_error", this.toJSON());
+            this.trigger("layer layer:error", this );
         },
 
         updateZIndex: function( zIndex ) {
@@ -33706,13 +33721,13 @@ function( app, Controls ) {
 
         beforeRender: function() {
             if ( this.model.zeega.get("mode") == "player") {
-                var target = app.player.get("target") ? app.player.get("target").find(".ZEEGA-player-window") :
-                                            $(".ZEEGA-workspace")[0] ? $(".ZEEGA-workspace") : $(".ZEEGA-player-window");
+                // var target = app.player.get("target") ? app.player.get("target").find(".ZEEGA-player-window") :
+                //                             $(".ZEEGA-workspace")[0] ? $(".ZEEGA-workspace") : $(".ZEEGA-player-window");
 
                 this.className = this._className + " " + this.className;
                 this.beforePlayerRender();
 
-                target.append( this.el );
+                this.model.getTarget().append( this.el );
                 //Zeega.$( target ).append( this.el );
 
                 this.$el.addClass( "visual-element-" + this.model.get("type").toLowerCase() );
@@ -33775,7 +33790,7 @@ function( app, Controls ) {
 
         // default verify fxn. return ready immediately
         verifyReady: function() {
-            this.model.trigger("visual_ready", this.model );
+            this.model.trigger("layer layer:visual_ready", this.model );
         },
 
         player_onPlay: function() {
@@ -34110,14 +34125,14 @@ function( app, Layer, Visual ){
             $img.imagesLoaded();
 
             $img.done(function() {
-                this.model.trigger( "visual_ready", this.model );
+                this.model.trigger( "layer layer:visual_ready", this.model );
                 $img.remove();
             }.bind(this));
 
             $img.fail(function() {
                 $img.remove();
-                this.model.trigger("visual_error", this.model );
-                this.model.trigger("visual_ready", this.model );
+                this.model.trigger("layer layer:visual_error", this.model );
+                this.model.trigger("layer layer:visual_ready", this.model );
             }.bind(this));
         }
     });
@@ -34467,9 +34482,7 @@ function( app, _Layer, Visual ){
                 this.audio = null;
             },
 
-            editor_onLayerEnter: function() {
-                // this.render();
-            },
+            editor_onLayerEnter: function() {},
 
             editor_onLayerExit: function() {
                 this.$("audio").attr("src", "");
@@ -34488,20 +34501,18 @@ function( app, _Layer, Visual ){
 
             setAudio: function() {
                 if ( this.audio === null ) {
-                    this.audio = this.$("#audio-el-" + this.model.id )[0];
-                    // this.audio = document.getElementById("audio-el-" + this.model.id );
-                    this.listen();
+                    this.audio = this.$("audio")[0];
                     this.audio.load();
                 }
             },
 
             getAudio: function() {
                 this.setAudio();
+
                 return this.audio;
             },
 
             verifyReady: function() {
-
                 this.audio = this.$("#audio-el-" + this.model.id )[0];
 
                 this.audio.load();
@@ -34511,51 +34522,17 @@ function( app, _Layer, Visual ){
             },
 
             init: function() {
-                //console.log("initiing this shit", this.model.id)
                 this.onCanPlay = _.once(function() {
                     this.audio.pause();
-                    this.audio.currentTime = this.getAttr("cue_in");
-
-                    if ( this.getAttr("cue_out") || this.getAttr("loop") ) {
-                        this.listen();
-                    }
-                    this.model.trigger( "visual_ready", this.model.id );
-                    this.model.status.emit("audio_play", this.model );
+                    this.model.trigger("layer layer:ready", this.model );
                 });
             },
 
-            onCanPlay: function() {},
+            onVisualReady: function() {
+                console.log('visual ready audio')
+            },
 
-            listen: _.once(function() {
-                // don't need to listen to audio time if there's no cue out!
-                if ( this.getAttr("cue_out") !== null ) {
-                    this.audio.addEventListener("timeupdate", function(){
-                        var currentTime = this.audio.currentTime;
-
-                        if ( currentTime >= this.getAttr("cue_out" ) ) {
-                            if ( this.getAttr("loop") ) {
-                                this.audio.pause();
-                                this.audio.currentTime = this.getAttr("cue_in");
-                                this.audio.play();
-                            } else {
-                                this.audio.pause();
-                                this.audio.currentTime = this.getAttr("cue_in");
-                            }
-                        }
-                    }.bind( this ));
-                }
-
-                this.audio.addEventListener("ended", function(){
-                    if ( this.getAttr("loop") ) {
-                        this.audio.pause();
-                        this.audio.currentTime = this.getAttr("cue_in");
-                        this.audio.play();
-                    } else {
-                        this.audio.pause();
-                        this.audio.currentTime = this.getAttr("cue_in");
-                    }
-                }.bind( this ));
-            })
+            onCanPlay: function() {}
 
         });
     } else {
@@ -34703,11 +34680,9 @@ function( app, _Layer, Visual ){
             },
 
             onLoading: function( value ){
-
                 if( value == 3 ) {
-                    this.model.trigger( "visual_ready", this.model.id );
+                    this.model.trigger( "layer:visual_ready", this.model.id );
                 }
-
             },
 
             onStateChange: function( event_id, value ){
@@ -35966,18 +35941,22 @@ function( app, Backbone, LayerCollection, Layers ) {
             // only try to preload if preload has not been attempted yet
             if ( this.state == "waiting" ) {
                 this.state = "loading";
-
-                this.once("layers_ready", this.onLayersReady, this );
+                this.once("layers:ready", this.onLayersReady, this );
                 this.layers.preload();
             }
         },
 
         onLayersReady: function( layers ) {
             this.state = "ready";
-            this.zeega.trigger("page_ready:" + this.id, this );
+            this.zeega.emit("page page:ready page:ready-" + this.id, this );
+
+            if ( this.zeega.get("currentPage").id == this.id ) this.play();
         },
 
         play: function() {
+            this.zeega.emit("page page:play", this );
+            if ( this.state != "ready") app.spin();
+            else app.spinStop();
             this.layers.play();
         },
 
@@ -35988,9 +35967,18 @@ function( app, Backbone, LayerCollection, Layers ) {
         },
 
         exit: function( newID ) {
+            app.spinStop();
             this.layers.each(function( layer ) {
                 layer.exit();
             });
+        },
+
+        getNextPage: function() {
+            return this.zeega.getNextPage( this );
+        },
+
+        getPrevPage: function() {
+            return this.zeega.getPreviousPage( this );
         },
 
 
@@ -36220,15 +36208,17 @@ function( app, PageModel, LayerCollection ) {
 
 define('engine/modules/project.model',[
     "app",
-    "engine/modules/page.collection"
+    "engine/modules/page.collection",
+    "engine/plugins/layers/_all"
 ],
 
-function( app, PageCollection ) {
+function( app, PageCollection, Layers ) {
 
     return app.Backbone.Model.extend({
 
         pages: null,
         zeega: null,
+        soundtrack: false,
 
 ////
 
@@ -36237,6 +36227,7 @@ function( app, PageCollection ) {
         modelType: "project",
 
         defaults: {
+            _soundtrack: {},
             id: null,
             user: {
                 id: null,
@@ -36284,18 +36275,34 @@ function( app, PageCollection ) {
         },
 
         initialize: function( data, options ) {
-            this.pages = new PageCollection( this.get("frames") );
-            this.pages.loadLayers( this.get("layers") );
-            this.pages.setPageOrder( this.get("sequences")[0] )
+            this._loadPages();
+            this._loadSoundtrack();
 
             this.initSaveEvents();
         },
 
+        _loadPages: function() {
+            this.pages = new PageCollection( this.get("frames") );
+            this.pages.loadLayers( this.get("layers") );
+            this.pages.setPageOrder( this.get("sequences")[0] );
+        },
+
+        _loadSoundtrack: function() {
+            if ( this.get("_soundtrack") ) {
+                this.soundtrack = new Layers["Audio"]( _.extend( this.get("_soundtrack"), { type: "Audio" }) );
+
+                this.soundtrack.visual = new Layers["Audio"].Visual({
+                        model: this.soundtrack,
+                        attributes: {
+                            "data-id": this.get("_soundtrack").id
+                        }
+                    });
+            }
+        },
 
 
 
         ///////
-
 
 
 
@@ -36428,21 +36435,29 @@ function( app, Engine, ProjectCollection, ProjectModel, PageCollection, PageMode
             this.blurPage( this.get("currentPage") );
             this.set("currentPage", page );
             page.trigger("focus");
+            this.emit("page page:focus", page );
         },
 
         blurPage: function( page ) {
             this.set("previousPage", page );
             page.trigger("blur")
+            this.emit("page page:blur", page );
+        },
+
+        getFirstPage: function() {
+            return this.projects.at(0).pages.at(0);
         },
 
         getNextPage: function( page ) {
             var p = page || this.getCurrentPage();
 
-            return this.getCurrentProject().pages.at( p.get("_order") + 1 ) || false;
+            return p.get("_order") < p.layers.length +1 ? this.getCurrentProject().pages.at( p.get("_order") + 1 ) : false;
         },
 
         getPreviousPage: function( page ) {
-            return this.getCurrentProject().pages.at( page.get("_order") - 1 ) || false;
+            var p = page || this.getCurrentPage();
+
+            return p.get("_order") > 0 ? this.getCurrentProject().pages.at( p.get("_order") - 1 ) : false;
         },
 
         getCurrentProject: function() {
@@ -36536,18 +36551,37 @@ function() {
         return false;
     };
 
+    var getSoundtrackID = function( response ) {
+        return response.sequences[0].attr.soundtrack || false;
+    }
+
     var removeDupeSoundtrack = function( response ) {
-        
-        if ( response.sequences[0].attr.soundtrack ) {
+        var soundtrackID = getSoundtrackID( response );
+
+        if ( soundtrackID ) {
             _.each( response.frames, function( frame ) {
-                frame.layers = _.without( frame.layers, response.sequences[0].attr.soundtrack );
+                frame.layers = _.without( frame.layers, soundtrackID );
             });
         }
     };
 
+    var getSoundtrackLayer = function( response ) {
+        var soundtrackID = getSoundtrackID( response );
+
+        if ( soundtrackID ) {
+            var soundtrackLayer = _.find( response.layers, function( layer ) {
+                return layer.id == soundtrackID;
+            });
+
+            return soundtrackLayer || false;
+        }
+        return false;
+    }
+
     // no op. projects are already formatted
     Parser[type].parse = function( response, opts ) {
         removeDupeSoundtrack( response.project );
+        response.project._soundtrack = getSoundtrackLayer( response.project );
 
         if ( opts.endPage ) {
             var endId, lastPageId, lastPage, endPage, endLayers;
@@ -37383,27 +37417,26 @@ function( app, ControlsView ) {
                 }.bind( this ), 1000 );
             }
 
-            this.model.emit("layout_rendered");
+            this.model.emit("layout:rendered");
         },
 
         setPrevNext: function() {
             // TODO: Investigate whether or not this-alias can be safely
             // replaced by bind(this)
             var next = this.model.get("next"),
-                prev = this.model.get("prev"),
-                _this = this;
+                prev = this.model.get("prev")
 
             if ( next && next.length ) {
                 app.$( next ).click(function() {
-                    _this.model.cueNext();
+                    this.model.cueNext();
                     return false;
-                });
+                }.bind(this));
             }
             if ( prev && prev.length ) {
                 app.$( prev ).click(function() {
-                    _this.model.cuePrev();
+                    this.model.cuePrev();
                     return false;
-                });
+                }.bind(this));
             }
         },
 
@@ -37548,6 +37581,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         ready: false,          // the player is parsed and in the dom. can call play play. layers have not been preloaded yet
         state: "paused",
+        soundtrackState: "waiting",
         layout: null,
 
         // default settings -  can be overridden by project data
@@ -37815,12 +37849,19 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                         mode: "player"
                     })
                 );
+            this.emit("player:ready", this );
+            this._listenToZeega();
+            this._renderLayout();
+        },
 
-            this._render();
+        _listenToZeega: function() {
+            this.zeega.on("all", function( event, attributes ) {
+                this.emit( event, attributes );
+            }, this );
         },
 
         // renders the player to the dom // this could be a _.once
-        _render: function() {
+        _renderLayout: function() {
             var target;
 
             this._setTarget();
@@ -37832,9 +37873,9 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                     "data-projectID": this.id
                 }
             });
-            target.append( this.layout.el );
 
-            this.once("layout_rendered", this._onRendered, this );
+            target.append( this.layout.el );
+            this.once("layout:rendered", this._onRendered, this );
 
             // do not apply relative style if the zeega is in appended to the body
             if ( !target.is("body") ) {
@@ -37846,47 +37887,60 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         _onRendered: function() {
             this.ready = true;
-            this._initEvents(); // this should be elsewhere. in an onReady fxn?
-            // this.emit( "ready", this );
+            this._renderSoundtrack();
+            this._initEvents();
+            this.emit( "ready", this );
 
             if ( this.get("autoplay") ) this.play();
+
+            this.zeega.getCurrentPage().once("layers:ready", function() {
+                this.emit("player player:canplay", this );
+            }, this );
+
+            this.preloadPage( this.zeega.getCurrentPage() );
         },
 
+        _renderSoundtrack: function() {
+            var soundtrack = this.zeega.projects.at(0).soundtrack;
 
-        // if the player is paused, then play the project
-        // if the player is not rendered, then render it first
-        /**
-        * play
-        * plays the project
-        * -if the player is paused, then play the project
-        * -if the player is not rendered, then render it first
-        *
-        * @method play
-        */
+            if ( soundtrack ) {
+                this.soundtrackState = "loading";
+                this.emit("soundtrack soundtrack:loading", soundtrack );
+                soundtrack.once("layer:ready", this._onSoundtrackReady, this );
+                soundtrack.set("_target", this.layout.$(".ZEEGA-soundtrack") );
+                soundtrack.render();
+            }
+        },
+
+        _onSoundtrackReady: function( soundtrack ) {
+            this.soundtrackState = "ready";
+            this.emit("soundtrack soundtrack:ready", soundtrack );
+
+            if ( this.get("autoplay") ) this.zeega.getCurrentProject().soundtrack.play();
+        },
 
         play: function() {
             var page = this.zeega.getCurrentPage();
 
             // this.loadSoundtrack( app );
             if ( !this.ready ) {
-                this.render(); // render the player first! // this should not happen
+                this.renderLayout(); // render the player first! // this should not happen
             } else if ( this.state == "paused" || this.state == "suspended" ) {
                 this._fadeIn();
                 this.cuePage( page );
+                this.zeega.getCurrentProject().soundtrack.play();
+                this.emit("player player:play", this );
             }
         },
 
         cuePage: function( page ) {
-            console.log("CP", page.id, page)
+
             if ( page.state == "waiting" ) {
                 // preload
-                this.zeega.once("page_ready:" + page.id, this._playPage, this );
+                this._playPage( page );
                 this.preloadPage( page );
             } else if ( page.state == "ready" ) {
                 this.state = "playing";
-                // if ( app.soundtrack ) app.soundtrack.play();
-                // this.emit( "play", this );
-                // this._playPage( page );
                 this.zeega.focusPage( page );
             }
         },
@@ -37925,28 +37979,44 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         emit: function( event, options ) {
             this.trigger( event, options );
+
+            if ( this.get("debugEvents") ) console.log("player evt: ", event, options );
         },
 
         // goes to the next frame after n ms
-        cueNext: function( ms ) {
-            this.cuePage( this.zeega.getNextPage() );
+        cueNext: function() {
+            var nextPage = this.zeega.getNextPage();
+
+            if ( nextPage ) this.cuePage( this.zeega.getNextPage() );
         },
 
         // goes to the prev frame after n ms
         cuePrev: function( ms ) {
+            var prevPage = this.zeega.getPreviousPage();
 
+            if ( prevPage ) this.cuePage( this.zeega.getPreviousPage() );
         },
 
-        // goes to previous frame in history
-        cueBack: function() {
-            // this.status.onBack();
-            // var history = this.status.get("frameHistory");
-            // if( history.length > 0 ){
-            //     this.cueFrame( history [ history.length - 1 ] );
-            // }
+        // move this to layout
+        _initEvents: function() {
+            var _this = this;
+
+            if ( this.get("keyboard") ) {
+                app.$(window).keyup(function( event ) {
+                    switch( event.which ) {
+                        case 37: // left arrow
+                            _this.cuePrev();
+                            break;
+                        case 39: // right arrow
+                            _this.cueNext();
+                            break;
+                        case 32: // spacebar
+                            _this.playPause();
+                            break;
+                    }
+                }.bind( this ));
+            }
         },
-
-
 
 
 
@@ -37967,27 +38037,6 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         toggleSize: function() {
             this.layout.toggleSize();
-        },
-
-         // move this to layout
-        _initEvents: function() {
-            var _this = this;
-
-            if ( this.get("keyboard") ) {
-                app.$(window).keyup(function( event ) {
-                    switch( event.which ) {
-                        case 37: // left arrow
-                            _this.cueBack();
-                            break;
-                        case 39: // right arrow
-                            _this.cueNext();
-                            break;
-                        case 32: // spacebar
-                            _this.playPause();
-                            break;
-                    }
-                }.bind( this ));
-            }
         },
 
         
@@ -38137,6 +38186,7 @@ function( app, Backbone, Spinner ) {
 
         MIN_LOAD_TIME: 2000,
         loadTimer: null,
+        playerCanplay: false,
         isReady: false,
         /* variables keeping track of generic layer states */
         layerCount : 0,
@@ -38150,75 +38200,40 @@ function( app, Backbone, Spinner ) {
             if( window != window.top ){
                 this.MIN_LOAD_TIME =0;
             }
-            this.model.on("layer_loading", this.onLayerLoading, this );
-            this.model.on("layer_ready", this.onLayerReady, this );
+
+            this.model.once("player:canplay", this.onPlayerCanplay, this );
         },
 
         serialize: function() {
-            if ( this.model.project ) {
+            if ( this.model.zeega.getCurrentProject() ) {
                 return _.extend({},
                     app.metadata,
-                    this.model.project.toJSON()
+                    this.model.zeega.getCurrentProject().toJSON()
                 );
             }
         },
 
         afterRender: function() {
-            var opts = {
-                lines: 13, // The number of lines to draw
-                length: 10, // The length of each line
-                width: 4, // The line thickness
-                radius: 30, // The radius of the inner circle
-                corners: 1, // Corner roundness (0..1)
-                rotate: 0, // The rotation offset
-                direction: 1, // 1: clockwise, -1: counterclockwise
-                color: '#FFF', // #rgb or #rrggbb
-                speed: 1, // Rounds per second
-                trail: 60, // Afterglow percentage
-                shadow: false, // Whether to render a shadow
-                hwaccel: false, // Whether to use hardware acceleration
-                className: 'spinner', // The CSS class to assign to the spinner
-                zIndex: 2e9, // The z-index (defaults to 2000000000)
-                top: 'auto', // Top position relative to parent in px
-                left: 'auto' // Left position relative to parent in px
-            };
-            this.spinner = new Spinner(opts).spin( this.$el[0] );
+            app.spin();
 
             this.loadTimer = setTimeout(function() {
                 clearTimeout( this.loadTimer );
                 this.loadTimer = "done";
-                if ( this.loadTimer == "done" && this.isReady ) {
+                if ( this.playerCanplay ) {
                     this.onCanPlay();
                 }
             }.bind( this ), this.MIN_LOAD_TIME );
         },
 
-        onLayerLoading: function( layer ) {
-            this.layerCount++;
-
-            if( _.contains(["Audio", "Image", "Video"], layer.type) ) {
-                var item, itemType;
-
-                itemType = layer.attr.archive || layer.type;
-                item = "<li><i class='zitem-" + itemType.toLowerCase() +" zitem-30' data-id='" + layer.id + "'></i></li>";
-                this.$(".ZEEGA-loading-layers").append( item );
-            }
-        },
-
-        onLayerReady: function(layer) {
-            this.layersReady++;
-
-            if (this.layersReady == this.layerCount) {
-                this.isReady =  true;
-                if ( this.loadTimer == "done" && this.isReady ) {
-                    this.onCanPlay();
-                }
+        onPlayerCanplay: function() {
+            this.playerCanplay = true;
+            if ( this.loadTimer == "done" ) {
+                this.onCanPlay();
             }
         },
 
         onCanPlay: _.once(function() {
-            
-            this.spinner.stop();
+            app.spinStop();
             this.$el.fadeOut(function() {
                 this.remove();
             }.bind( this ));
@@ -38249,8 +38264,7 @@ function(app, Backbone) {
         className: "ZEEGA-player-controls",
 
         initialize: function() {
-            /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.updateArrowState, this);
+            this.model.on("page:play", this.updateArrowState, this);
         },
 
         events: {
@@ -38264,27 +38278,22 @@ function(app, Backbone) {
         },
 
         prev: function() {
-            this.model.cueBack();
+            this.model.cuePrev();
             return false;
         },
 
-        updateArrowState: function( info ) {
+        updateArrowState: function( page ) {
+            var next = page.getNextPage(),
+                prev = page.getPrevPage();
 
-            if( this.model.status.get("frameHistory").length > 1 ){
-                this.activateArrow("prev");
-            } else {
-                this.disableArrow("prev");
-            }
-
-
-            if( info._connections == "r" || info._connections == "lr" ){
-                this.activateArrow("next");
-            } else {
-                this.disableArrow("next");
-            }
+            if( next ) this.enableArrow("next");
+            else this.disableArrow("next");
+            
+            if ( prev ) this.enableArrow("prev");
+            else this.disableArrow("prev")
         },
 
-        activateArrow: function(className) {
+        enableArrow: function(className) {
             this.$("."+ className +".disabled").removeClass("disabled");
         },
 
@@ -38316,23 +38325,37 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-citations",
 
-        
         serialize: function() {
 
-            if ( this.model.project ) {
+            if ( this.model.zeega ) {
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites()
                 },
                     app.metadata,
-                    this.model.project.toJSON()
+                    this.model.zeega.projects.at(0).toJSON()
                 );
             }
         },
 
+        initialize: function() {
+            /* update the arrow state whenever a frame is rendered */
+            this.model.on("frame_play", this.updateCitations, this );
+            this.model.on("data_loaded", this.render, this);
+            this.model.on("pause", this.fadeIn, this );
+
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
+        },
+
+        afterRender: function(){
+            if ( app.metadata.loggedIn ){
+                this.$(".favorite").show();
+            }
+        },
+
         getFavorites: function(){
-            
-            var count = this.model.project.get("favorite_count"),
+            var count = this.model.zeega.projects.at(0).get("favorite_count"),
                 html = "";
 
             if ( count == 1){
@@ -38348,23 +38371,6 @@ function(app, Backbone) {
         incFavorites: function( inc ){
             this.model.project.set( "favorite_count", this.model.project.get("favorite_count") + inc );
             this.$(".zeega-favorite_count").html( this.getFavorites() );
-        },
-
-        initialize: function() {
-
-            /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.updateCitations, this );
-            this.model.on("data_loaded", this.render, this);
-            this.model.on("pause", this.fadeIn, this );
-
-            this.model.on("endpage_enter", this.endPageEnter, this );
-            this.model.on("endpage_exit", this.endPageExit, this );
-        },
-
-        afterRender: function(){
-            if ( app.metadata.loggedIn ){
-                this.$(".favorite").show();
-            }
         },
 
         toggleFavorite: function(){
@@ -38492,9 +38498,8 @@ function(app, Backbone) {
         },
 
         startOver: function() {
-            
-            this.model.status.set("frameHistory",[]);
-            this.model.cueFrame( this.model.get("startFrame") );
+            console.log('start over', this)
+            this.model.cuePage( this.model.zeega.getFirstPage() );
             app.emit("start_over", {source: "button"});
             return false;
         }
@@ -38565,16 +38570,15 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
-
             var showChrome;
 
-            if ( this.model.project ) {
+            if ( this.model.zeega ) {
                 return _.extend({
                         show_chrome: app.showChrome,
                         share_links: this.getShareLinks(),
                         path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
-                    this.model.project.toJSON()
+                    this.model.zeega.projects.at(0).toJSON()
                 );
             }
         },
@@ -38582,33 +38586,34 @@ function(app, Backbone) {
          getShareLinks: function() {
             var html,
                 links = {},
+                project = this.model.zeega.projects.at(0),
                 webRoot = "http:" + app.metadata.hostname + app.metadata.directory;
                 
 
-            if( !_.isUndefined(this.model.project.get("title"))){
-                title = this.model.project.get("title");
+            if( !_.isUndefined(this.model.zeega.projects.at(0).get("title"))){
+                title = project.get("title");
             } else {
                 title = "";
             }
             
 
             html = "<p>" + title + "</p>" +
-                "<p><a href='" + webRoot + this.model.project.get("id") + "'>" +
+                "<p><a href='" + webRoot + project.get("id") + "'>" +
                 "<strong>►&nbsp;Play&nbsp;Zeega&nbsp;►</strong></a>" +
-                "</p><p>by&nbsp;<a href='" + webRoot + "profile/" + this.model.project.get("user_id") + "'>" + this.model.project.get("authors") + "</a></p>";
+                "</p><p>by&nbsp;<a href='" + webRoot + "profile/" + project.get("user_id") + "'>" + project.get("authors") + "</a></p>";
 
-            links.tumblr = "http://www.tumblr.com/share/photo?source=" + encodeURIComponent( this.model.project.get("cover_image") ) +
+            links.tumblr = "http://www.tumblr.com/share/photo?source=" + encodeURIComponent( project.get("cover_image") ) +
                 "&caption=" + encodeURIComponent( html ) +
-                "&click_thru="+ encodeURIComponent( webRoot ) + this.model.project.get("id");
+                "&click_thru="+ encodeURIComponent( webRoot ) + project.get("id");
 
-            links.reddit = "http://www.reddit.com/submit?url=" + encodeURIComponent( webRoot ) + this.model.project.get("id") +
+            links.reddit = "http://www.reddit.com/submit?url=" + encodeURIComponent( webRoot ) + project.get("id") +
                 "&title=" + encodeURIComponent( title );
 
-            links.twitter = "https://twitter.com/intent/tweet?original_referer=" + encodeURIComponent( webRoot ) + this.model.project.get("id") +
+            links.twitter = "https://twitter.com/intent/tweet?original_referer=" + encodeURIComponent( webRoot ) + project.get("id") +
                 "&text=" + encodeURIComponent( title  + " made w/ @zeega") +
-                "&url=" + encodeURIComponent( webRoot ) + this.model.project.get("id");
+                "&url=" + encodeURIComponent( webRoot ) + project.get("id");
 
-            links.facebook = "http://www.facebook.com/sharer.php?u=" + encodeURIComponent( webRoot ) + this.model.project.get("id");
+            links.facebook = "http://www.facebook.com/sharer.php?u=" + encodeURIComponent( webRoot ) + project.get("id");
 
             return links;
         },
@@ -38793,12 +38798,12 @@ function(app, Backbone) {
         },
 
         serialize: function() {
-            if ( this.model.project ) {
+            if ( this.model.zeega.getCurrentProject() ) {
                 return _.extend({
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
                         projects: this.relatedProjects
                     },
-                    this.model.project.toJSON()
+                    this.model.zeega.getCurrentProject().toJSON()
                 );
             }
         },
@@ -38884,12 +38889,9 @@ define('modules/ui',[
 
 function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, PauseView ) {
 
-    // Create a new module
-    var UI = {};
-
     var FADE_OUT_DELAY = 3000;
 
-    UI.Layout = Backbone.Layout.extend({
+    return Backbone.Layout.extend({
 
         hasPlayed: false,
         el: "#main",
@@ -38902,14 +38904,13 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
-            this.citations = new MenuBarBottom.View({ model: app.player });
-            this.menuBar = new MenuBarTop.View({ model: app.player });
+            this.bottomBar = new MenuBarBottom.View({ model: app.player });
+            this.topBar = new MenuBarTop.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
-
-            this.insertView("#overlays", this.citations );
-            this.insertView("#overlays", this.menuBar );
+            this.insertView("#overlays", this.bottomBar );
+            this.insertView("#overlays", this.topBar );
 
             if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
@@ -38921,17 +38922,24 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
             $( window ).resize(function() {
                 this.onResize();
             }.bind(this));
+
+            app.player.once("player:play", function() {
+                this.showMenubar();
+                this.showCitationbar();
+            }, this );
         },
 
         afterRender: function() {
-            app.state.set("baseRendered", true );
+            // app.state.set("baseRendered", true );
             // this.resetFadeOutTimer();
         },
 
         // sets the window size lazily so we don't have to do it elsewhere
         setWindowSize: function() {
-            app.state.set("windowWidth", window.innerWidth );
-            app.state.set("windowHeight", window.innerHeight );
+            this.windowWidth = window.innerWidth;
+            this.windowHeight = window.innerHeight;
+
+            console.log('sWS', this)
         },
 
         events : {
@@ -38951,23 +38959,19 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
                 if ( pageY < 100 ) {
                     this.showMenubar();
                 }
-                else if ( pageY > app.state.get("windowHeight") - 100 ) {
+                else if ( pageY > this.windowHeight - 100 ) {
+                    console.log('show citations')
                     this.showCitationbar();
                 }
             }
         },
 
-        fadeOutChrome: function() {
-            this.menuBar.fadeOut();
-            this.citations.fadeOut();
-        },
-
         showMenubar: _.debounce(function() {
-            this.menuBar.fadeIn();
+            this.topBar.fadeIn();
         }, 500, true ),
 
         showCitationbar: _.debounce(function() {
-            this.citations.fadeIn();
+            this.bottomBar.fadeIn();
         }, 500, true ),
 
         onPause: function() {
@@ -38977,17 +38981,15 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
         },
 
         onPlay: function() {
-            this.menuBar.fadeOut();
-            this.citations.fadeOut();
+            this.hasPlayed = true;
+            this.topBar.fadeOut();
+            this.bottomBar.fadeOut();
             if ( this.pause ) {
                 this.pause.remove();
             }
         }
 
     });
-
-    // Required, return the module for AMD compliance
-    return UI;
 });
 define('analytics/analytics',[
     "app",
@@ -39153,7 +39155,7 @@ define('modules/initializer',[
      // Plugins
 ],
 
-function( app, Player, UI, Analytics ) {
+function( app, Player, PlayerUI, Analytics ) {
 
     return app.Backbone.Model.extend({
 
@@ -39171,8 +39173,8 @@ function( app, Player, UI, Analytics ) {
                 scalable: true,
                 endPage: true,
                 controls: false,
-                autoplay: true, // for testing
-                preloadRadius: 1,
+                autoplay: false, // for testing
+                preloadRadius: 2,
                 target: "#player",
                 preview: false,
                 data: $.parseJSON( window.projectJSON ) || null,
@@ -39185,7 +39187,7 @@ function( app, Player, UI, Analytics ) {
             if( window.projectJSON ) {
                 this.onDataLoaded();
             } else {
-                app.player.on('data_loaded', this.onDataLoaded, this);
+                app.player.once('player:ready', this.onDataLoaded, this);
             }
             app.player.on('sequence_enter', this.updateWindowTitle, this);
            
@@ -39196,14 +39198,13 @@ function( app, Player, UI, Analytics ) {
             render base layout
             the base layout contains the logic for the player skin (citations, ui, etc)
             */
+            this.setContextVariables();
             // this.initAnalytics();
-            app.layout = new UI.Layout();
+            app.layout = new PlayerUI();
 
         },
 
-        initAnalytics: function() {
-            app.analytics = new Analytics();
-            
+        setContextVariables: function() {
             try {
                 app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
             } catch ( err ) {
@@ -39224,6 +39225,10 @@ function( app, Player, UI, Analytics ) {
             } else {
                 context = "embed";
             }
+        },
+
+        initAnalytics: function() {
+            app.analytics = new Analytics();
 
             app.analytics.setGlobals({
                 projectId: app.player.project.get("id"),
@@ -39264,7 +39269,6 @@ function( app, Initializer ) {
 
         initialize: function() {
             new Initializer();
-            app.state.set("initialized", true );
         },
 
         base: function() {}

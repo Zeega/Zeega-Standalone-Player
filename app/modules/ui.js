@@ -32,8 +32,8 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
         initialize: function() {
             this.setWindowSize();
 
-            app.player.on("pause", this.onPause, this );
-            app.player.on("play", this.onPlay, this );
+            // app.player.on("pause", this.onPause, this );
+            // app.player.on("play", this.onPlay, this );
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
@@ -55,17 +55,19 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
             $( window ).resize(function() {
                 this.onResize();
             }.bind(this));
+
+            app.player.once("player:play", this.onPlay, this );
         },
 
         afterRender: function() {
-            app.state.set("baseRendered", true );
+            // app.state.set("baseRendered", true );
             // this.resetFadeOutTimer();
         },
 
         // sets the window size lazily so we don't have to do it elsewhere
         setWindowSize: function() {
-            app.state.set("windowWidth", window.innerWidth );
-            app.state.set("windowHeight", window.innerHeight );
+            this.windowWidth = window.innerWidth;
+            this.windowHeight = window.innerHeight;
         },
 
         events : {
@@ -85,15 +87,10 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
                 if ( pageY < 100 ) {
                     this.showMenubar();
                 }
-                else if ( pageY > app.state.get("windowHeight") - 100 ) {
+                else if ( pageY > this.windowHeight - 100 ) {
                     this.showCitationbar();
                 }
             }
-        },
-
-        fadeOutChrome: function() {
-            this.topBar.fadeOut();
-            this.bottomBar.fadeOut();
         },
 
         showMenubar: _.debounce(function() {
@@ -111,8 +108,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
         },
 
         onPlay: function() {
-            this.topBar.fadeOut();
-            this.bottomBar.fadeOut();
+            this.hasPlayed = true;
+            this.topBar.fadeOut( 0 );
+            this.bottomBar.fadeOut( 0 );
             if ( this.pause ) {
                 this.pause.remove();
             }

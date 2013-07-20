@@ -19,7 +19,6 @@ function(app, Backbone) {
 
         className: "ZEEGA-player-citations",
 
-        
         serialize: function() {
 
             if ( this.model.zeega ) {
@@ -30,6 +29,22 @@ function(app, Backbone) {
                     app.metadata,
                     this.model.zeega.projects.at(0).toJSON()
                 );
+            }
+        },
+
+        initialize: function() {
+            /* update the arrow state whenever a frame is rendered */
+            this.model.on("frame_play", this.updateCitations, this );
+            this.model.on("data_loaded", this.render, this);
+            this.model.on("pause", this.fadeIn, this );
+
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
+        },
+
+        afterRender: function(){
+            if ( app.metadata.loggedIn ){
+                this.$(".favorite").show();
             }
         },
 
@@ -50,23 +65,6 @@ function(app, Backbone) {
         incFavorites: function( inc ){
             this.model.project.set( "favorite_count", this.model.project.get("favorite_count") + inc );
             this.$(".zeega-favorite_count").html( this.getFavorites() );
-        },
-
-        initialize: function() {
-
-            /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.updateCitations, this );
-            this.model.on("data_loaded", this.render, this);
-            this.model.on("pause", this.fadeIn, this );
-
-            this.model.on("endpage_enter", this.endPageEnter, this );
-            this.model.on("endpage_exit", this.endPageExit, this );
-        },
-
-        afterRender: function(){
-            if ( app.metadata.loggedIn ){
-                this.$(".favorite").show();
-            }
         },
 
         toggleFavorite: function(){
@@ -141,7 +139,7 @@ function(app, Backbone) {
 
         fadeOut: function( stay ) {
             if( this.visible && this.sticky === false ) {
-                var fadeOutAfter = stay || 2000;
+                var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
 
                 if ( this.timer ) {
                     clearTimeout( this.timer );

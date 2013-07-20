@@ -89,7 +89,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } 
 ;__p+=' >\n                    '+
 ( user.display_name )+
-'\n                </a>\n\n                \n                \n                <span class="zeega-favorite_count">'+
+'\n                </a>\n\n                <span class="zeega-favorite_count">'+
 ( favorites )+
 '</span>\n               \n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
  if ( !_.isNumber( views ) ) { views = 0 ;} 
@@ -265,11 +265,7 @@ __p+='<audio id="audio-el-'+
 ( id )+
 '" src="'+
 ( attr.uri )+
-'"\n    ';
- if ( attr.loop ) { 
-;__p+='\n        loop\n    ';
- } 
-;__p+='\n    preload\n></audio>';
+'" loop preload ></audio>';
 }
 return __p;
 };
@@ -387,7 +383,7 @@ return __p;
 this["JST"]["app/player/templates/layouts/player-layout.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-player-wrapper">\n    <div class="ZEEGA-player-window"></div>\n</div>';
+__p+='<div class="ZEEGA-soundtrack"></div>\n<div class="ZEEGA-player-wrapper">\n    <div class="ZEEGA-player-window"></div>\n</div>';
 }
 return __p;
 };

@@ -57,15 +57,13 @@ function( app, Player, PlayerUI, Analytics ) {
             render base layout
             the base layout contains the logic for the player skin (citations, ui, etc)
             */
+            this.setContextVariables();
             // this.initAnalytics();
-            console.log("player layout", app)
             app.layout = new PlayerUI();
 
         },
 
-        initAnalytics: function() {
-            app.analytics = new Analytics();
-            
+        setContextVariables: function() {
             try {
                 app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
             } catch ( err ) {
@@ -86,6 +84,10 @@ function( app, Player, PlayerUI, Analytics ) {
             } else {
                 context = "embed";
             }
+        },
+
+        initAnalytics: function() {
+            app.analytics = new Analytics();
 
             app.analytics.setGlobals({
                 projectId: app.player.project.get("id"),

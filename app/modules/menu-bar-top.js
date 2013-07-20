@@ -18,7 +18,6 @@ function(app, Backbone) {
         className: "ZEEGA-player-menu-bar",
 
         serialize: function() {
-
             var showChrome;
 
             if ( this.model.zeega ) {
@@ -158,7 +157,7 @@ function(app, Backbone) {
 
         fadeOut: function( stay ) {
             if( this.visible && this.sticky === false ) {
-                var fadeOutAfter = stay || 2000;
+                var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
 
                 if ( this.timer ) {
                     clearTimeout( this.timer );
