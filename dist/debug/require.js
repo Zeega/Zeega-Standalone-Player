@@ -445,7 +445,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else {
 ;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
  } 
-;__p+='\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='\n        </div>\n\n        <a class="citation-soundtrack"></a>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -35802,7 +35802,6 @@ function(
     );
 });
 
-// frame.js
 define('engine/modules/page.model',[
     "app",
     "backbone",
@@ -35820,25 +35819,8 @@ function( app, Backbone, LayerCollection, Layers ) {
         state: "waiting",
         modelType: "frame",
 
-
-
-////
-
-
-        // hasPlayed: false,
-        // mode: "editor",
-
-        // frame render as soon as it's loaded. used primarily for the initial frame
-        // renderOnReady: null,
-
         // lazySave: null,
         // startThumbWorker: null,
-
-
-////
-
-
-
 
         defaults: {
             _order: 0,
@@ -36103,9 +36085,10 @@ function( app, PageModel, LayerCollection ) {
         zeega: null,
         remixPageMax: 5,
 
-        loadLayers: function( layers ) {
+        load: function( layers, project ) {
             this.each(function( page ) {
                 page.loadLayers( layers );
+                page.project = project;
             });
         },
 
@@ -36220,10 +36203,6 @@ function( app, PageCollection, Layers ) {
         zeega: null,
         soundtrack: false,
 
-////
-
-        updated: false,
-        frameKey: {},
         modelType: "project",
 
         defaults: {
@@ -36263,27 +36242,19 @@ function( app, PageCollection, Layers ) {
             }
         },
 
-        defaultOptions: {
-            // preloadRadius: 2,
-            // attach: {}, // ?
-            // aspect_ratio: 0.751174, // ?
-            // mode: "editor" // ?
-        },
-
         url : function() {
             return app.api +'projects/' + this.id;
         },
 
-        initialize: function( data, options ) {
+        _loadProject: function() {
             this._loadPages();
             this._loadSoundtrack();
-
             this.initSaveEvents();
         },
 
         _loadPages: function() {
             this.pages = new PageCollection( this.get("frames") );
-            this.pages.loadLayers( this.get("layers") );
+            this.pages.load( this.get("layers"), this );
             this.pages.setPageOrder( this.get("sequences")[0] );
         },
 
@@ -36298,6 +36269,10 @@ function( app, PageCollection, Layers ) {
                         }
                     });
             }
+        },
+
+        getRemixData: function() {
+            return this.get("remix");
         },
 
 
@@ -36364,152 +36339,6 @@ function( app, PageCollection, Layers ) {
     });
 
 });
-define('engine/modules/project.collection',[
-    "app",
-    "engine/modules/project.model"
-],
-
-function( app, ProjectModel ) {
-
-    return app.Backbone.Collection.extend({
-
-        model: ProjectModel,
-
-        zeega: null
-
-    });
-
-});
-
-define('engine/modules/zeega',[
-    "app",
-    "engine/engine",
-
-    "engine/modules/project.collection",
-    "engine/modules/project.model",
-    "engine/modules/page.collection",
-    "engine/modules/page.model",
-    "engine/modules/layer.collection",
-    "engine/modules/layer.model"
-],
-
-function( app, Engine, ProjectCollection, ProjectModel, PageCollection, PageModel, LayerCollection, LayerModel ) {
-
-    return app.Backbone.Model.extend({
-
-        projects: null,
-
-        defaults: {
-            mode: "editor",
-
-            currentProject: null,
-            currentPage: null,
-            currentLayer: null,
-
-            // do I need these?
-            previousProject: null,
-            previousPage: null,
-            previousLayer: null,
-        },
-
-        initialize: function( models, options ) {
-            this.injectZeega();
-
-            if ( options.projects ) this.projects = new ProjectCollection( options.projects );
-
-            this._initCurrentState();
-            
-            console.log( "ZEEGA", this )
-        },
-
-        injectZeega: function() {
-            ProjectCollection.prototype.zeega =
-            ProjectModel.prototype.zeega =
-            PageCollection.prototype.zeega =
-            PageModel.prototype.zeega =
-            LayerCollection.prototype.zeega =
-            LayerModel.prototype.zeega = this;
-        },
-
-        focusPage: function( page ) {
-            this.blurPage( this.get("currentPage") );
-            this.set("currentPage", page );
-            page.trigger("focus");
-            this.emit("page page:focus", page );
-        },
-
-        blurPage: function( page ) {
-            this.set("previousPage", page );
-            page.trigger("blur")
-            this.emit("page page:blur", page );
-        },
-
-        getFirstPage: function() {
-            return this.projects.at(0).pages.at(0);
-        },
-
-        getNextPage: function( page ) {
-            var p = page || this.getCurrentPage();
-
-            return p.get("_order") < p.layers.length +1 ? this.getCurrentProject().pages.at( p.get("_order") + 1 ) : false;
-        },
-
-        getPreviousPage: function( page ) {
-            var p = page || this.getCurrentPage();
-
-            return p.get("_order") > 0 ? this.getCurrentProject().pages.at( p.get("_order") - 1 ) : false;
-        },
-
-        getCurrentProject: function() {
-            return this.get("currentProject");
-        },
-
-        getCurrentPage: function() {
-            return this.get("currentPage");
-        },
-
-        getPage: function( pageID ) {
-
-        },
-
-        getCurrentLayer: function() {
-
-        },
-
-        getSoundtrack: function() {
-
-        },
-
-        addProject: function( project ) {
-
-        },
-
-        removeProject: function( projectID ) {
-
-        },
-
-        emit: function( event, attributes ) {
-            this.trigger( event, attributes );
-        },
-
-        // can be updated to use the startFrame property. good for now
-        _initCurrentState: function() {
-            var currentProject = this.projects.at(0),
-                currentPage = currentProject.pages.at(0);
-
-            this.set({
-                currentProject: currentProject,
-                currentPage: currentPage
-            });
-        },
-
-        _setFirstPage: function() {
-            this.projects.at(0)
-        }
-    });
-
-});
-
 define('engine/data-parsers/zeega-project-model',[
     "engine/modules/project.model"
 ],
@@ -36918,17 +36747,13 @@ function(
     );
 });
 
-// parser.js
-define('engine/engine',[
-    "engine/modules/zeega",
+define('engine/parser',[
     "engine/data-parsers/_all"
 ],
 
-function( Zeega, DataParsers ) {
+function( DataParsers ) {
 
-    var Engine = {};
-
-    Engine.parse = function( data, options ) {
+    return function( data, options ) {
         var parsed;
 
         // determine which parser to use
@@ -36947,8 +36772,233 @@ function( Zeega, DataParsers ) {
         return parsed;
     }
 
+});
+
+define('engine/modules/project.collection',[
+    "app",
+    "engine/modules/project.model"
+],
+
+function( app, ProjectModel ) {
+
+    return app.Backbone.Collection.extend({
+
+        model: ProjectModel,
+
+        zeega: null
+
+    });
+
+});
+
+define('engine/modules/zeega',[
+    "app",
+    "engine/parser",
+
+    "engine/modules/project.collection",
+    "engine/modules/project.model",
+    "engine/modules/page.collection",
+    "engine/modules/page.model",
+    "engine/modules/layer.collection",
+    "engine/modules/layer.model"
+],
+
+function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageModel, LayerCollection, LayerModel ) {
+
+    return app.Backbone.Model.extend({
+
+        projects: null,
+
+        defaults: {
+            mode: "editor",
+
+            currentProject: null,
+            currentPage: null,
+            currentLayer: null,
+
+            // do I need these?
+            previousProject: null,
+            previousPage: null,
+            previousLayer: null,
+        },
+
+        initialize: function( models, options ) {
+            this.injectZeega();
+
+            if ( options.projects ) this.projects = new ProjectCollection( options.projects );
+
+            this.projects.each(function( project ) {
+                project._loadProject();
+            });
+
+            this._initCurrentState();
+        },
+
+        injectZeega: function() {
+            ProjectCollection.prototype.zeega =
+            ProjectModel.prototype.zeega =
+            PageCollection.prototype.zeega =
+            PageModel.prototype.zeega =
+            LayerCollection.prototype.zeega =
+            LayerModel.prototype.zeega = this;
+        },
+
+        focusPage: function( page ) {
+            if ( this.getCurrentProject().id != page.project.id ) {
+                this.set("currentProject", page.project );
+            }
+
+            this.blurPage( this.get("currentPage") );
+            this.set("currentPage", page );
+            page.trigger("focus");
+            this.emit("page page:focus", page );
+        },
+
+        blurPage: function( page ) {
+            this.set("previousPage", page );
+            page.trigger("blur")
+            this.emit("page page:blur", page );
+        },
+
+        getFirstPage: function() {
+            return this.projects.at(0).pages.at(0);
+        },
+
+        getNextPage: function( page ) {
+            var p = page || this.getCurrentPage();
+            var nextPage = false;
+
+            if ( p.get("_order") + 1 < this.getCurrentProject().pages.length ) {
+                nextPage = this.getCurrentProject().pages.at( p.get("_order") + 1 );
+            } else if ( this.getNextProject() ) {
+                nextPage = this.getNextProject().pages.at(0);
+            }
+
+            return nextPage;
+        },
+
+        getPreviousPage: function( page ) {
+            var p = page || this.getCurrentPage();
+            var previousPage = false;
+
+            if ( p.get("_order") > 0 ) {
+                previousPage = this.getCurrentProject().pages.at( p.get("_order") - 1 );
+            } else if ( this.getPreviousProject() ) {
+                previousPage = this.getPreviousProject().pages.at( this.getPreviousProject().pages.length - 1 );
+            }
+
+            return previousPage;
+        },
+
+        getCurrentProject: function() {
+            return this.get("currentProject");
+        },
+
+        getNextProject: function() {
+            var index = this.projects.indexOf( this.getCurrentProject() );
+
+            return this.projects.at( index + 1 );
+        },
+
+        getPreviousProject: function() {
+            var index = this.projects.indexOf( this.getCurrentProject() );
+
+            return this.projects.at( index - 1 );
+        },
+
+
+        getCurrentPage: function() {
+            return this.get("currentPage");
+        },
+
+        getPage: function( pageID ) {
+
+        },
+
+        getCurrentLayer: function() {
+
+        },
+
+        getSoundtrack: function() {
+            return this.projects.at(0).soundtrack;
+        },
+
+        preloadNextZeega: function() {
+            var remixData = this.getCurrentProject().getRemixData();
+
+            this.waiting = true
+            // only preload if the project does not already exist
+            if ( remixData.remix && !this.projects.get( remixData.parent.id ) && this.waiting ) {
+                var projectUrl = "http:" + app.metadata.hostname +'api/projects/' + remixData.parent.id;
+
+                $.getJSON( projectUrl, function( data ) {
+                    this._onDataLoaded( data );
+                }.bind(this));
+
+                this.waiting = false;
+            }
+        },
+
+        _onDataLoaded: function( data ) {
+            var newProjectData = Parser( data,
+                _.extend({},
+                    this.toJSON(),
+                    {
+                        mode: "player"
+                    })
+                );
+
+            var newProject = new ProjectModel( newProjectData );
+
+            newProject._loadProject();
+
+            this.projects.push( newProject );
+        },
+
+
+
+        addProject: function( project ) {
+
+        },
+
+        removeProject: function( projectID ) {
+
+        },
+
+        emit: function( event, attributes ) {
+            this.trigger( event, attributes );
+        },
+
+        // can be updated to use the startFrame property. good for now
+        _initCurrentState: function() {
+            var currentProject = this.projects.at(0),
+                currentPage = currentProject.pages.at(0);
+
+            this.set({
+                currentProject: currentProject,
+                currentPage: currentPage
+            });
+        },
+
+        _setFirstPage: function() {
+            this.projects.at(0)
+        }
+    });
+
+});
+
+// parser.js
+define('engine/engine',[
+    "engine/modules/zeega",
+    "engine/parser"
+],
+
+function( Zeega, Parser ) {
+
+    var Engine = {};
+
     Engine.generateZeega = function( data, options ) {
-        var parsed = Engine.parse( data, options );
+        var parsed = Parser( data, options );
 
         if ( parsed !== undefined ) {
             return new Zeega( options, {
@@ -37811,17 +37861,6 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         },
 
-
-        /**
-        * initialize the zeega player:
-        *
-        * can be initialized like so:
-        *
-        * var player = new Player.Model({ url: "<valid url>"} });
-        *
-        */
-
-
         projects: null,
 
         initialize: function( attributes ) {
@@ -37849,7 +37888,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                         mode: "player"
                     })
                 );
-            this.emit("player:ready", this );
+            this.emit("player player:ready", this );
             this._listenToZeega();
             this._renderLayout();
         },
@@ -37901,7 +37940,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
         },
 
         _renderSoundtrack: function() {
-            var soundtrack = this.zeega.projects.at(0).soundtrack;
+            var soundtrack = this.zeega.getSoundtrack();
 
             if ( soundtrack ) {
                 this.soundtrackState = "loading";
@@ -37916,21 +37955,40 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
             this.soundtrackState = "ready";
             this.emit("soundtrack soundtrack:ready", soundtrack );
 
-            if ( this.get("autoplay") ) this.zeega.getCurrentProject().soundtrack.play();
+            if ( this.get("autoplay") ) this.zeega.getSoundtrack().play();
         },
 
         play: function() {
             var page = this.zeega.getCurrentPage();
 
-            // this.loadSoundtrack( app );
             if ( !this.ready ) {
                 this.renderLayout(); // render the player first! // this should not happen
             } else if ( this.state == "paused" || this.state == "suspended" ) {
                 this._fadeIn();
                 this.cuePage( page );
-                this.zeega.getCurrentProject().soundtrack.play();
+                this.zeega.getSoundtrack().play();
                 this.emit("player player:play", this );
             }
+        },
+
+                // if the player is playing, pause the project
+        pause: function() {
+            if ( this.state == "playing" ) {
+                this.state ="paused";
+
+                this.zeega.getCurrentPage().pause();
+                if ( this.zeega.getSoundtrack() ) {
+                    this.zeega.getSoundtrack().pause();
+                }
+                // pause auto advance
+                this.emit("pause", this );
+            }
+        },
+
+
+        playPause: function() {
+            if ( this.state == "paused" || this.state == "suspended" ) this.play();
+            else this.pause();
         },
 
         cuePage: function( page ) {
@@ -37938,22 +37996,23 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
             if ( page.state == "waiting" ) {
                 // preload
                 this._playPage( page );
-                this.preloadPage( page );
             } else if ( page.state == "ready" ) {
                 this.state = "playing";
                 this.zeega.focusPage( page );
             }
+            this.preloadPage( page );
         },
 
         preloadPage: function( page ) {
             var nextPage = this.zeega.getNextPage( page );
 
             page.preload();
-
             for ( var i = 0; i < this.get("preloadRadius"); i++ ) {
                 if( nextPage ) {
                     nextPage.preload();
                     nextPage = this.zeega.getNextPage( nextPage );
+                } else {
+                    this.zeega.preloadNextZeega();
                 }
             }
             
@@ -38039,63 +38098,12 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
             this.layout.toggleSize();
         },
 
-        
-        loadSoundtrack: _.once(function( app ) {
-
-                console.log("load soundtrack")
-                // this can be done better // TODO 6/8/13
-                app.soundtrack = this.project.sequences.at(0).soundtrackModel;
-
-                if ( app.soundtrack ) {
-                    if ( app.soundtrack.state == "ready" ) {
-                        app.soundtrack.play();
-                    } else {
-                        app.soundtrack.on("layer_ready", function() {
-                            app.soundtrack.play();
-                        });
-                    }
-                    app.soundtrack.render();
-                }
-            }),
-
         mute: function() {
             // TODO
         },
 
         unMute: function() {
             // TODO
-        },
-
-        // if the player is playing, pause the project
-        pause: function() {
-            if ( this.state == "playing" ) {
-                this.state ="paused";
-                // pause each frame - layer
-                this.status.get("current_frame_model").pause();
-                if ( app.soundtrack ) {
-                    app.soundtrack.pause();
-                }
-                // pause auto advance
-                this.status.emit("pause");
-            }
-        },
-
-        suspend: function() {
-            if ( this.state == "playing" ) {
-                this.state ="suspended";
-                // pause each frame - layer
-                this.status.get("current_frame_model").pause();
-                if ( app.soundtrack ) {
-                    app.soundtrack.pause();
-                }
-                // pause auto advance
-                this.status.emit("suspend");
-            }
-        },
-
-        playPause: function() {
-            if ( this.state == "paused" || this.state == "suspended" ) this.play();
-            else this.pause();
         },
 
         // mobile only hack
@@ -38304,16 +38312,66 @@ function(app, Backbone) {
 
     return Controls;
 });
-define('modules/menu-bar-bottom',[
+define('modules/citation.view',[
     "app",
     // Libs
     "backbone"
 ],
 
 function(app, Backbone) {
-    var Citations = {};
 
-    Citations.View = Backbone.View.extend({
+    return Backbone.View.extend({
+        tagName: "li",
+        template: "app/templates/citation",
+
+        serialize: function() {
+            var iconType;
+
+            switch( this.model.get("type") ) {
+                case "Image":
+                    iconType = "picture";
+                    break;
+                case "Video":
+                    iconType = "film";
+                    break;
+                case "Audio":
+                    iconType = "volume-up";
+                    break;
+            }
+
+            return _.extend(
+                { iconType: iconType },
+                this.model.toJSON()
+            );
+        },
+
+        events: {
+            "mouseenter": "onMouseEnter",
+            "mouseleave": "onMouseLeave"
+        },
+
+        onMouseEnter: function() {
+            var title = this.model.get("attr").title !== "" ? this.model.get("attr").title : "[untitled]";
+
+            this.options.parent.$(".citation-title").text( title );
+        },
+
+        onMouseLeave: function() {
+            this.options.parent.$(".citation-title").empty();
+        }
+    });
+
+});
+define('modules/menu-bar-bottom',[
+    "app",
+    "modules/citation.view",
+    // Libs
+    "backbone"
+],
+
+function( app, CitationView, Backbone ) {
+    
+    return Backbone.View.extend({
         
         timer: null,
         visible: true,
@@ -38340,8 +38398,8 @@ function(app, Backbone) {
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.updateCitations, this );
-            this.model.on("data_loaded", this.render, this);
+            this.model.on("page:focus", this.updateCitations, this );
+            // this.model.on("data_loaded", this.render, this);
             this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );
@@ -38410,28 +38468,35 @@ function(app, Backbone) {
             this.fadeOut( 0 );
         },
 
-        updateCitations: function( info ) {
-            var soundtrack = this.model.getSoundtrack(),
-                layersToCite = _.filter( info.layers, function( layer ) {
-                    return _.contains(["Audio", "Image", "Video"], layer.type );
-                });
+        updateCitations: function( page ) {
+            var soundtrack = this.model.zeega.getSoundtrack();
 
-            if ( soundtrack ) {
-                layersToCite.unshift( soundtrack.toJSON() );
-            }
+            if ( soundtrack ) this.updateSoundtrackCitation( soundtrack );
 
             this.$(".citations ul").empty();
-            _.each( layersToCite, function(layer){
-                var citation = new CitationView({
-                    parent: this,
-                    model: new Backbone.Model(layer)
-                });
+            page.layers.each(function( layer ) {
+                if ( _.contains(["Image"], layer.get("type")) ) {
+                    var citation = new CitationView({
+                        parent: this,
+                        model: layer
+                    });
 
-                this.$(".citations ul").append(citation.el);
-                citation.render();
-            }.bind( this ));
+                    this.$(".citations ul").append(citation.el);
+                    citation.render();
+                }
+            }, this );
+        },
 
-
+        updateSoundtrackCitation: function( soundtrack ) {
+            console.log("STTT", soundtrack);
+            this.$(".citation-soundtrack")
+                .attr("href", soundtrack.get("attr").attribution_uri )
+                .css({
+                    background: "url("+ soundtrack.get("attr").thumbnail_url +")",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                })
+                .show();
         },
 
         events: {
@@ -38444,20 +38509,20 @@ function(app, Backbone) {
         },
 
         fadeOut: function( stay ) {
-            if( this.visible && this.sticky === false ) {
-                var fadeOutAfter = stay || 2000;
+            // if( this.visible && this.sticky === false ) {
+            //     var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
 
-                if ( this.timer ) {
-                    clearTimeout( this.timer );
-                }
-                this.timer = setTimeout(function(){
-                    if ( !this.hover && app.player.state != "paused" ) {
-                        this.visible = false;
-                        this.$el.fadeOut();
-                    }
-                }.bind( this ), fadeOutAfter);
+            //     if ( this.timer ) {
+            //         clearTimeout( this.timer );
+            //     }
+            //     this.timer = setTimeout(function(){
+            //         if ( !this.hover && app.player.state != "paused" ) {
+            //             this.visible = false;
+            //             this.$el.fadeOut();
+            //         }
+            //     }.bind( this ), fadeOutAfter);
                 
-            }
+            // }
         },
 
         fadeIn: function( stay ) {
@@ -38494,61 +38559,18 @@ function(app, Backbone) {
             } else {
                 this.model.pause();
             }
+
             return false;
         },
 
         startOver: function() {
-            console.log('start over', this)
             this.model.cuePage( this.model.zeega.getFirstPage() );
             app.emit("start_over", {source: "button"});
+
             return false;
         }
     });
 
-    var CitationView = Backbone.View.extend({
-        tagName: "li",
-        template: "app/templates/citation",
-
-        serialize: function() {
-            var iconType;
-
-            switch( this.model.get("type") ) {
-                case "Image":
-                    iconType = "picture";
-                    break;
-                case "Video":
-                    iconType = "film";
-                    break;
-                case "Audio":
-                    iconType = "volume-up";
-                    break;
-            }
-
-            return _.extend(
-                { iconType: iconType },
-                this.model.toJSON()
-            );
-        },
-
-        events: {
-            "mouseenter": "onMouseEnter",
-            "mouseleave": "onMouseLeave"
-        },
-
-        onMouseEnter: function() {
-            var title = this.model.get("attr").title !== "" ? this.model.get("attr").title : "[untitled]";
-
-            this.options.parent.$(".citation-title").text( title );
-        },
-
-        onMouseLeave: function() {
-            this.options.parent.$(".citation-title").empty();
-        }
-
-  
-    });
-
-    return Citations;
 });
 define('modules/menu-bar-top',[
     "app",
@@ -38623,7 +38645,7 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
-            this.model.on("sequence_enter", this.onSequenceEnter, this);
+            this.model.on("player:canplay", this.onCanplay, this);
         },
 
         afterRender: function(){
@@ -38632,8 +38654,10 @@ function(app, Backbone) {
                 this.$(".btnz-join").hide();
             }
         },
-        onSequenceEnter: function(){
-            var soundtrack = this.model.getSoundtrack();
+
+        onCanplay: function(){
+            var soundtrack = this.model.zeega.getSoundtrack();
+
             if ( soundtrack ) {
                 this.$(".ZEEGA-sound-state").show();
             }
@@ -38659,16 +38683,16 @@ function(app, Backbone) {
         },
 
         toggleMute: function(){
-            var soundtrack = this.model.getSoundtrack();
+            var soundtrack = this.model.zeega.getSoundtrack();
             if ( soundtrack ){
                 if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
                     this.$(".ZEEGA-sound-state").removeClass("muted");
-                    soundtrack.visual.onPlay();
-                    app.emit("mute_toggle", { state: "unmuted" });
+                    soundtrack.play();
+                    this.model.emit("mute_toggle", { state: "unmuted" });
                 } else {
                     this.$(".ZEEGA-sound-state").addClass("muted");
-                    soundtrack.visual.onPause();
-                    app.emit("mute_toggle", { state: "muted" });
+                    soundtrack.pause();
+                    this.model.emit("mute_toggle", { state: "muted" });
                 }
             }
             return false;
@@ -38709,7 +38733,7 @@ function(app, Backbone) {
 
         fadeOut: function( stay ) {
             if( this.visible && this.sticky === false ) {
-                var fadeOutAfter = stay || 2000;
+                var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
 
                 if ( this.timer ) {
                     clearTimeout( this.timer );
@@ -38899,12 +38923,12 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
         initialize: function() {
             this.setWindowSize();
 
-            app.player.on("pause", this.onPause, this );
-            app.player.on("play", this.onPlay, this );
+            // app.player.on("pause", this.onPause, this );
+            // app.player.on("play", this.onPlay, this );
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
-            this.bottomBar = new MenuBarBottom.View({ model: app.player });
+            this.bottomBar = new MenuBarBottom({ model: app.player });
             this.topBar = new MenuBarTop.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );
@@ -38923,10 +38947,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
                 this.onResize();
             }.bind(this));
 
-            app.player.once("player:play", function() {
-                this.showMenubar();
-                this.showCitationbar();
-            }, this );
+            app.player.once("player:play", this.onPlay, this );
         },
 
         afterRender: function() {
@@ -38938,8 +38959,6 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
         setWindowSize: function() {
             this.windowWidth = window.innerWidth;
             this.windowHeight = window.innerHeight;
-
-            console.log('sWS', this)
         },
 
         events : {
@@ -38960,7 +38979,6 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
                     this.showMenubar();
                 }
                 else if ( pageY > this.windowHeight - 100 ) {
-                    console.log('show citations')
                     this.showCitationbar();
                 }
             }
@@ -38982,8 +39000,8 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
 
         onPlay: function() {
             this.hasPlayed = true;
-            this.topBar.fadeOut();
-            this.bottomBar.fadeOut();
+            this.topBar.fadeOut( 0 );
+            this.bottomBar.fadeOut( 0 );
             if ( this.pause ) {
                 this.pause.remove();
             }
@@ -39167,7 +39185,7 @@ function( app, Player, PlayerUI, Analytics ) {
             var context, showChrome;
 
             app.player = new Player({
-                // debugEvents: true,
+                //debugEvents: true,
                 // cover: false,
 
                 scalable: true,

@@ -37,7 +37,7 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
 
             this.loader = new Loader.View({ model: app.player });
             this.controls = new Controls.View({ model: app.player });
-            this.bottomBar = new MenuBarBottom.View({ model: app.player });
+            this.bottomBar = new MenuBarBottom({ model: app.player });
             this.topBar = new MenuBarTop.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );

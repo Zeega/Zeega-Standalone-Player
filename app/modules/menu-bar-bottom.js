@@ -1,13 +1,13 @@
 define([
     "app",
+    "modules/citation.view",
     // Libs
     "backbone"
 ],
 
-function(app, Backbone) {
-    var Citations = {};
-
-    Citations.View = Backbone.View.extend({
+function( app, CitationView, Backbone ) {
+    
+    return Backbone.View.extend({
         
         timer: null,
         visible: true,
@@ -34,8 +34,8 @@ function(app, Backbone) {
 
         initialize: function() {
             /* update the arrow state whenever a frame is rendered */
-            this.model.on("frame_play", this.updateCitations, this );
-            this.model.on("data_loaded", this.render, this);
+            this.model.on("page:focus", this.updateCitations, this );
+            // this.model.on("data_loaded", this.render, this);
             this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );
@@ -104,28 +104,34 @@ function(app, Backbone) {
             this.fadeOut( 0 );
         },
 
-        updateCitations: function( info ) {
-            var soundtrack = this.model.getSoundtrack(),
-                layersToCite = _.filter( info.layers, function( layer ) {
-                    return _.contains(["Audio", "Image", "Video"], layer.type );
-                });
+        updateCitations: function( page ) {
+            var soundtrack = this.model.zeega.getSoundtrack();
 
-            if ( soundtrack ) {
-                layersToCite.unshift( soundtrack.toJSON() );
-            }
+            if ( soundtrack ) this.updateSoundtrackCitation( soundtrack );
 
             this.$(".citations ul").empty();
-            _.each( layersToCite, function(layer){
-                var citation = new CitationView({
-                    parent: this,
-                    model: new Backbone.Model(layer)
-                });
+            page.layers.each(function( layer ) {
+                if ( _.contains(["Image"], layer.get("type")) ) {
+                    var citation = new CitationView({
+                        parent: this,
+                        model: layer
+                    });
 
-                this.$(".citations ul").append(citation.el);
-                citation.render();
-            }.bind( this ));
+                    this.$(".citations ul").append(citation.el);
+                    citation.render();
+                }
+            }, this );
+        },
 
-
+        updateSoundtrackCitation: function( soundtrack ) {
+            this.$(".citation-soundtrack")
+                .attr("href", soundtrack.get("attr").attribution_uri )
+                .css({
+                    background: "url("+ soundtrack.get("attr").thumbnail_url +")",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                })
+                .show();
         },
 
         events: {
@@ -150,7 +156,6 @@ function(app, Backbone) {
                         this.$el.fadeOut();
                     }
                 }.bind( this ), fadeOutAfter);
-                
             }
         },
 
@@ -188,59 +193,16 @@ function(app, Backbone) {
             } else {
                 this.model.pause();
             }
+
             return false;
         },
 
         startOver: function() {
-            console.log('start over', this)
             this.model.cuePage( this.model.zeega.getFirstPage() );
             app.emit("start_over", {source: "button"});
+
             return false;
         }
     });
 
-    var CitationView = Backbone.View.extend({
-        tagName: "li",
-        template: "app/templates/citation",
-
-        serialize: function() {
-            var iconType;
-
-            switch( this.model.get("type") ) {
-                case "Image":
-                    iconType = "picture";
-                    break;
-                case "Video":
-                    iconType = "film";
-                    break;
-                case "Audio":
-                    iconType = "volume-up";
-                    break;
-            }
-
-            return _.extend(
-                { iconType: iconType },
-                this.model.toJSON()
-            );
-        },
-
-        events: {
-            "mouseenter": "onMouseEnter",
-            "mouseleave": "onMouseLeave"
-        },
-
-        onMouseEnter: function() {
-            var title = this.model.get("attr").title !== "" ? this.model.get("attr").title : "[untitled]";
-
-            this.options.parent.$(".citation-title").text( title );
-        },
-
-        onMouseLeave: function() {
-            this.options.parent.$(".citation-title").empty();
-        }
-
-  
-    });
-
-    return Citations;
 });

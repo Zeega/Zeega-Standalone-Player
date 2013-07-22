@@ -2698,6 +2698,13 @@ a:active {
   position: relative;
   top: 10px;
 }
+.ZEEGA-player-citations .citation-soundtrack {
+  height: 45px;
+  width: 45px;
+  float: right;
+  display: none;
+  margin-left: 10px;
+}
 .ZEEGA-player-citations .ZEEGA-home {
   position: relative;
   background-image: url(../img/restart.png);

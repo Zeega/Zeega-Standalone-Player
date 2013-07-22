@@ -71,7 +71,7 @@ function(app, Backbone) {
             this.model.on("pause", this.fadeIn, this );
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
-            this.model.on("sequence_enter", this.onSequenceEnter, this);
+            this.model.on("player:canplay", this.onCanplay, this);
         },
 
         afterRender: function(){
@@ -80,8 +80,10 @@ function(app, Backbone) {
                 this.$(".btnz-join").hide();
             }
         },
-        onSequenceEnter: function(){
-            var soundtrack = this.model.getSoundtrack();
+
+        onCanplay: function(){
+            var soundtrack = this.model.zeega.getSoundtrack();
+
             if ( soundtrack ) {
                 this.$(".ZEEGA-sound-state").show();
             }
@@ -107,16 +109,16 @@ function(app, Backbone) {
         },
 
         toggleMute: function(){
-            var soundtrack = this.model.getSoundtrack();
+            var soundtrack = this.model.zeega.getSoundtrack();
             if ( soundtrack ){
                 if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
                     this.$(".ZEEGA-sound-state").removeClass("muted");
-                    soundtrack.visual.onPlay();
-                    app.emit("mute_toggle", { state: "unmuted" });
+                    soundtrack.play();
+                    this.model.emit("mute_toggle", { state: "unmuted" });
                 } else {
                     this.$(".ZEEGA-sound-state").addClass("muted");
-                    soundtrack.visual.onPause();
-                    app.emit("mute_toggle", { state: "muted" });
+                    soundtrack.pause();
+                    this.model.emit("mute_toggle", { state: "muted" });
                 }
             }
             return false;
