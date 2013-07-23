@@ -17117,8 +17117,10 @@ function( $, _, Backbone, State, Spinner ) {
             left: 'auto' // Left position relative to parent in px
         });
 
-    app.spin = function() {
-        app.spinner.spin( app.layout.el );
+    app.spin = function( el ) {
+        var target = el || app.layout.el;
+
+        app.spinner.spin( target );
     }
 
     app.spinStop = function() {
@@ -33517,8 +33519,7 @@ function( app, Controls ) {
             if ( this.get("_target") ) {
                 return this.get("_target");
             } else {
-                return app.player.get("target") ? app.player.get("target").find(".ZEEGA-player-window") :
-                                            $(".ZEEGA-workspace")[0] ? $(".ZEEGA-workspace") : $(".ZEEGA-player-window");
+                return $(".ZEEGA-player-window") || $(".ZEEGA-workspace");
             }
         },
 
@@ -38231,7 +38232,7 @@ function( app, Backbone, Spinner ) {
         },
 
         afterRender: function() {
-            app.spin();
+            app.spin( this.el );
 
             this.loadTimer = setTimeout(function() {
                 clearTimeout( this.loadTimer );

@@ -40,7 +40,7 @@ function( app, Backbone, Spinner ) {
         },
 
         afterRender: function() {
-            app.spin();
+            app.spin( this.el );
 
             this.loadTimer = setTimeout(function() {
                 clearTimeout( this.loadTimer );

@@ -50,8 +50,10 @@ function( $, _, Backbone, State, Spinner ) {
             left: 'auto' // Left position relative to parent in px
         });
 
-    app.spin = function() {
-        app.spinner.spin( app.layout.el );
+    app.spin = function( el ) {
+        var target = el || app.layout.el;
+
+        app.spinner.spin( target );
     }
 
     app.spinStop = function() {
