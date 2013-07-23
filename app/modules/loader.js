@@ -47,10 +47,11 @@ function( app, Backbone, Spinner ) {
                 }
             }.bind( this ), this.MIN_LOAD_TIME );
 
-            this.$(".bg-preload").imagesLoaded().done(function() {
-                console.log("done!!")
-                this.$(".ZEEGA-loader-bg").fadeIn("slow");
-            }.bind(this));
+            this.$(".bg-preload")
+                .imagesLoaded()
+                .done(function() {
+                    this.$(".ZEEGA-loader-bg").fadeIn("slow");
+                }.bind(this));
         },
 
         onPlayerCanplay: function() {
