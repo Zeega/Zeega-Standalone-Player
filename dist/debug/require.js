@@ -416,7 +416,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
 ;__p+=' target="blank" ';
  } 
 ;__p+=' data-bypass="true">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
-( userThumbnail )+
+( user.thumbnail_url )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
 ( title )+
 '</div>\n            <div class="username">\n                <a class="profile-name profile-link" href="';
@@ -495,15 +495,23 @@ return __p;
 this["JST"]["app/templates/remix-endpage.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="end-page-wrapper" >\n\n    <div class="column project-current">\n        <div class="user-token user-token-large" style="\n            background-image: url('+
+__p+='<div class="end-page-wrapper" >\n\n    <div class="column project-current">\n        <div class="title">just watched</div>\n        <div class="user-token user-token-medium" style="\n            background-image: url('+
 ( user.thumbnail_url )+
-');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">@'+
-( user.username )+
-'</div>\n    </div>\n\n    <div class="column column-center">\n        <div class="remix-arrow"></div>\n        <div class="center-divider">remixed from</div>\n    </div>\n\n    <div class="column project-parent">\n        <div class="user-token user-token-large" style="\n            background-image: url('+
+');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
+( user.display_name )+
+'</div>\n    </div>\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient1"></div>\n    </div>\n\n    <div class="column project-parent">\n        <div class="title">up next</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
 ( remix.parent.user.thumbnail_url )+
-');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">@'+
-( remix.parent.user.username )+
-'</div>\n    </div>\n\n</div>';
+');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
+( remix.parent.user.display_name )+
+'</div>\n    </div>\n\n    ';
+ if ( remix.parent.id != remix.root.id ) { 
+;__p+='\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient2"></div>\n    </div>\n\n    <div class="column project-root">\n        <div class="title">remixed from</div>\n        <div class="user-token user-token-medium" style="\n            background-image: url('+
+( remix.root.user.thumbnail_url )+
+');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
+( remix.root.user.display_name )+
+'</div>\n    </div>\n\n    ';
+ } 
+;__p+='\n\n</div>';
 }
 return __p;
 };
@@ -35773,11 +35781,11 @@ function( app, Layer, Visual ){
         ],
 
         onPlay: function() {
-            this.model.zeega.emit("endpage_enter");
+            this.model.zeega.emit("endpage_enter", this.model );
         },
 
         onExit: function() {
-            this.model.zeega.emit("endpage_exit");
+            this.model.zeega.emit("endpage_exit", this.model );
         }
     });
 
@@ -38472,7 +38480,7 @@ function( app, CitationView, Backbone ) {
                     favorites: this.getFavorites()
                 },
                     app.metadata,
-                    this.model.zeega.projects.at(0).toJSON()
+                    this.model.zeega.getCurrentProject().toJSON()
                 );
             }
         },
@@ -38485,6 +38493,8 @@ function( app, CitationView, Backbone ) {
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+
+            this.model.on("change:currentProject", this.render, this );
         },
 
         afterRender: function(){
@@ -38508,7 +38518,7 @@ function( app, CitationView, Backbone ) {
         },
 
         incFavorites: function( inc ){
-            this.model.project.set( "favorite_count", this.model.project.get("favorite_count") + inc );
+            this.model.zeega.projects.at(0).set( "favorite_count", this.model.zeega.projects.at(0).get("favorite_count") + inc );
             this.$(".zeega-favorite_count").html( this.getFavorites() );
         },
 
@@ -38516,16 +38526,16 @@ function( app, CitationView, Backbone ) {
             var url;
             this.$(".btnz").toggleClass("favorited");
 
-            if(this.model.project.get("favorite")){
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
-                this.model.project.set({ "favorite": false });
+            if(this.model.zeega.projects.at(0).get("favorite")){
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/unfavorite";
+                this.model.zeega.projects.at(0).set({ "favorite": false });
                 this.incFavorites(-1);
                 app.emit("unfavorite");
 
 
             } else {
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
-                this.model.project.set({ "favorite": true });
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/favorite";
+                this.model.zeega.projects.at(0).set({ "favorite": true });
                 this.incFavorites(1);
                 app.emit("favorite");
             }
@@ -38967,13 +38977,12 @@ function(app, Backbone) {
         initialize: function() {
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+
             this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
         },
 
         serialize: function() {
-            console.log("serialize remix endoaasdg", this.model.zeega.getCurrentProject().toJSON())
-
-            if ( this.model.zeega.getCurrentProject() ) {
+            if ( this.isRemixPage() && this.model.zeega.getNextPage() ) {
                 return _.extend({
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
                     },
@@ -38982,8 +38991,16 @@ function(app, Backbone) {
             }
         },
 
-        endPageEnter: function() {
-            if ( this.model.zeega.getNextPage() ) this.show();
+        endPageEnter: function( layer ) {
+            
+            if ( this.isRemixPage() ) {
+                this.render();
+                this.show();
+            }
+        },
+
+        isRemixPage: function() {
+            return this.model.zeega.getNextPage() !== false;
         },
 
         endPageExit: function() {
@@ -39332,7 +39349,7 @@ function( app, Player, PlayerUI, Analytics ) {
             var context, showChrome;
 
             app.player = new Player({
-                //debugEvents: true,
+                // debugEvents: true,
                 // cover: false,
 
                 scalable: true,
