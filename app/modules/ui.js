@@ -17,10 +17,11 @@ define([
     "modules/menu-bar-bottom",
     "modules/menu-bar-top",
     "modules/endpage",
+    "modules/remix-endpage",
     "modules/pause"
 ],
 
-function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, PauseView ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, RemixEndpage, PauseView ) {
 
     var FADE_OUT_DELAY = 3000;
 
@@ -48,6 +49,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
             if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
+
+                this.remixEndpage = new RemixEndpage.View({ model: app.player });
+                this.insertView("#overlays", this.remixEndpage );
             }
             
             this.render();

@@ -9,7 +9,7 @@ define([
     "player/modules/player",
 
     "modules/ui",
-    "analytics/analytics",
+    "analytics/analytics"
 
      // Plugins
 ],

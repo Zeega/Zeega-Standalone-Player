@@ -17,9 +17,9 @@ function(app, Backbone) {
         hover: false,
         sticky: false,
 
-        template: "app/templates/endpage",
+        template: "app/templates/remix-endpage",
 
-        className: "ZEEGA-end-page",
+        className: "ZEEGA-remix-endpage",
 
         initialize: function() {
             this.model.on("endpage_enter", this.endPageEnter, this );
@@ -38,25 +38,18 @@ function(app, Backbone) {
             }
         },
 
-        afterRender: function(){
-            if( app.metadata.loggedIn ){
-                this.$(".btnz-join").hide();
-            }
-        },
         endPageEnter: function() {
-            if ( !this.model.zeega.getNextPage() ) this.show();
+            if ( this.model.zeega.getNextPage() ) this.show();
         },
 
         endPageExit: function() {
             this.hide();
         },
+
         show: function(){
             this.$el.fadeIn("fast");
-            if( !this.viewed ){
-                this.viewed = true;
-                app.emit("viewed_to_end");
-            }
         },
+
         hide: function(){
             this.$el.fadeOut("fast");
         }

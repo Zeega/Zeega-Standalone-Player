@@ -40,7 +40,7 @@ function(app, Backbone) {
             else this.disableArrow("next");
             
             if ( prev ) this.enableArrow("prev");
-            else this.disableArrow("prev")
+            else this.disableArrow("prev");
         },
 
         enableArrow: function(className) {
