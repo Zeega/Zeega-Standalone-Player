@@ -495,7 +495,15 @@ return __p;
 this["JST"]["app/templates/remix-endpage.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="end-page-wrapper" >\n    <h2>remix</h2>\n\n\n</div>';
+__p+='<div class="end-page-wrapper" >\n\n    <div class="column project-current">\n        <div class="user-token user-token-large" style="\n            background-image: url('+
+( user.thumbnail_url )+
+');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">@'+
+( user.username )+
+'</div>\n    </div>\n\n    <div class="column column-center">\n        <div class="remix-arrow"></div>\n        <div class="center-divider">remixed from</div>\n    </div>\n\n    <div class="column project-parent">\n        <div class="user-token user-token-large" style="\n            background-image: url('+
+( remix.parent.user.thumbnail_url )+
+');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">@'+
+( remix.parent.user.username )+
+'</div>\n    </div>\n\n</div>';
 }
 return __p;
 };
@@ -17219,7 +17227,7 @@ function( app ) {
 
         play: function() {
             this.each(function( layer, i ) {
-                layer.updateZIndex( this.length - i );
+                layer.updateZIndex( layer.get("_order") );
                 layer.play();
             }, this );
         },
@@ -17259,9 +17267,10 @@ function( app ) {
         },
 
         comparator: function( layer ) {
-            if ( this.page ) {
-                return layer.order[ this.page.id ];
-            }
+            return this.get("_order");
+            // if ( this.page ) {
+            //     return layer.order[ this.page.id ];
+            // }
         }
     });
     
@@ -35912,8 +35921,11 @@ function( app, Backbone, LayerCollection, Layers ) {
             }.bind(this));
 
             // make layer type array
-            classedLayers = _.map( pageLayers, function( layer ) {
-                var classedLayer = new Layers[ layer.type ]( _.extend( layer, { type: layer.type }));
+            classedLayers = _.map( pageLayers, function( layer, i ) {
+                var classedLayer = new Layers[ layer.type ]( _.extend( layer, {
+                    type: layer.type,
+                    _order: i
+                }));
 
                 classedLayer.visual = new Layers[ layer.type ].Visual({
                     model: classedLayer,
@@ -36257,8 +36269,6 @@ function( app, PageCollection, Layers ) {
         },
 
         _loadProject: function() {
-
-            console.log("URL", this.url() )
             this._loadPages();
             this._loadSoundtrack();
             this.initSaveEvents();
@@ -38961,10 +38971,11 @@ function(app, Backbone) {
         },
 
         serialize: function() {
+            console.log("serialize remix endoaasdg", this.model.zeega.getCurrentProject().toJSON())
+
             if ( this.model.zeega.getCurrentProject() ) {
                 return _.extend({
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
-                        projects: this.relatedProjects
                     },
                     this.model.zeega.getCurrentProject().toJSON()
                 );
