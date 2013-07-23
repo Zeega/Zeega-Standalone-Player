@@ -152,6 +152,14 @@ __p+='';
 return __p;
 };
 
+this["JST"]["app/templates/remix-endpage.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="end-page-wrapper" >\n    <h2>remix</h2>\n\n\n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/engine/plugins/controls/av/av.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){

@@ -490,6 +490,14 @@ __p+='';
 return __p;
 };
 
+this["JST"]["app/templates/remix-endpage.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="end-page-wrapper" >\n    <h2>remix</h2>\n\n\n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/engine/plugins/controls/av/av.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -17160,11 +17168,10 @@ function( $, _, Backbone, State, Spinner ) {
 
 // layer.js
 define('engine/modules/layer.collection',[
-    "app",
-    // "engine/plugins/layers/_all"
+    "app"
 ],
 
-function( app, Layers ) {
+function( app ) {
 
     return app.Backbone.Collection.extend({
 
@@ -17197,7 +17204,7 @@ function( app, Layers ) {
         },
 
         onVisualReady: function( layer ) {
-            var allReady = this.every(function( layer ) { return layer.state == "ready" });
+            var allReady = this.every(function( layer ) { return layer.state == "ready"; });
 
             if ( allReady ) {
                 this.off("layer:visual_ready");
@@ -33508,7 +33515,7 @@ function( app, Controls ) {
 
         getTarget: function() {
             if ( this.get("_target") ) {
-                return this.get("_target")
+                return this.get("_target");
             } else {
                 return app.player.get("target") ? app.player.get("target").find(".ZEEGA-player-window") :
                                             $(".ZEEGA-workspace")[0] ? $(".ZEEGA-workspace") : $(".ZEEGA-player-window");
@@ -34529,7 +34536,7 @@ function( app, _Layer, Visual ){
             },
 
             onVisualReady: function() {
-                console.log('visual ready audio')
+
             },
 
             onCanPlay: function() {}
@@ -36382,7 +36389,7 @@ function() {
 
     var getSoundtrackID = function( response ) {
         return response.sequences[0].attr.soundtrack || false;
-    }
+    };
 
     var removeDupeSoundtrack = function( response ) {
         var soundtrackID = getSoundtrackID( response );
@@ -36405,7 +36412,7 @@ function() {
             return soundtrackLayer || false;
         }
         return false;
-    }
+    };
 
     // no op. projects are already formatted
     Parser[type].parse = function( response, opts ) {
@@ -36819,7 +36826,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
             // do I need these?
             previousProject: null,
             previousPage: null,
-            previousLayer: null,
+            previousLayer: null
         },
 
         initialize: function( models, options ) {
@@ -36856,7 +36863,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
 
         blurPage: function( page ) {
             this.set("previousPage", page );
-            page.trigger("blur")
+            page.trigger("blur");
             this.emit("page page:blur", page );
         },
 
@@ -36926,16 +36933,16 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         preloadNextZeega: function() {
             var remixData = this.getCurrentProject().getRemixData();
 
-            this.waiting = true
+            this.waiting = true;
             // only preload if the project does not already exist
             if ( remixData.remix && !this.projects.get( remixData.parent.id ) && this.waiting ) {
                 var projectUrl = "http:" + app.metadata.hostname +'api/projects/' + remixData.parent.id;
 
                 $.getJSON( projectUrl, function( data ) {
                     this._onDataLoaded( data );
+                    this.waiting = false;
                 }.bind(this));
 
-                this.waiting = false;
             }
         },
 
@@ -36947,7 +36954,6 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                         mode: "player"
                     })
                 );
-
             var newProject = new ProjectModel( newProjectData );
 
             newProject._loadProject();
@@ -36981,7 +36987,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         },
 
         _setFirstPage: function() {
-            this.projects.at(0)
+            this.projects.at(0);
         }
     });
 
@@ -37474,7 +37480,7 @@ function( app, ControlsView ) {
             // TODO: Investigate whether or not this-alias can be safely
             // replaced by bind(this)
             var next = this.model.get("next"),
-                prev = this.model.get("prev")
+                prev = this.model.get("prev");
 
             if ( next && next.length ) {
                 app.$( next ).click(function() {
@@ -37960,13 +37966,16 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         play: function() {
             var page = this.zeega.getCurrentPage();
+            var soundtrack = this.zeega.getSoundtrack();
 
             if ( !this.ready ) {
                 this.renderLayout(); // render the player first! // this should not happen
             } else if ( this.state == "paused" || this.state == "suspended" ) {
                 this._fadeIn();
                 this.cuePage( page );
-                this.zeega.getSoundtrack().play();
+                
+                if ( soundtrack ) this.zeega.getSoundtrack().play();
+
                 this.emit("player player:play", this );
             }
         },
@@ -38298,7 +38307,7 @@ function(app, Backbone) {
             else this.disableArrow("next");
             
             if ( prev ) this.enableArrow("prev");
-            else this.disableArrow("prev")
+            else this.disableArrow("prev");
         },
 
         enableArrow: function(className) {
@@ -38488,7 +38497,6 @@ function( app, CitationView, Backbone ) {
         },
 
         updateSoundtrackCitation: function( soundtrack ) {
-            console.log("STTT", soundtrack);
             this.$(".citation-soundtrack")
                 .attr("href", soundtrack.get("attr").attribution_uri )
                 .css({
@@ -38509,20 +38517,19 @@ function( app, CitationView, Backbone ) {
         },
 
         fadeOut: function( stay ) {
-            // if( this.visible && this.sticky === false ) {
-            //     var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
+            if( this.visible && this.sticky === false ) {
+                var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
 
-            //     if ( this.timer ) {
-            //         clearTimeout( this.timer );
-            //     }
-            //     this.timer = setTimeout(function(){
-            //         if ( !this.hover && app.player.state != "paused" ) {
-            //             this.visible = false;
-            //             this.$el.fadeOut();
-            //         }
-            //     }.bind( this ), fadeOutAfter);
-                
-            // }
+                if ( this.timer ) {
+                    clearTimeout( this.timer );
+                }
+                this.timer = setTimeout(function(){
+                    if ( !this.hover && app.player.state != "paused" ) {
+                        this.visible = false;
+                        this.$el.fadeOut();
+                    }
+                }.bind( this ), fadeOutAfter);
+            }
         },
 
         fadeIn: function( stay ) {
@@ -38838,7 +38845,7 @@ function(app, Backbone) {
             }
         },
         endPageEnter: function() {
-            this.show();
+            if ( !this.model.zeega.getNextPage() ) this.show();
         },
 
         endPageExit: function() {
@@ -38851,6 +38858,69 @@ function(app, Backbone) {
                 app.emit("viewed_to_end");
             }
         },
+        hide: function(){
+            this.$el.fadeOut("fast");
+        }
+
+    });
+
+    return EndPage;
+});
+
+
+
+define('modules/remix-endpage',[
+    "app",
+    // Libs
+    "backbone"
+],
+
+function(app, Backbone) {
+
+    // Create a new module
+    var EndPage = {};
+
+    // This will fetch the tutorial template and render it.
+    EndPage.View = Backbone.View.extend({
+        
+        viewed: false,
+        visible: false,
+        hover: false,
+        sticky: false,
+
+        template: "app/templates/remix-endpage",
+
+        className: "ZEEGA-remix-endpage",
+
+        initialize: function() {
+            this.model.on("endpage_enter", this.endPageEnter, this );
+            this.model.on("endpage_exit", this.endPageExit, this );
+            this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
+        },
+
+        serialize: function() {
+            if ( this.model.zeega.getCurrentProject() ) {
+                return _.extend({
+                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        projects: this.relatedProjects
+                    },
+                    this.model.zeega.getCurrentProject().toJSON()
+                );
+            }
+        },
+
+        endPageEnter: function() {
+            if ( this.model.zeega.getNextPage() ) this.show();
+        },
+
+        endPageExit: function() {
+            this.hide();
+        },
+
+        show: function(){
+            this.$el.fadeIn("fast");
+        },
+
         hide: function(){
             this.$el.fadeOut("fast");
         }
@@ -38908,10 +38978,11 @@ define('modules/ui',[
     "modules/menu-bar-bottom",
     "modules/menu-bar-top",
     "modules/endpage",
+    "modules/remix-endpage",
     "modules/pause"
 ],
 
-function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, PauseView ) {
+function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, RemixEndpage, PauseView ) {
 
     var FADE_OUT_DELAY = 3000;
 
@@ -38939,6 +39010,9 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, P
             if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
+
+                this.remixEndpage = new RemixEndpage.View({ model: app.player });
+                this.insertView("#overlays", this.remixEndpage );
             }
             
             this.render();
@@ -39168,7 +39242,7 @@ define('modules/initializer',[
     "player/modules/player",
 
     "modules/ui",
-    "analytics/analytics",
+    "analytics/analytics"
 
      // Plugins
 ],
