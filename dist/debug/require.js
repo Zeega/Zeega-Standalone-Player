@@ -397,7 +397,9 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n        <li>click arrows and hotspots to explore</li>\n    </ul>\n    <ul class="rotating">\n    </ul>\n</div>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
 ( cover_image )+
-');\n        background-position: 50% 50%;\n        background-repeat: no-repeat no-repeat;\n        background-attachment: fixed;\n        -webkit-background-size: cover;\n        -moz-background-size: cover;\n        -o-background-size: cover;\n        background-size: cover;\n    "\n></div>\n';
+');\n        background-position: 50% 50%;\n        background-repeat: no-repeat no-repeat;\n        background-attachment: fixed;\n        -webkit-background-size: cover;\n        -moz-background-size: cover;\n        -o-background-size: cover;\n        background-size: cover;\n    "\n></div>\n<img class="bg-preload" src="'+
+( cover_image )+
+'">\n';
 }
 return __p;
 };
@@ -36108,9 +36110,9 @@ function( app, PageModel, LayerCollection ) {
             this.sort({ silent: true });
         },
 
-
-
         /////
+
+
 
 
         initEditor: function() {
@@ -36261,7 +36263,13 @@ function( app, PageCollection, Layers ) {
         },
 
         _loadPages: function() {
-            this.pages = new PageCollection( this.get("frames") );
+            var pageArray = _.map( this.get("sequences")[0].frames, function( pageId ) {
+                return _.find( this.get("frames"), function( page ) {
+                    return page.id == pageId
+                });
+            }, this );
+
+            this.pages = new PageCollection( pageArray );
             this.pages.load( this.get("layers"), this );
             this.pages.setPageOrder( this.get("sequences")[0] );
         },
@@ -36919,6 +36927,18 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
             return this.get("currentPage");
         },
 
+        getPages: function() {
+            var pagesArray = [];
+            
+            this.projects.each(function( project ) {
+                project.pages.each(function( page ) {
+                    pagesArray.push( page )
+                });
+            });
+
+            return pagesArray;
+        },
+
         getPage: function( pageID ) {
 
         },
@@ -36979,7 +36999,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         // can be updated to use the startFrame property. good for now
         _initCurrentState: function() {
             var currentProject = this.projects.at(0),
-                currentPage = currentProject.pages.at(0);
+                currentPage = this.getFirstPage();
 
             this.set({
                 currentProject: currentProject,
@@ -38013,19 +38033,55 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
             this.preloadPage( page );
         },
 
+        preloadTimer: null,
+
         preloadPage: function( page ) {
             var nextPage = this.zeega.getNextPage( page );
+
+            clearTimeout( this.preloadTimer );
 
             page.preload();
             for ( var i = 0; i < this.get("preloadRadius"); i++ ) {
                 if( nextPage ) {
+                    nextPage.once("layers:ready", function() {
+                        this.onPreloadFinish( nextPage );
+                    }, this );
+                    
                     nextPage.preload();
                     nextPage = this.zeega.getNextPage( nextPage );
                 } else {
                     this.zeega.preloadNextZeega();
                 }
             }
-            
+
+        },
+
+        onPreloadFinish: _.debounce(function( page ) {
+            var newStartPage = _.find( this.zeega.getPages(), function( page ) {
+                return page.state == "waiting";
+            });
+
+            if ( newStartPage ) {
+                this.onPreloadIdle( newStartPage );
+            }
+
+        }, 1500),
+
+        onPreloadIdle: function( page ) {
+            var next = this.zeega.getNextPage( page );
+
+            // var audio = this.zeega.getSoundtrack().visual.audio;
+            // console.log('preload from idle', page.id, audio.buffered.end( audio.buffered.length-1 ), audio.duration )
+
+            if ( next && next.state == "waiting" ) {
+                next.once("layers:ready", function() {
+                    this.preloadTimer = setTimeout(function() {
+                        this.onPreloadIdle( next );
+                    }.bind(this), 500 );
+                }, this );
+
+                next.preload();
+            }
         },
 
         // can only be called if a page is preloaded and ready
@@ -38239,11 +38295,11 @@ function( app, Backbone, Spinner ) {
                 }
             }.bind( this ), this.MIN_LOAD_TIME );
 
-            this.$("ZEEGA-loader-bg").imagesLoaded();
-
-            this.$("ZEEGA-loader-bg").done(function() {
-                this.$("ZEEGA-loader-bg").fadeIn(1000);
-            }.bind(this));
+            this.$(".bg-preload")
+                .imagesLoaded()
+                .done(function() {
+                    this.$(".ZEEGA-loader-bg").fadeIn("slow");
+                }.bind(this));
         },
 
         onPlayerCanplay: function() {

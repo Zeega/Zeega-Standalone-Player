@@ -2747,7 +2747,14 @@ a:active {
   top: 0;
   left: 0;
   z-index: -2;
-  opacity: 0;
+  display: none;
+}
+.ZEEGA-loader-overlay .bg-preload {
+  position: absolute;
+  left: -1000%;
+  top: -1000%;
+  height: 1px;
+  width: 1px;
 }
 .ZEEGA-player-menu-bar {
   pointer-events: auto;
