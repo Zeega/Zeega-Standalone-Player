@@ -1613,6 +1613,62 @@ a:active {
 .ZEEGA-end-page article .play-next:hover {
   opacity: 1;
 }
+.ZEEGA-remix-endpage {
+  display: block;
+  color: white;
+  position: absolute;
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  display: none;
+  background: url(../img/tiny-stripes-dark.png);
+}
+.ZEEGA-remix-endpage .column {
+  float: left;
+}
+.ZEEGA-remix-endpage .column.column-center {
+  margin: 0 20px;
+}
+.ZEEGA-remix-endpage .column .username {
+  margin-top: 10px;
+}
+.ZEEGA-remix-endpage .column.project-current {
+  color: #ffff00;
+}
+.ZEEGA-remix-endpage .column.project-current .user-token {
+  border-color: #ffff00;
+}
+.ZEEGA-remix-endpage .column.project-parent {
+  color: #ff0066;
+}
+.ZEEGA-remix-endpage .column.project-parent .user-token {
+  border-color: #ff0066;
+}
+.ZEEGA-remix-endpage .remix-arrow {
+  height: 100px;
+  width: 100px;
+  background: url(../img/remix-arrow.png);
+  background-size: 100px 100px;
+  margin: 37px 0;
+}
+.ZEEGA-remix-endpage .end-page-wrapper {
+  height: 200px;
+  width: 475px;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  text-align: center;
+  font-size: 12px;
+}
+.user-token.user-token-large {
+  height: 150px;
+  width: 150px;
+  border-radius: 150px;
+  border: 8px solid white;
+}
 .pause-overlay {
   color: white;
   background: rgba(0, 0, 0, 0.5);

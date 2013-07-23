@@ -1,5 +1,26 @@
 <div class="end-page-wrapper" >
-    <h2>remix</h2>
 
+    <div class="column project-current">
+        <div class="user-token user-token-large" style="
+            background-image: url(<%= user.thumbnail_url %>);
+            background-size: cover;
+            background-position: center;
+        "></div>
+        <div class="username">@<%= user.username %></div>
+    </div>
+
+    <div class="column column-center">
+        <div class="remix-arrow"></div>
+        <div class="center-divider">remixed from</div>
+    </div>
+
+    <div class="column project-parent">
+        <div class="user-token user-token-large" style="
+            background-image: url(<%= remix.parent.user.thumbnail_url %>);
+            background-size: cover;
+            background-position: center;
+        "></div>
+        <div class="username">@<%= remix.parent.user.username %></div>
+    </div>
 
 </div>

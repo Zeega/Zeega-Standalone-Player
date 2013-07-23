@@ -28,10 +28,11 @@ function(app, Backbone) {
         },
 
         serialize: function() {
+            console.log("serialize remix endoaasdg", this.model.zeega.getCurrentProject().toJSON())
+
             if ( this.model.zeega.getCurrentProject() ) {
                 return _.extend({
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
-                        projects: this.relatedProjects
                     },
                     this.model.zeega.getCurrentProject().toJSON()
                 );
