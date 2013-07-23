@@ -3000,6 +3000,9 @@ a:active {
 .ZEEGA-remix-endpage .column .username {
   margin-top: 10px;
 }
+.ZEEGA-remix-endpage .column .title {
+  margin-bottom: 10px;
+}
 .ZEEGA-remix-endpage .column.project-current {
   color: #ffff00;
 }
@@ -3012,16 +3015,23 @@ a:active {
 .ZEEGA-remix-endpage .column.project-parent .user-token {
   border-color: #ff0066;
 }
+.ZEEGA-remix-endpage .column.project-current,
+.ZEEGA-remix-endpage .column.project-root {
+  margin-top: 50px;
+}
 .ZEEGA-remix-endpage .remix-arrow {
-  height: 100px;
-  width: 100px;
+  height: 50px;
+  width: 50px;
   background: url(../img/remix-arrow.png);
-  background-size: 100px 100px;
-  margin: 37px 0;
+  background-size: 100px 50px;
+  margin: 88px 10px;
+}
+.ZEEGA-remix-endpage .remix-arrow.gradient2 {
+  background-position: -50px 0;
 }
 .ZEEGA-remix-endpage .end-page-wrapper {
   height: 200px;
-  width: 475px;
+  width: 486px;
   margin: auto;
   top: 0;
   left: 0;
@@ -3036,6 +3046,12 @@ a:active {
   width: 150px;
   border-radius: 150px;
   border: 8px solid white;
+}
+.user-token.user-token-medium {
+  height: 75px;
+  width: 75px;
+  border-radius: 150px;
+  border: 6px solid white;
 }
 .pause-overlay {
   color: white;

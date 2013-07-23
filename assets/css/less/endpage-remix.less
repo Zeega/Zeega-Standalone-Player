@@ -23,6 +23,10 @@
             margin-top: 10px;
         }
 
+        .title {
+            margin-bottom: 10px;
+        }
+
         &.project-current {
             color: @currentColor;
 
@@ -37,19 +41,28 @@
                 border-color: @parentColor;
             }
         }
+
+        &.project-current,
+        &.project-root {
+            margin-top: 50px;
+        }
     }
 
     .remix-arrow {
-        height: 100px;
-        width: 100px;
+        height: 50px;
+        width: 50px;
         background: url(../img/remix-arrow.png);
-        background-size: 100px 100px;
-        margin: 37px 0;
+        background-size: 100px 50px;
+        margin: 88px 10px;
+
+        &.gradient2 {
+            background-position: -50px 0;
+        }
     }
 
     .end-page-wrapper {
         height: 200px;
-        width: 475px;
+        width: 486px;
         margin: auto;
         top: 0;
         left: 0;
@@ -69,5 +82,12 @@
         width: 150px;
         border-radius: 150px;
         border: 8px solid white;
+    }
+
+    &.user-token-medium {
+        height: 75px;
+        width: 75px;
+        border-radius: 150px;
+        border: 6px solid white;
     }
 }

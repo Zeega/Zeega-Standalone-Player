@@ -26,7 +26,7 @@ function( app, Player, PlayerUI, Analytics ) {
             var context, showChrome;
 
             app.player = new Player({
-                //debugEvents: true,
+                // debugEvents: true,
                 // cover: false,
 
                 scalable: true,

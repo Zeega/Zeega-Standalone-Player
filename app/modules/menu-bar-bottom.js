@@ -27,7 +27,7 @@ function( app, CitationView, Backbone ) {
                     favorites: this.getFavorites()
                 },
                     app.metadata,
-                    this.model.zeega.projects.at(0).toJSON()
+                    this.model.zeega.getCurrentProject().toJSON()
                 );
             }
         },
@@ -40,6 +40,8 @@ function( app, CitationView, Backbone ) {
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+
+            this.model.on("change:currentProject", this.render, this );
         },
 
         afterRender: function(){
@@ -63,7 +65,7 @@ function( app, CitationView, Backbone ) {
         },
 
         incFavorites: function( inc ){
-            this.model.project.set( "favorite_count", this.model.project.get("favorite_count") + inc );
+            this.model.zeega.projects.at(0).set( "favorite_count", this.model.zeega.projects.at(0).get("favorite_count") + inc );
             this.$(".zeega-favorite_count").html( this.getFavorites() );
         },
 
@@ -71,16 +73,16 @@ function( app, CitationView, Backbone ) {
             var url;
             this.$(".btnz").toggleClass("favorited");
 
-            if(this.model.project.get("favorite")){
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/unfavorite";
-                this.model.project.set({ "favorite": false });
+            if(this.model.zeega.projects.at(0).get("favorite")){
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/unfavorite";
+                this.model.zeega.projects.at(0).set({ "favorite": false });
                 this.incFavorites(-1);
                 app.emit("unfavorite");
 
 
             } else {
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.project.id + "/favorite";
-                this.model.project.set({ "favorite": true });
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/favorite";
+                this.model.zeega.projects.at(0).set({ "favorite": true });
                 this.incFavorites(1);
                 app.emit("favorite");
             }

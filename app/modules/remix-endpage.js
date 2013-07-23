@@ -24,13 +24,12 @@ function(app, Backbone) {
         initialize: function() {
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
+
             this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
         },
 
         serialize: function() {
-            console.log("serialize remix endoaasdg", this.model.zeega.getCurrentProject().toJSON())
-
-            if ( this.model.zeega.getCurrentProject() ) {
+            if ( this.isRemixPage() && this.model.zeega.getNextPage() ) {
                 return _.extend({
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
                     },
@@ -39,8 +38,16 @@ function(app, Backbone) {
             }
         },
 
-        endPageEnter: function() {
-            if ( this.model.zeega.getNextPage() ) this.show();
+        endPageEnter: function( layer ) {
+            
+            if ( this.isRemixPage() ) {
+                this.render();
+                this.show();
+            }
+        },
+
+        isRemixPage: function() {
+            return this.model.zeega.getNextPage() !== false;
         },
 
         endPageExit: function() {
