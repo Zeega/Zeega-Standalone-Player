@@ -2,7 +2,8 @@ define([
     "app",
     // Libs
     "backbone",
-    "engineVendor/spin"
+    "engineVendor/spin",
+    "engineVendor/jquery.imagesloaded.min"
 ],
 
 function( app, Backbone, Spinner ) {
@@ -14,10 +15,6 @@ function( app, Backbone, Spinner ) {
         loadTimer: null,
         playerCanplay: false,
         isReady: false,
-        /* variables keeping track of generic layer states */
-        layerCount : 0,
-        layersReady : 0,
-        spinner: null,
 
         className: "ZEEGA-loader-overlay",
         template: "app/templates/loader",
@@ -49,6 +46,11 @@ function( app, Backbone, Spinner ) {
                     this.onCanPlay();
                 }
             }.bind( this ), this.MIN_LOAD_TIME );
+
+            this.$(".bg-preload").imagesLoaded().done(function() {
+                console.log("done!!")
+                this.$(".ZEEGA-loader-bg").fadeIn("slow");
+            }.bind(this));
         },
 
         onPlayerCanplay: function() {

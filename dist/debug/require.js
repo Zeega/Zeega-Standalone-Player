@@ -38194,7 +38194,8 @@ define('modules/loader',[
     "app",
     // Libs
     "backbone",
-    "engineVendor/spin"
+    "engineVendor/spin",
+    "engineVendor/jquery.imagesloaded.min"
 ],
 
 function( app, Backbone, Spinner ) {
@@ -38206,10 +38207,6 @@ function( app, Backbone, Spinner ) {
         loadTimer: null,
         playerCanplay: false,
         isReady: false,
-        /* variables keeping track of generic layer states */
-        layerCount : 0,
-        layersReady : 0,
-        spinner: null,
 
         className: "ZEEGA-loader-overlay",
         template: "app/templates/loader",
@@ -38241,6 +38238,12 @@ function( app, Backbone, Spinner ) {
                     this.onCanPlay();
                 }
             }.bind( this ), this.MIN_LOAD_TIME );
+
+            this.$("ZEEGA-loader-bg").imagesLoaded();
+
+            this.$("ZEEGA-loader-bg").done(function() {
+                this.$("ZEEGA-loader-bg").fadeIn(1000);
+            }.bind(this));
         },
 
         onPlayerCanplay: function() {
