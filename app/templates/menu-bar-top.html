@@ -7,8 +7,6 @@
     </div>
 </a>
 
-
-
 <a href="<%= path %>register/" <% if (window!=window.top) { %> target="blank" <% } %> data-bypass="true" class="btnz btnz-join">Join Zeega</a>
 
 <% } %>
@@ -20,7 +18,7 @@
             <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>
         </li>
         <li>
-            <a href="<%= path %><%= id %>/remix" data-bypass="true" class="btnz btn-remix"><i class="icon-random"></i> remix</a>
+            <a href="<%= path %><%= id %>/remix" data-bypass="true" class="btnz btn-remix" <% if (window!=window.top ) { %> target="blank" <% } %>><i class="icon-random"></i> remix</a>
         </li>
     </ul>
 
