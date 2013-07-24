@@ -441,13 +441,7 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n<!--\n        <div class="favorite">\n\n            ';
- if ( favorite === true ) {  
-;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
- } else {
-;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
- } 
-;__p+='\n        </div>\n-->\n\n        <a class="citation-soundtrack"></a>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citation-soundtrack">\n            <a class="citation-trackback"><i class="itemz-soundcloud"></i></a>\n            <a href="#" class="play-pause"><i class="pp-btn pause"></i></a>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -38505,12 +38499,6 @@ function( app, CitationView, Backbone ) {
             this.model.on("change:currentProject", this.render, this );
         },
 
-        afterRender: function(){
-            if ( app.metadata.loggedIn ){
-                this.$(".favorite").show();
-            }
-        },
-
         getFavorites: function(){
             var count = this.model.zeega.projects.at(0).get("favorite_count"),
                 html = "";
@@ -38522,7 +38510,6 @@ function( app, CitationView, Backbone ) {
             }
 
             return html;
-
         },
 
         endPageEnter: function() {
@@ -38560,13 +38547,16 @@ function( app, CitationView, Backbone ) {
 
         updateSoundtrackCitation: function( soundtrack ) {
             this.$(".citation-soundtrack")
-                .attr("href", soundtrack.get("attr").attribution_uri )
                 .css({
                     background: "url("+ soundtrack.get("attr").thumbnail_url +")",
                     backgroundSize: "cover",
                     backgroundPosition: "center"
                 })
                 .show();
+
+            this.$(".citation-soundtrack .citation-trackback")
+                .attr("href", soundtrack.get("attr").attribution_uri );
+
         },
 
         events: {
@@ -38575,7 +38565,26 @@ function( app, CitationView, Backbone ) {
             "click #project-play-pause": "playpause",
             "click .ZEEGA-home": "startOver",
             "click .favorite-btnz": "toggleFavorite",
-            "click .profile-link": "onProfile"
+            "click .profile-link": "onProfile",
+            "click .play-pause": "toggleMute"
+        },
+
+        toggleMute: function(){
+            var soundtrack = this.model.zeega.getSoundtrack();
+
+            console.log( soundtrack.visual.getAudio().paused )
+
+            if ( soundtrack.visual.getAudio().paused ) {
+                this.$(".pp-btn").addClass("pause");
+                soundtrack.play();
+                this.model.emit("mute_toggle", { state: "unmuted" });
+            } else {
+                this.$(".pp-btn").removeClass("pause");
+                soundtrack.pause();
+                this.model.emit("mute_toggle", { state: "muted" });
+            }
+
+            return false;
         },
 
         fadeOut: function( stay ) {
@@ -38746,12 +38755,10 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click .project-title": "startOver",
-            "click .ZEEGA-sound-state": "toggleMute",
             "click .share-network a": "onShare",
             "click .ZEEGA-tab": "onHome",
 
-            "click .btn-favorite": "toggleFavorite",
-
+            "click .btn-favorite": "toggleFavorite"
         },
 
         toggleFavorite: function(){
@@ -38792,23 +38799,6 @@ function(app, Backbone) {
 
             return html;
         },
-
-        // toggleMute: function(){
-        //     var soundtrack = this.model.zeega.getSoundtrack();
-        //     if ( soundtrack ){
-        //         if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
-        //             this.$(".ZEEGA-sound-state").removeClass("muted");
-        //             soundtrack.play();
-        //             this.model.emit("mute_toggle", { state: "unmuted" });
-        //         } else {
-        //             this.$(".ZEEGA-sound-state").addClass("muted");
-        //             soundtrack.pause();
-        //             this.model.emit("mute_toggle", { state: "muted" });
-        //         }
-        //     }
-        //     return false;
-        // },
-
 
         fadeOut: function( stay ) {
             if( this.visible && this.sticky === false ) {
