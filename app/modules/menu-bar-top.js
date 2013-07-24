@@ -103,12 +103,10 @@ function(app, Backbone) {
             "mouseenter": "onMouseenter",
             "mouseleave": "onMouseleave",
             "click .project-title": "startOver",
-            "click .ZEEGA-sound-state": "toggleMute",
             "click .share-network a": "onShare",
             "click .ZEEGA-tab": "onHome",
 
-            "click .btn-favorite": "toggleFavorite",
-
+            "click .btn-favorite": "toggleFavorite"
         },
 
         toggleFavorite: function(){
@@ -149,23 +147,6 @@ function(app, Backbone) {
 
             return html;
         },
-
-        // toggleMute: function(){
-        //     var soundtrack = this.model.zeega.getSoundtrack();
-        //     if ( soundtrack ){
-        //         if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
-        //             this.$(".ZEEGA-sound-state").removeClass("muted");
-        //             soundtrack.play();
-        //             this.model.emit("mute_toggle", { state: "unmuted" });
-        //         } else {
-        //             this.$(".ZEEGA-sound-state").addClass("muted");
-        //             soundtrack.pause();
-        //             this.model.emit("mute_toggle", { state: "muted" });
-        //         }
-        //     }
-        //     return false;
-        // },
-
 
         fadeOut: function( stay ) {
             if( this.visible && this.sticky === false ) {

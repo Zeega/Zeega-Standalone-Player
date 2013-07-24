@@ -44,12 +44,6 @@ function( app, CitationView, Backbone ) {
             this.model.on("change:currentProject", this.render, this );
         },
 
-        afterRender: function(){
-            if ( app.metadata.loggedIn ){
-                this.$(".favorite").show();
-            }
-        },
-
         getFavorites: function(){
             var count = this.model.zeega.projects.at(0).get("favorite_count"),
                 html = "";
@@ -61,7 +55,6 @@ function( app, CitationView, Backbone ) {
             }
 
             return html;
-
         },
 
         endPageEnter: function() {
@@ -99,13 +92,16 @@ function( app, CitationView, Backbone ) {
 
         updateSoundtrackCitation: function( soundtrack ) {
             this.$(".citation-soundtrack")
-                .attr("href", soundtrack.get("attr").attribution_uri )
                 .css({
                     background: "url("+ soundtrack.get("attr").thumbnail_url +")",
                     backgroundSize: "cover",
                     backgroundPosition: "center"
                 })
                 .show();
+
+            this.$(".citation-soundtrack .citation-trackback")
+                .attr("href", soundtrack.get("attr").attribution_uri );
+
         },
 
         events: {
@@ -114,7 +110,26 @@ function( app, CitationView, Backbone ) {
             "click #project-play-pause": "playpause",
             "click .ZEEGA-home": "startOver",
             "click .favorite-btnz": "toggleFavorite",
-            "click .profile-link": "onProfile"
+            "click .profile-link": "onProfile",
+            "click .play-pause": "toggleMute"
+        },
+
+        toggleMute: function(){
+            var soundtrack = this.model.zeega.getSoundtrack();
+
+            console.log( soundtrack.visual.getAudio().paused )
+
+            if ( soundtrack.visual.getAudio().paused ) {
+                this.$(".pp-btn").addClass("pause");
+                soundtrack.play();
+                this.model.emit("mute_toggle", { state: "unmuted" });
+            } else {
+                this.$(".pp-btn").removeClass("pause");
+                soundtrack.pause();
+                this.model.emit("mute_toggle", { state: "muted" });
+            }
+
+            return false;
         },
 
         fadeOut: function( stay ) {
