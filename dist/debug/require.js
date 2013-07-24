@@ -441,13 +441,13 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
+;__p+='</span>\n            </div>\n        </div>\n\n<!--\n        <div class="favorite">\n\n            ';
  if ( favorite === true ) {  
 ;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
  } else {
 ;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
  } 
-;__p+='\n        </div>\n\n        <a class="citation-soundtrack"></a>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='\n        </div>\n-->\n\n        <a class="citation-soundtrack"></a>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -471,15 +471,19 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n    <span class ="share-network">\n        <a name="twitter" class="social-share-icon" href="'+
+;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n        <li>\n            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        </li>\n        <li>\n            <a href="'+
+( path )+
+''+
+( id )+
+'/remix" data-bypass="true" class="btnz btn-remix"><i class="icon-random"></i> remix</a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
-'" target="blank"><i class="zsocial-twitter"></i></a>\n        <a name="facebook" class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
-'" target="blank"><i class="zsocial-facebook"></i></a>\n        <a name="tumblr" class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-facebook"></i></a>\n        </li>\n        <li>\n            <a name="tumblr" class="social-share-icon" href="'+
 ( share_links.tumblr )+
-'" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a name="reddit" class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n        </li>\n        <!-- <li>\n            <a name="reddit" class="social-share-icon" href="'+
 ( share_links.reddit )+
-'" target="blank"><i class="zsocial-reddit"></i></a>\n    </span>\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
+'" target="blank"><i class="zsocial-reddit"></i></a>\n        </li> -->\n    </ul>\n\n</div>';
 }
 return __p;
 };
@@ -38517,34 +38521,6 @@ function( app, CitationView, Backbone ) {
 
         },
 
-        incFavorites: function( inc ){
-            this.model.zeega.projects.at(0).set( "favorite_count", this.model.zeega.projects.at(0).get("favorite_count") + inc );
-            this.$(".zeega-favorite_count").html( this.getFavorites() );
-        },
-
-        toggleFavorite: function(){
-            var url;
-            this.$(".btnz").toggleClass("favorited");
-
-            if(this.model.zeega.projects.at(0).get("favorite")){
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/unfavorite";
-                this.model.zeega.projects.at(0).set({ "favorite": false });
-                this.incFavorites(-1);
-                app.emit("unfavorite");
-
-
-            } else {
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/favorite";
-                this.model.zeega.projects.at(0).set({ "favorite": true });
-                this.incFavorites(1);
-                app.emit("favorite");
-            }
-            $.ajax({ url: url, type: 'POST', success: function(){  }  });
-
-            return false;
-
-        },
-
         endPageEnter: function() {
             this.sticky = true;
             this.$(".citations").hide();
@@ -38768,57 +38744,67 @@ function(app, Backbone) {
             "click .project-title": "startOver",
             "click .ZEEGA-sound-state": "toggleMute",
             "click .share-network a": "onShare",
-            "click .ZEEGA-tab": "onHome"
+            "click .ZEEGA-tab": "onHome",
+
+            "click .btn-favorite": "toggleFavorite",
+
         },
 
-        toggleMute: function(){
-            var soundtrack = this.model.zeega.getSoundtrack();
-            if ( soundtrack ){
-                if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
-                    this.$(".ZEEGA-sound-state").removeClass("muted");
-                    soundtrack.play();
-                    this.model.emit("mute_toggle", { state: "unmuted" });
-                } else {
-                    this.$(".ZEEGA-sound-state").addClass("muted");
-                    soundtrack.pause();
-                    this.model.emit("mute_toggle", { state: "muted" });
-                }
-            }
-            return false;
-        },
+        toggleFavorite: function(){
+            var url;
 
-        toggleFullscreen: function() {
-            if ( app.state.get("fullscreen") ) {
-                this.leaveFullscreen();
-                app.emit("fullscreen_toggle", { state: "noFullscreen" });
+            this.$(".btn-favorite").toggleClass("favorited");
+
+            if ( this.model.zeega.projects.at(0).get("favorite")) {
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/unfavorite";
+                this.model.zeega.projects.at(0).set({ "favorite": false });
+                this.incFavorites(-1);
+                app.emit("unfavorite");
             } else {
-                this.goFullscreen();
-                app.emit("fullscreen_toggle", { state: "fullscreen" });
+                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/favorite";
+                this.model.zeega.projects.at(0).set({ "favorite": true });
+                this.incFavorites(1);
+                app.emit("favorite");
             }
+            $.ajax({ url: url, type: 'POST', success: function(){  }  });
+
             return false;
         },
 
-        goFullscreen : function() {
-            app.state.set("fullscreen", true );
-            docElm = document.getElementById("main");
-              
-            if ( docElm.requestFullscreen ) docElm.requestFullscreen();
-            else if ( docElm.mozRequestFullScreen ) docElm.mozRequestFullScreen();
-            else if ( docElm.webkitRequestFullScreen ) docElm.webkitRequestFullScreen();
-
-            this.$("#project-fullscreen-toggle").text("exit fullscreen");
+        incFavorites: function( inc ){
+            this.model.zeega.projects.at(0).set( "favorite_count", this.model.zeega.projects.at(0).get("favorite_count") + inc );
+            $(".zeega-favorite_count").html( this.getFavorites() );
         },
 
+        getFavorites: function(){
+            var count = this.model.zeega.projects.at(0).get("favorite_count"),
+                html = "";
 
+            if ( count == 1){
+                html = "♥ " + count + " favorite";
+            } else if ( count > 1 ){
+                html = "♥ " + count + " favorites";
+            }
 
-        leaveFullscreen : function() {
-            app.state.set("fullscreen", false );
-            if ( document.exitFullscreen )        document.exitFullscreen();
-            else if ( document.mozCancelFullScreen )    document.mozCancelFullScreen();
-            else if ( document.webkitCancelFullScreen )   document.webkitCancelFullScreen();
-
-            this.$("#project-fullscreen-toggle").text("fullscreen");
+            return html;
         },
+
+        // toggleMute: function(){
+        //     var soundtrack = this.model.zeega.getSoundtrack();
+        //     if ( soundtrack ){
+        //         if( this.$(".ZEEGA-sound-state").hasClass("muted") ){
+        //             this.$(".ZEEGA-sound-state").removeClass("muted");
+        //             soundtrack.play();
+        //             this.model.emit("mute_toggle", { state: "unmuted" });
+        //         } else {
+        //             this.$(".ZEEGA-sound-state").addClass("muted");
+        //             soundtrack.pause();
+        //             this.model.emit("mute_toggle", { state: "muted" });
+        //         }
+        //     }
+        //     return false;
+        // },
+
 
         fadeOut: function( stay ) {
             if( this.visible && this.sticky === false ) {

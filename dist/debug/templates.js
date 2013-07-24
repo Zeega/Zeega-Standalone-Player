@@ -103,13 +103,13 @@ __p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n      
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="favorite">\n\n            ';
+;__p+='</span>\n            </div>\n        </div>\n\n<!--\n        <div class="favorite">\n\n            ';
  if ( favorite === true ) {  
 ;__p+=' \n                <a href="#" class="btnz favorite-btnz favorited">♥ favorite</a>\n            ';
  } else {
 ;__p+='\n                <a href="#" class="btnz favorite-btnz">♥ favorite</a>\n            ';
  } 
-;__p+='\n        </div>\n\n        <a class="citation-soundtrack"></a>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='\n        </div>\n-->\n\n        <a class="citation-soundtrack"></a>\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -133,15 +133,19 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n    <span class ="share-network">\n        <a name="twitter" class="social-share-icon" href="'+
+;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n        <li>\n            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        </li>\n        <li>\n            <a href="'+
+( path )+
+''+
+( id )+
+'/remix" data-bypass="true" class="btnz btn-remix"><i class="icon-random"></i> remix</a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
-'" target="blank"><i class="zsocial-twitter"></i></a>\n        <a name="facebook" class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
-'" target="blank"><i class="zsocial-facebook"></i></a>\n        <a name="tumblr" class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-facebook"></i></a>\n        </li>\n        <li>\n            <a name="tumblr" class="social-share-icon" href="'+
 ( share_links.tumblr )+
-'" target="blank"><i class="zsocial-tumblr"></i></a>\n        <a name="reddit" class="social-share-icon" href="'+
+'" target="blank"><i class="zsocial-tumblr"></i></a>\n        </li>\n        <!-- <li>\n            <a name="reddit" class="social-share-icon" href="'+
 ( share_links.reddit )+
-'" target="blank"><i class="zsocial-reddit"></i></a>\n    </span>\n    <a href="#" id="project-fullscreen-toggle" class="btnz">fullscreen</a>\n    <a class="ZEEGA-sound-state" style="display:none;"></a>\n</div>';
+'" target="blank"><i class="zsocial-reddit"></i></a>\n        </li> -->\n    </ul>\n\n</div>';
 }
 return __p;
 };
