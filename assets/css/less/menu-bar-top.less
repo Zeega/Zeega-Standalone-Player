@@ -19,6 +19,52 @@
             float: left;
             margin-right: 10px;
         }
+
+        ul {
+            float: left;
+
+            li {
+                float: left;
+            }
+
+            &:first-child {
+                margin-right: 20px;
+            }
+        }
+
+        .btnz {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: none;
+            border: 2px solid rgba(0, 0, 0, 0.5);
+            color: rgba(0, 0, 0, 0.6);
+            text-shadow: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+
+            i {
+                opacity: 0.6;
+                vertical-align: -3px;
+            }
+
+            &:hover {
+                color: orangered;
+                border-color: orangered;
+            }
+
+            &.favorited {
+                padding: 8px;
+                background: orangered;
+
+                .content {
+                    display: none;
+                }
+
+                i {
+                    opacity: 1;
+                    background-image: url("../img/glyphicons-halflings-white.png");
+                }
+            }
+        }
     }
 
     .social-share-icon {

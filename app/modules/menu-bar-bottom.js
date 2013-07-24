@@ -64,34 +64,6 @@ function( app, CitationView, Backbone ) {
 
         },
 
-        incFavorites: function( inc ){
-            this.model.zeega.projects.at(0).set( "favorite_count", this.model.zeega.projects.at(0).get("favorite_count") + inc );
-            this.$(".zeega-favorite_count").html( this.getFavorites() );
-        },
-
-        toggleFavorite: function(){
-            var url;
-            this.$(".btnz").toggleClass("favorited");
-
-            if(this.model.zeega.projects.at(0).get("favorite")){
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/unfavorite";
-                this.model.zeega.projects.at(0).set({ "favorite": false });
-                this.incFavorites(-1);
-                app.emit("unfavorite");
-
-
-            } else {
-                url = "http://" + app.metadata.hostname + app.metadata.directory + "api/projects/" + this.model.zeega.projects.at(0).id + "/favorite";
-                this.model.zeega.projects.at(0).set({ "favorite": true });
-                this.incFavorites(1);
-                app.emit("favorite");
-            }
-            $.ajax({ url: url, type: 'POST', success: function(){  }  });
-
-            return false;
-
-        },
-
         endPageEnter: function() {
             this.sticky = true;
             this.$(".citations").hide();

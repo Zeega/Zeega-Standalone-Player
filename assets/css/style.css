@@ -2776,6 +2776,43 @@ a:active {
   float: left;
   margin-right: 10px;
 }
+.ZEEGA-player-menu-bar .menu-right ul {
+  float: left;
+}
+.ZEEGA-player-menu-bar .menu-right ul li {
+  float: left;
+}
+.ZEEGA-player-menu-bar .menu-right ul:first-child {
+  margin-right: 20px;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: none;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.6);
+  text-shadow: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz i {
+  opacity: 0.6;
+  vertical-align: -3px;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz:hover {
+  color: orangered;
+  border-color: orangered;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz.favorited {
+  padding: 8px;
+  background: orangered;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz.favorited .content {
+  display: none;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz.favorited i {
+  opacity: 1;
+  background-image: url("../img/glyphicons-halflings-white.png");
+}
 .ZEEGA-player-menu-bar .social-share-icon {
   opacity: 0.8;
   transition: opacity 0.5s;
