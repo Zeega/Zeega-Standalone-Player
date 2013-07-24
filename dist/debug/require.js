@@ -503,19 +503,23 @@ __p+='<div class="end-page-wrapper" >\n\n    <div class="column project-current"
 ( user.thumbnail_url )+
 ');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
 ( user.display_name )+
-'</div>\n    </div>\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient1"></div>\n    </div>\n\n    <div class="column project-parent">\n        <div class="title">up next</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
+'</div>\n    </div>\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient1"></div>\n    </div>\n\n';
+ if ( remix.remix ) { 
+;__p+='\n    <div class="column project-parent">\n        <div class="title">up next</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
 ( remix.parent.user.thumbnail_url )+
 ');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
 ( remix.parent.user.display_name )+
 '</div>\n    </div>\n\n    ';
  if ( remix.parent.id != remix.root.id ) { 
-;__p+='\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient2"></div>\n    </div>\n\n    <div class="column project-root">\n        <div class="title">remixed from</div>\n        <div class="user-token user-token-medium" style="\n            background-image: url('+
+;__p+='\n\n        <div class="column column-arrow">\n            <div class="remix-arrow gradient2"></div>\n        </div>\n\n        <div class="column project-root">\n            <div class="title">remixed from</div>\n            <div class="user-token user-token-medium" style="\n                background-image: url('+
 ( remix.root.user.thumbnail_url )+
-');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
+');\n                background-size: cover;\n                background-position: center;\n            "></div>\n            <div class="username">'+
 ( remix.root.user.display_name )+
-'</div>\n    </div>\n\n    ';
+'</div>\n        </div>\n\n    ';
  } 
-;__p+='\n\n</div>';
+;__p+='\n';
+ } 
+;__p+='\n</div>';
 }
 return __p;
 };
