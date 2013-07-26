@@ -31,7 +31,7 @@ function(app, Backbone) {
         serialize: function() {
             if ( this.isRemixPage() && this.model.zeega.getNextPage() ) {
                 return _.extend({
-                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
                     this.model.zeega.getCurrentProject().toJSON()
                 );

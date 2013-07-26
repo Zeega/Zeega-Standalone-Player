@@ -395,7 +395,29 @@ return __p;
 this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n        <li>click arrows and hotspots to explore</li>\n    </ul>\n    <ul class="rotating">\n    </ul>\n</div>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
+__p+='';
+ if ( remix.remix ) { 
+;__p+='\n\n<div class="loader-remix-meta" class="'+
+( token_class )+
+'">\n\n    <div class="column project-current">\n        <div class="title">a remix by</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
+( user.thumbnail_url )+
+');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
+( user.display_name )+
+'</div>\n    </div>\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient1"></div>\n    </div>\n\n    <div class="column project-parent">\n        <div class="title">via</div>\n        <div class="user-token user-token-medium" style="\n            background-image: url('+
+( remix.parent.user.thumbnail_url )+
+');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
+( remix.parent.user.display_name )+
+'</div>\n    </div>\n\n    ';
+ if ( remix.parent.id != remix.root.id ) { 
+;__p+='\n\n        <div class="column column-arrow">\n            <div class="remix-arrow gradient2"></div>\n        </div>\n\n        <div class="column project-root">\n            <div class="title">started by</div>\n            <div class="user-token user-token-medium" style="\n                background-image: url('+
+( remix.root.user.thumbnail_url )+
+');\n                background-size: cover;\n                background-position: center;\n            "></div>\n            <div class="username">'+
+( remix.root.user.display_name )+
+'</div>\n        </div>\n\n    ';
+ } 
+;__p+='\n</div>\n\n';
+ } 
+;__p+='\n\n<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n        <li>click arrows and hotspots to explore</li>\n    </ul>\n    <ul class="rotating">\n    </ul>\n</div>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
 ( cover_image )+
 ');\n        background-position: 50% 50%;\n        background-repeat: no-repeat no-repeat;\n        background-attachment: fixed;\n        -webkit-background-size: cover;\n        -moz-background-size: cover;\n        -o-background-size: cover;\n        background-size: cover;\n    "\n></div>\n<img class="bg-preload" src="'+
 ( cover_image )+
@@ -457,7 +479,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
@@ -469,7 +491,11 @@ __p+='\n';
 ( path )+
 ''+
 ( id )+
-'/remix" data-bypass="true" class="btnz btn-remix"><i class="icon-random"></i> remix</a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
+'/remix" data-bypass="true" class="btnz btn-remix" ';
+ if (window!=window.top ) { 
+;__p+=' target="blank" ';
+ } 
+;__p+='><i class="icon-random"></i> remix</a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
@@ -36287,7 +36313,7 @@ function( app, PageCollection, Layers ) {
         _loadPages: function() {
             var pageArray = _.map( this.get("sequences")[0].frames, function( pageId ) {
                 return _.find( this.get("frames"), function( page ) {
-                    return page.id == pageId
+                    return page.id == pageId;
                 });
             }, this );
 
@@ -36954,7 +36980,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
             
             this.projects.each(function( project ) {
                 project.pages.each(function( page ) {
-                    pagesArray.push( page )
+                    pagesArray.push( page );
                 });
             });
 
@@ -38299,9 +38325,15 @@ function( app, Backbone, Spinner ) {
 
         serialize: function() {
             if ( this.model.zeega.getCurrentProject() ) {
-                return _.extend({},
+                var p = this.model.zeega.getCurrentProject();
+                var r = p.get("remix");
+
+                return _.extend({
+                        token_class: r.remix && r.parent.id == r.root.id ? "two-up":
+                                        r.remix ? "three-up" : ""
+                    },
                     app.metadata,
-                    this.model.zeega.getCurrentProject().toJSON()
+                    p.toJSON()
                 );
             }
         },
@@ -38572,7 +38604,7 @@ function( app, CitationView, Backbone ) {
         toggleMute: function(){
             var soundtrack = this.model.zeega.getSoundtrack();
 
-            console.log( soundtrack.visual.getAudio().paused )
+            console.log( soundtrack.visual.getAudio().paused );
 
             if ( soundtrack.visual.getAudio().paused ) {
                 this.$(".pp-btn").addClass("pause");
@@ -38964,7 +38996,7 @@ function(app, Backbone) {
         serialize: function() {
             if ( this.isRemixPage() && this.model.zeega.getNextPage() ) {
                 return _.extend({
-                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        path: "http:" + app.metadata.hostname + app.metadata.directory
                     },
                     this.model.zeega.getCurrentProject().toJSON()
                 );

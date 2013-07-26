@@ -117,7 +117,7 @@ function( app, CitationView, Backbone ) {
         toggleMute: function(){
             var soundtrack = this.model.zeega.getSoundtrack();
 
-            console.log( soundtrack.visual.getAudio().paused )
+            console.log( soundtrack.visual.getAudio().paused );
 
             if ( soundtrack.visual.getAudio().paused ) {
                 this.$(".pp-btn").addClass("pause");
