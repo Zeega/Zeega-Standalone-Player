@@ -29,9 +29,15 @@ function( app, Backbone, Spinner ) {
 
         serialize: function() {
             if ( this.model.zeega.getCurrentProject() ) {
-                return _.extend({},
+                var p = this.model.zeega.getCurrentProject();
+                var r = p.get("remix");
+
+                return _.extend({
+                        token_class: r.remix && r.parent.id == r.root.id ? "two-up":
+                                        r.remix ? "three-up" : ""
+                    },
                     app.metadata,
-                    this.model.zeega.getCurrentProject().toJSON()
+                    p.toJSON()
                 );
             }
         },
