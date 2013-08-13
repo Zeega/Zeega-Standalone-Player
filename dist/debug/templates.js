@@ -25,29 +25,21 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
  _.each(projects, function( project ) { 
-;__p+='\n    <article style="background-image: url('+
-(project.cover_image )+
-');" >\n            <div class="info-overlay">\n                <div class="left-column">\n                  <a data-bypass="true" href="'+
-(path )+
-'profile/'+
-(project.user.id )+
-'" >\n                    <div class="profile-token" style="background-image: url('+
-( project.user.thumbnail_url )+
-');"></div>\n                   </a>\n                </div>\n                <div class="right-column">\n                  <h1 class = "caption">'+
-( project.title )+
-'</h1>\n                  \n                  <div class="profile-name">\n                    <a data-bypass="true" href="'+
-(path )+
-'profile/'+
-(project.user.id)+
-'" >\n                      '+
+;__p+='\n    <div class="suggested-zeega">\n\n        <div class="top">'+
 (project.user.display_name)+
-'\n                    </a>\n                   \n                  </div>\n                 \n                </div>\n                  \n            \n            </div>\n            <a href="'+
+'</div>\n\n        <a href="'+
 (path )+
 ''+
 (project.id )+
-'" class="play-next" data-id="'+
+'"\n                class="middle zeega-thumb play-next"\n                data-id="'+
 (project.id )+
-'" data-bypass="true"></a>\n    </article>\n';
+'"\n                data-bypass="true"\n                style="background-image: url('+
+(project.cover_image )+
+');">\n\n            <div class="profile-token"\n                    style="background-image: url('+
+( project.user.thumbnail_url )+
+');\n                            background-size: cover;\n                            background-position: center;"></div>\n            <span class="playbutton"></span>\n        </a>\n\n        <div class="bottom">'+
+( project.title )+
+'</div>\n    </div>\n';
  }); 
 ;__p+='\n\n</div>';
 }
@@ -157,7 +149,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random"></i> remix</a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
+;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
@@ -319,7 +311,7 @@ __p+='<audio id="audio-el-'+
 ( id )+
 '" src="'+
 ( attr.uri )+
-'" loop preload ></audio>';
+'" loop ></audio>';
 }
 return __p;
 };

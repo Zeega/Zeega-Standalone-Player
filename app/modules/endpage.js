@@ -44,12 +44,21 @@ function(app, Backbone) {
             }
         },
         endPageEnter: function() {
-            if ( !this.model.zeega.getNextPage() ) this.show();
+            if ( !this.model.zeega.getNextPage() ) {
+                this.show();
+                $(".btn-remix").addClass("remix-endpage");
+                $(".btn-remix i").addClass("icon-white");
+                $(".btn-remix .content").text("remix this Zeega");
+            }
         },
 
         endPageExit: function() {
             this.hide();
+            $(".btn-remix").removeClass("remix-endpage");
+            $(".btn-remix i").removeClass("icon-white");
+            $(".btn-remix .content").text("remix");
         },
+
         show: function(){
             this.$el.fadeIn("fast");
             if( !this.viewed ){

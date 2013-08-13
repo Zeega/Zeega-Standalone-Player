@@ -64,6 +64,30 @@
                     background-image: url("../img/glyphicons-halflings-white.png");
                 }
             }
+
+            &.btn-remix {
+                transition: all 0.5s;
+                min-width: 52px;
+            }
+
+            &.remix-endpage {
+                background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,0,102,1)), color-stop(100%,rgba(66,255,251,1)));
+                width: 300px;
+                border-color: white;
+                color: white;
+                min-width: 125px;
+
+                transition: all 0.5s;
+
+                i {
+                    opacity: 1;
+                }
+
+                &:hover {
+                    transition: all 0.5s;
+                    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,0,102,1)), color-stop(100%,rgba(255,255,0,1)));
+                }
+            }
         }
     }
 

@@ -2904,6 +2904,25 @@ a:active {
   opacity: 1;
   background-image: url("../img/glyphicons-halflings-white.png");
 }
+.ZEEGA-player-menu-bar .menu-right .btnz.btn-remix {
+  transition: all 0.5s;
+  min-width: 52px;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz.remix-endpage {
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #42fffb));
+  width: 300px;
+  border-color: white;
+  color: white;
+  min-width: 125px;
+  transition: all 0.5s;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz.remix-endpage i {
+  opacity: 1;
+}
+.ZEEGA-player-menu-bar .menu-right .btnz.remix-endpage:hover {
+  transition: all 0.5s;
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #ffff00));
+}
 .ZEEGA-player-menu-bar .social-share-icon {
   opacity: 0.8;
   transition: opacity 0.5s;
@@ -3010,7 +3029,7 @@ a:active {
 .ZEEGA-end-page h2 {
   font-family: "futura", sans-serif;
   color: white;
-  text-align: center;
+  text-align: left;
   font-size: 2em;
   margin-bottom: 20px;
 }
@@ -3018,96 +3037,68 @@ a:active {
   margin: -117px auto 0 auto;
   width: 620px;
 }
-.ZEEGA-end-page article:nth-child(2) {
+.ZEEGA-end-page .suggested-zeega {
+  float: left;
+  font-size: 11px;
+  color: white;
+  width: 300px;
+}
+.ZEEGA-end-page .suggested-zeega:nth-child(2) {
   margin-right: 20px;
 }
-.ZEEGA-end-page article {
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  background-color: white;
-  background-image: url(../img/default_project_cover.png);
-  width: 300px;
-  height: 200px;
-  outline: 1px solid rgba(255, 255, 255, 0.6);
+.ZEEGA-end-page .suggested-zeega .top {
+  margin-left: 62px;
   position: relative;
-  float: left;
+  top: -5px;
 }
-.ZEEGA-end-page article .info-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  overflow-x: hidden;
-  padding: 10px;
-  border-radius: 0 0 2px 2px;
-  color: white;
-  text-shadow: rgba(0, 0, 0, 0.498039) 2px 2px 12px;
-}
-.ZEEGA-end-page article .info-overlay .left-column {
-  float: left;
-  margin-right: 10px;
-}
-.ZEEGA-end-page article .info-overlay .left-column .profile-token {
+.ZEEGA-end-page .suggested-zeega .zeega-thumb {
+  background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  border-radius: 28px;
-  height: 40px;
-  width: 40px;
-  overflow: hidden;
-  float: left;
-  border: 3px solid orangered;
-}
-.ZEEGA-end-page article .info-overlay .right-column {
-  height: 46px;
-  width: 200px;
+  display: block;
+  height: 196px;
+  border: 2px solid white;
   position: relative;
-  float: left;
+  border-radius: 4px;
 }
-.ZEEGA-end-page article .info-overlay .right-column .profile-name {
-  font-size: 0.7em;
+.ZEEGA-end-page .suggested-zeega .zeega-thumb .profile-token {
+  border-color: white;
   position: absolute;
-  width: 100%;
-  bottom: 0;
+  top: -22px;
+  left: 10px;
 }
-.ZEEGA-end-page article .info-overlay .right-column .profile-name a {
-  text-decoration: none;
-  color: orangered;
+.ZEEGA-end-page .suggested-zeega .zeega-thumb:hover {
+  border-color: orangered;
 }
-.ZEEGA-end-page article .info-overlay .right-column .profile-name .zeega-views {
-  padding-left: 10px;
-  display: none;
+.ZEEGA-end-page .suggested-zeega .zeega-thumb:hover .profile-token {
+  border-color: orangered;
 }
-.ZEEGA-end-page article .info-overlay .right-column h1 {
-  font-size: 0.7em;
-  line-height: .85em;
-  margin: 0;
-}
-.ZEEGA-end-page article .play-next {
+.ZEEGA-end-page .suggested-zeega .zeega-thumb .playbutton {
   opacity: 0.8;
-  width: 100px;
-  height: 54px;
+  width: 50px;
+  height: 50px;
   display: block;
   top: 40px;
   position: absolute;
   left: 0;
   right: 0;
+  top: 0;
+  bottom: 0;
   margin: auto;
-  background: rgba(0, 0, 0, 0.5);
   border-radius: 50px;
   padding: 5px 5px 3px 5px;
-  background-image: url(../img/start-button.png);
+  background-image: url(../img/playbutton.png);
   background-position: center;
   background-size: 93%;
   background-repeat: no-repeat;
 }
-.ZEEGA-end-page article .play-next:hover {
+.ZEEGA-end-page .suggested-zeega .zeega-thumb .playbutton:hover {
   opacity: 1;
+}
+.ZEEGA-end-page .suggested-zeega .bottom {
+  padding: 10px;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  margin-top: 3px;
 }
 .ZEEGA-remix-endpage {
   display: block;

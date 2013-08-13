@@ -27,7 +27,7 @@
     h2 {
         font-family: "futura", sans-serif;
         color:white;
-        text-align:center;
+        text-align: left;
         font-size: 2em;
         margin-bottom: 20px;
 
@@ -38,100 +38,79 @@
         width: 620px;
     }
 
-    article:nth-child(2){
-        margin-right:20px;
-    }
 
-    article {
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        background-size: cover;
-        background-color: white;
-        background-image: url(../img/default_project_cover.png);
+
+
+    .suggested-zeega {
+        float: left;
+        font-size: 11px;
+        color: white;
         width: 300px;
-        height: 200px;
-        outline: 1px solid rgba(255,255,255,0.6);
-        position: relative;
-        float:left;
 
-         .info-overlay{
-
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.5);
-            overflow-x:hidden;
-            padding: 10px;
-            border-radius: 0 0 2px 2px;
-            color: white;
-            text-shadow: rgba(0, 0, 0, 0.498039) 2px 2px 12px;
-
-            .left-column{
-                float:left;
-                margin-right: 10px;
-                .profile-token{
-                    background-position: center;
-                    background-repeat: no-repeat;
-                    -webkit-background-size: cover;
-                    -moz-background-size: cover;
-                    -o-background-size: cover;
-                    background-size: cover;
-                    border-radius: 28px;
-                    height: 40px;
-                    width: 40px;
-                    overflow: hidden;
-                    float: left;
-                    border: 3px solid orangered;
-                }
-            }
-            .right-column{
-                height: 46px;
-                width: 200px;
-                position: relative;
-                float:left;
-                
-                .profile-name{
-                    font-size: 0.7em;
-                    position: absolute;
-                    width: 100%;
-                    bottom: 0;
-                    a{
-                        text-decoration: none;
-                        color: orangered;
-                    }
-                    .zeega-views{
-                        padding-left: 10px;
-                        display: none;
-                    }
-                }    
-                h1{
-                    font-size: 0.7em;
-                    line-height: .85em;
-                    margin: 0;
-                }
-            }
+        &:nth-child(2) {
+            margin-right: 20px;
         }
-        .play-next{
-            opacity:0.8;
-            width: 100px;
-            height: 54px;
-            display: block;
-            top: 40px;
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: auto;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 50px;
-            padding: 5px 5px 3px 5px;
-            background-image: url(../img/start-button.png);
+
+        .top {
+            margin-left: 62px;
+            position: relative;
+            top: -5px;
+        }
+
+        .zeega-thumb {
+            background-size: cover;
             background-position: center;
-            background-size: 93%;
-            background-repeat: no-repeat;
-            &:hover{
-                opacity:1;
+            display: block;
+            height: 196px;
+            border: 2px solid white;
+            position: relative;
+            border-radius: 4px;
+
+            .profile-token {
+                border-color: white;
+                position: absolute;
+                top: -22px;
+                left: 10px;
+            }
+
+            &:hover {
+                border-color: orangered;
+                .profile-token {
+                    border-color: orangered;
+                }
+            }
+
+            .playbutton{
+                opacity:0.8;
+                width: 50px;
+                height: 50px;
+                display: block;
+                top: 40px;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                border-radius: 50px;
+                padding: 5px 5px 3px 5px;
+                background-image: url(../img/playbutton.png);
+                background-position: center;
+                background-size: 93%;
+                background-repeat: no-repeat;
+                &:hover{
+                    opacity:1;
+                }
             }
         }
+
+        .bottom {
+            padding: 10px;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            margin-top: 3px;
+        }
+
     }
+
 }
