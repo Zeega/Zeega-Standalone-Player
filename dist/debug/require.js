@@ -37048,6 +37048,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
     return app.Backbone.Model.extend({
 
         projects: null,
+        waiting: false,
 
         defaults: {
             mode: "editor",
@@ -37234,11 +37235,14 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         preloadNextZeega: function() {
             var remixData = this.getCurrentProject().getRemixData();
 
-            this.waiting = true;
+console.log("PRELOAD:", this.waiting, remixData.remix, this.projects.get( remixData.parent.id ),remixData.parent.id, this.projects )
             // only preload if the project does not already exist
-            if ( remixData.remix && !this.projects.get( remixData.parent.id ) && this.waiting ) {
+            if ( remixData.remix && !this.projects.get( remixData.parent.id ) && !this.waiting ) {
                 var projectUrl = "http:" + app.metadata.hostname + app.metadata.directory +'api/projects/' + remixData.parent.id;
 
+                this.waiting = true;
+
+console.log("preloading next!!")
                 this.emit("project:fetching");
 
                 $.getJSON( projectUrl, function( data ) {
@@ -38351,6 +38355,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
         preloadPage: function( page ) {
             var nextPage = this.zeega.getNextPage( page );
 
+            this.zeega.preloadNextZeega();
             clearTimeout( this.preloadTimer );
 
             page.preload();
@@ -38362,8 +38367,6 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                     
                     nextPage.preload();
                     nextPage = this.zeega.getNextPage( nextPage );
-                } else {
-                    this.zeega.preloadNextZeega();
                 }
             }
 
