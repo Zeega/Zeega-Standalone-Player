@@ -2351,6 +2351,42 @@ table {
 .icon-fullscreen {
   background-position: -456px -144px;
 }
+.user-token {
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  border-radius: 28px;
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  border: 3px solid orangered;
+}
+.user-token.token-medium {
+  height: 40px;
+  width: 40px;
+  border: 3px solid orangered;
+}
+.user-token.token-small {
+  height: 23px;
+  width: 23px;
+  border: 2px solid;
+  border-color: #444;
+  transition: border-color 0.5s;
+  -webkit-transition: border-color 0.5s;
+}
+.user-token.token-small:hover {
+  border-color: orangered;
+  transition: border-color 0.5s;
+  -webkit-transition: border-color 0.5s;
+}
+.user-token.token-tiny {
+  height: 10px;
+  width: 10px;
+  border: 2px solid #444;
+}
 html {
   background: black;
   font-family: 'Helvetica', sans-serif;
@@ -2361,6 +2397,7 @@ html {
   position: absolute;
   z-index: 10;
   top: 0;
+  overflow: hidden;
 }
 #main #overlays {
   background: none !important;
@@ -2679,12 +2716,15 @@ a:active {
 }
 .ZEEGA-player-citations {
   bottom: 0;
-  padding: 10px 0;
-  pointer-events: none;
   position: absolute;
   width: 100%;
   z-index: 11;
   pointer-events: auto;
+}
+.ZEEGA-player-citations:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 .ZEEGA-player-citations a {
   cursor: pointer;
@@ -2757,6 +2797,114 @@ a:active {
 }
 .ZEEGA-player-citations .ZEEGA-home img {
   width: 100%;
+}
+.remix-meta {
+  position: relative;
+}
+.remix-meta:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.remix-meta .remix-tab {
+  background-image: url(../img/remix-corner.png);
+  height: 75px;
+  width: 75px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  float: left;
+  opacity: 0.8;
+}
+.remix-meta .remix-trail {
+  position: absolute;
+  bottom: 5px;
+  margin-left: 75px;
+}
+.ZEEGA-chrome-metablock {
+  color: white;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  border-top: 1px solid #222;
+}
+.ZEEGA-chrome-metablock a {
+  color: orangered;
+}
+.ZEEGA-chrome-metablock .meta-inner {
+  padding: 10px 20px;
+}
+.ZEEGA-chrome-metablock .meta-inner:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.ZEEGA-chrome-metablock .left-col {
+  float: left;
+  margin-right: 20px;
+}
+.ZEEGA-chrome-metablock .left-col:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.ZEEGA-chrome-metablock .right-col {
+  float: left;
+  width: 300px;
+  min-height: 20px;
+}
+.ZEEGA-chrome-metablock .right-col .username {
+  font-size: 11px;
+  position: absolute;
+  bottom: 10px;
+}
+.ZEEGA-chrome-metablock .right-col .username .zeega-views {
+  opacity: 0.75;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+}
+.ZEEGA-chrome-metablock .right-col .username .zeega-views i {
+  position: relative;
+  top: -2px;
+}
+.ZEEGA-chrome-metablock .right-col .username .zeega-views:hover {
+  opacity: 1;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+}
+.ZEEGA-chrome-metablock .right-col .caption {
+  line-height: 1.1em;
+  font-size: 13px;
+  word-wrap: break-word;
+}
+.ZEEGA-chrome-metablock .favorite {
+  float: left;
+  display: none;
+}
+.ZEEGA-chrome-metablock .favorite .btnz {
+  background: transparent;
+  border: 1px solid #666;
+  box-shadow: none;
+  padding: 5px 20px;
+  bottom: 10px;
+  position: absolute;
+  color: #ddd;
+}
+.ZEEGA-chrome-metablock .favorite .btnz:hover {
+  background-color: orangered;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+.ZEEGA-chrome-metablock .favorite .btnz.favorited {
+  background-color: orangered;
+  background-image: none;
+}
+.ZEEGA-chrome-metablock .citations {
+  float: right;
+}
+.ZEEGA-chrome-metablock .citations li {
+  float: right;
+  margin-right: 5px;
 }
 .ZEEGA-loader-overlay {
   height: 100%;
@@ -3231,92 +3379,6 @@ a:active {
 }
 .profile-token img {
   width: 100%;
-}
-.ZEEGA-chrome-metablock {
-  color: white;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-  border-top: 1px solid #222;
-}
-.ZEEGA-chrome-metablock a {
-  color: orangered;
-}
-.ZEEGA-chrome-metablock .meta-inner {
-  padding: 10px 20px;
-}
-.ZEEGA-chrome-metablock .meta-inner:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.ZEEGA-chrome-metablock .left-col {
-  float: left;
-  margin-right: 20px;
-}
-.ZEEGA-chrome-metablock .left-col:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.ZEEGA-chrome-metablock .right-col {
-  float: left;
-  width: 300px;
-  min-height: 20px;
-}
-.ZEEGA-chrome-metablock .right-col .username {
-  font-size: 11px;
-  position: absolute;
-  bottom: 10px;
-}
-.ZEEGA-chrome-metablock .right-col .username .zeega-views {
-  opacity: 0.75;
-  transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
-}
-.ZEEGA-chrome-metablock .right-col .username .zeega-views i {
-  position: relative;
-  top: -2px;
-}
-.ZEEGA-chrome-metablock .right-col .username .zeega-views:hover {
-  opacity: 1;
-  transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
-}
-.ZEEGA-chrome-metablock .right-col .caption {
-  line-height: 1.1em;
-  font-size: 13px;
-  word-wrap: break-word;
-}
-.ZEEGA-chrome-metablock .favorite {
-  float: left;
-  display: none;
-}
-.ZEEGA-chrome-metablock .favorite .btnz {
-  background: transparent;
-  border: 1px solid #666;
-  box-shadow: none;
-  padding: 5px 20px;
-  bottom: 10px;
-  position: absolute;
-  color: #ddd;
-}
-.ZEEGA-chrome-metablock .favorite .btnz:hover {
-  background-color: orangered;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-}
-.ZEEGA-chrome-metablock .favorite .btnz.favorited {
-  background-color: orangered;
-  background-image: none;
-}
-.ZEEGA-chrome-metablock .citations {
-  float: right;
-}
-.ZEEGA-chrome-metablock .citations li {
-  float: right;
-  margin-right: 5px;
 }
 .ZEEGA-notices {
   position: absolute;

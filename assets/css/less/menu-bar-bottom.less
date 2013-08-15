@@ -1,11 +1,10 @@
 .ZEEGA-player-citations {
     bottom: 0;
-    padding: 10px 0;
-    pointer-events: none;
     position: absolute;
     width: 100%;
     z-index: 11;
     pointer-events: auto;
+    .clearfix;
 
     a {
         cursor: pointer;
@@ -84,6 +83,115 @@
         }
         img {
             width: 100%;
+        }
+    }
+}
+
+.remix-meta {
+    position: relative;
+    .clearfix;
+    .remix-tab {
+        background-image: url(../img/remix-corner.png);
+        height: 75px;
+        width: 75px;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        float: left;
+        opacity: 0.8;
+    }
+    .remix-trail {
+        position: absolute;
+        bottom: 5px;
+        margin-left: 75px;
+    }
+}
+
+.ZEEGA-chrome-metablock {
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1;
+    border-top: 1px solid #222;
+
+    a {
+        color: orangered;
+    }
+    
+    .meta-inner {
+        padding: 10px 20px;
+        .clearfix;
+    }
+
+    .left-col {
+        .clearfix;
+        float:left;
+        margin-right: 20px
+    }
+
+    .right-col {
+        float: left;
+        width: 300px;
+        min-height: 20px;
+
+        .username {
+            font-size: 11px;
+            position: absolute;
+            bottom: 10px;
+
+            .zeega-views {
+                opacity: 0.75;
+                .transition( opacity, 0.5s );
+
+                i {
+                    position: relative;
+                    top: -2px;
+                }
+
+                &:hover {
+                    opacity: 1;
+                    .transition( opacity, 0.5s );
+                }
+            }
+        }
+        .caption {
+            line-height: 1.1em;
+            font-size: 13px;
+            word-wrap: break-word;
+        }
+    }
+
+    .favorite {
+        float:left;
+        display: none;
+
+        .btnz{
+            background: transparent;
+            border: 1px solid #666;
+            box-shadow: none;
+            padding: 5px 20px;
+            bottom: 10px;
+            position: absolute;
+            color: #ddd;
+
+            &:hover{
+                background-color: orangered;
+                box-shadow: 0 0 15px rgba(255,255,255,0.5);
+            }
+            &.favorited{
+                
+                background-color: orangered;
+                background-image:none;
+            }
+        }
+    }
+
+    .citations {
+        float: right;
+        li {
+            float: right;
+            margin-right: 5px;
         }
     }
 }

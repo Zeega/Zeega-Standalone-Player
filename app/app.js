@@ -17,6 +17,18 @@ function( $, _, Backbone, State, Spinner ) {
         root: "/",
         metadata: $("meta[name=zeega]").data(),
 
+        getWebRoot: function() {
+            return "http:" + this.metadata.hostname + this.metadata.directory;
+        },
+
+        getApi: function() {
+            return this.getWebRoot() + "api/";
+        },
+
+        getUserId: function(){
+            return this.metadata.userId;
+        },
+
       /*
         app.state stores information on the current state of the application
       */

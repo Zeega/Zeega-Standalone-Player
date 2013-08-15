@@ -1,11 +1,12 @@
 define([
     "app",
     "modules/citation.view",
+    "modules/remix-heads.collection",
     // Libs
     "backbone"
 ],
 
-function( app, CitationView, Backbone ) {
+function( app, CitationView, RemixHeadsCollection, Backbone ) {
     
     return Backbone.View.extend({
         
@@ -20,8 +21,8 @@ function( app, CitationView, Backbone ) {
         className: "ZEEGA-player-citations",
 
         serialize: function() {
-
             if ( this.model.zeega ) {
+                console.log("remixxxx", this.model.zeega.getCurrentProject())
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites()
@@ -33,9 +34,10 @@ function( app, CitationView, Backbone ) {
         },
 
         initialize: function() {
-            /* update the arrow state whenever a frame is rendered */
+
+            console.log("PATH:", app.player.zeega.getRemixPath() );
+
             this.model.on("page:focus", this.updateCitations, this );
-            // this.model.on("data_loaded", this.render, this);
             this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );
@@ -117,8 +119,6 @@ function( app, CitationView, Backbone ) {
         toggleMute: function(){
             var soundtrack = this.model.zeega.getSoundtrack();
 
-            console.log( soundtrack.visual.getAudio().paused );
-
             if ( soundtrack.visual.getAudio().paused ) {
                 this.$(".pp-btn").addClass("pause");
                 soundtrack.play();
@@ -142,7 +142,8 @@ function( app, CitationView, Backbone ) {
                 this.timer = setTimeout(function(){
                     if ( !this.hover && app.player.state != "paused" ) {
                         this.visible = false;
-                        this.$el.fadeOut();
+                        this.$el.animate({ bottom: ( -1 - this.$(".ZEEGA-chrome-metablock").height() ) + "px" }, 500 );
+                        // this.$(".ZEEGA-chrome-metablock").hide("blind",{direction:"vertical"},500);
                     }
                 }.bind( this ), fadeOutAfter);
             }
@@ -160,7 +161,8 @@ function( app, CitationView, Backbone ) {
             if ( this.timer ) {
                 clearTimeout( this.timer );
             }
-            this.$el.fadeIn();
+            this.$el.animate({ bottom: 0 }, 500 );
+            // this.$(".ZEEGA-chrome-metablock").show("blind",{direction:"vertical"},500);
         },
 
         onMouseenter: function() {
