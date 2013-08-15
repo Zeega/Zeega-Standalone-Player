@@ -83,7 +83,21 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
+__p+='';
+ if( remix.remix ) { 
+;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        <li>\n            <a class="profile-link" href="';
+ path 
+;__p+='profile/'+
+( userId )+
+'" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' data-bypass="true">\n                <div class="user-token token-small"\n                    style="\n                        background-image: url('+
+( user.thumbnail_url )+
+');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n    </ul>\n</div>\n\n';
+ } 
+;__p+='\n\n<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
@@ -127,7 +141,7 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='\n';
  if ( show_chrome ) { 
-;__p+='\n\n<a href="'+
+;__p+='\n\n<a class="tab-wrapper" href="'+
 ( path )+
 '" ';
  if (window!=window.top ) { 
@@ -141,7 +155,7 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n        <li>\n            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        </li>\n        <li>\n            <a href="'+
+;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n        <li>\n            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        </li>\n\n        <!--\n        <li>\n            <a href="'+
 ( path )+
 ''+
 ( id )+
@@ -149,7 +163,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
+;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    -->\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
@@ -375,15 +389,7 @@ __p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</
 ( attr.content )+
 '</textarea>\n            <select class="font-list" id="font-list-'+
 ( id )+
-'"></select>\n            <div class="textarea-info">max 140 characters</div>\n        </div>\n\n<!--\n        <div class="bottom-box clearfix">\n            <a href="#" class="link-page-open action ';
- if ( attr.to_frame ) { 
-;__p+='hide';
- } 
-;__p+='"><i class="icon-plus-sign"></i> link to page</a>\n\n            <div class="page-chooser-wrapper ';
- if ( !attr.to_frame ) { 
-;__p+='hide';
- } 
-;__p+='">\n                <a href="#" class="link-new-page"><i class="icon-plus icon-white"></i></br>New Page</a>\n                <div class="divider">or</div>\n                <ul class="page-chooser-list clearfix"></ul>\n                <a href="#" class="unlink-text action"><i class="icon-minus-sign"></i> remove link</a>\n            </div>\n        </div>\n-->\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="text-modal-save btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
+'"></select>\n            <div class="textarea-info">max 140 characters</div>\n        </div>\n\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="text-modal-save btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
 }
 return __p;
 };

@@ -421,7 +421,21 @@ return __p;
 this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
+__p+='';
+ if( remix.remix ) { 
+;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        <li>\n            <a class="profile-link" href="';
+ path 
+;__p+='profile/'+
+( userId )+
+'" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' data-bypass="true">\n                <div class="user-token token-small"\n                    style="\n                        background-image: url('+
+( user.thumbnail_url )+
+');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n    </ul>\n</div>\n\n';
+ } 
+;__p+='\n\n<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
@@ -465,7 +479,7 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='\n';
  if ( show_chrome ) { 
-;__p+='\n\n<a href="'+
+;__p+='\n\n<a class="tab-wrapper" href="'+
 ( path )+
 '" ';
  if (window!=window.top ) { 
@@ -479,7 +493,7 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n        <li>\n            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        </li>\n        <li>\n            <a href="'+
+;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n        <li>\n            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        </li>\n\n        <!--\n        <li>\n            <a href="'+
 ( path )+
 ''+
 ( id )+
@@ -487,7 +501,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
+;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    -->\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
@@ -713,15 +727,7 @@ __p+='<div class="modal-content">\n    <div class="modal-title">Edit your text</
 ( attr.content )+
 '</textarea>\n            <select class="font-list" id="font-list-'+
 ( id )+
-'"></select>\n            <div class="textarea-info">max 140 characters</div>\n        </div>\n\n<!--\n        <div class="bottom-box clearfix">\n            <a href="#" class="link-page-open action ';
- if ( attr.to_frame ) { 
-;__p+='hide';
- } 
-;__p+='"><i class="icon-plus-sign"></i> link to page</a>\n\n            <div class="page-chooser-wrapper ';
- if ( !attr.to_frame ) { 
-;__p+='hide';
- } 
-;__p+='">\n                <a href="#" class="link-new-page"><i class="icon-plus icon-white"></i></br>New Page</a>\n                <div class="divider">or</div>\n                <ul class="page-chooser-list clearfix"></ul>\n                <a href="#" class="unlink-text action"><i class="icon-minus-sign"></i> remove link</a>\n            </div>\n        </div>\n-->\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="text-modal-save btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
+'"></select>\n            <div class="textarea-info">max 140 characters</div>\n        </div>\n\n        <div class="bottom-chooser clearfix">\n            <a href="#" class="text-modal-save btnz btnz-submit">OK</a>\n        </div>\n    </div>\n</div>\n';
 }
 return __p;
 };
@@ -17121,6 +17127,18 @@ function( $, _, Backbone, State, Spinner ) {
         // The root path to run the application.
         root: "/",
         metadata: $("meta[name=zeega]").data(),
+
+        getWebRoot: function() {
+            return "http:" + this.metadata.hostname + this.metadata.directory;
+        },
+
+        getApi: function() {
+            return this.getWebRoot() + "api/";
+        },
+
+        getUserId: function(){
+            return this.metadata.userId;
+        },
 
       /*
         app.state stores information on the current state of the application
@@ -35327,32 +35345,6 @@ function( app ) {
             $("#main").addClass("modal");
             this.loadFonts();
             this.$("textarea").focus().select();
-            this.fillInPages();
-        },
-
-        fillInPages: function() {
-            app.status.get("currentSequence").frames.each(function( frame ) {
-                var fv = $("<li>"),
-                    bg = frame.get("thumbnail_url") === "" ? "black" :
-                        "url(" + frame.get("thumbnail_url") +") no-repeat center center";
-
-                fv.addClass("page")
-                    .data("id", frame.id )
-                    .css({
-                        background: bg,
-                        "-webkit-background-size": "cover"
-                    });
-
-                if ( app.status.get("currentFrame").id == frame.id ) {
-                    fv.addClass("inactive");
-                }
-
-                if ( this.model.getAttr("to_frame") == frame.id ) {
-                    fv.addClass("active");
-                }
-
-                this.$('.page-chooser-list').append( fv );
-            }, this );
         },
 
         events: {
@@ -35916,7 +35908,7 @@ function( app, Backbone, LayerCollection, Layers ) {
             }.bind( this ), 1000 );
 
             this.startThumbWorker = _.debounce(function() {
-                var worker = new Worker( app.webRoot + "js/helpers/thumbworker.js" );
+                var worker = new Worker( app.getWebRoot() + "js/helpers/thumbworker.js" );
             
                 worker.addEventListener("message", function(e) {
 
@@ -36535,6 +36527,18 @@ function( app, PageCollection, Layers, SequenceModel ) {
                 frames: frames,
                 layers: _.uniq( layers )
             });
+        },
+
+        getSimpleJSON: function() {
+            return _.pick(this.toJSON(),["cover_image", "user", "id"]);
+        },
+
+        getRemixParent: function() {
+
+        },
+
+        getRemixRoot: function() {
+
         },
 
         getFrame: function( frameID ) {
@@ -37213,6 +37217,10 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
             return this.getCurrentProject().get("remix").remix;
         },
 
+        isNew: function() {
+            return this.getCurrentProject().pages.length == 1 && this.getCurrentProject().pages.at(0).layers.length === 0;
+        },
+
         copyLayer: function( layer ) {
             if ( layer ) {
                 this.set("clipboard", layer );
@@ -37237,8 +37245,9 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
 
 // console.log("PRELOAD:", this.waiting, remixData.remix, this.projects.get( remixData.parent.id ),remixData.parent.id, this.projects )
             // only preload if the project does not already exist
+
             if ( remixData.remix && !this.projects.get( remixData.parent.id ) && !this.waiting ) {
-                var projectUrl = "http:" + app.metadata.hostname + app.metadata.directory +'api/projects/' + remixData.parent.id;
+                var projectUrl = app.getApi() + "projects/" + remixData.parent.id;
 
                 this.waiting = true;
 
@@ -37250,6 +37259,29 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                     this.waiting = false;
                     this.emit("project:fetch_success");
                 }.bind(this));
+            }
+        },
+
+        getRemixPath: function() {
+            var isComplete, path, temp;
+
+            path = [ this.projects.at(0).getSimpleJSON() ];
+
+            path = this.projects.map(function( project ) {
+                var remixObj = project.get("remix");
+
+                //isComplete = temp.parent.id == temp.root.id;
+project.getSimpleJSON();
+                // temp = project.get("remix");
+
+                return project.get("remix");
+            });
+
+            console.log("__path", path)
+
+            return {
+                complete: isComplete,
+                path: path
             }
         },
 
@@ -38734,14 +38766,27 @@ function(app, Backbone) {
     });
 
 });
+define('modules/remix-heads.collection',[
+    "app",
+    "backbone"
+],
+
+function( app, Backbone ) {
+    
+    return Backbone.Collection.extend({
+        
+    });
+
+});
 define('modules/menu-bar-bottom',[
     "app",
     "modules/citation.view",
+    "modules/remix-heads.collection",
     // Libs
     "backbone"
 ],
 
-function( app, CitationView, Backbone ) {
+function( app, CitationView, RemixHeadsCollection, Backbone ) {
     
     return Backbone.View.extend({
         
@@ -38756,8 +38801,8 @@ function( app, CitationView, Backbone ) {
         className: "ZEEGA-player-citations",
 
         serialize: function() {
-
             if ( this.model.zeega ) {
+                console.log("remixxxx", this.model.zeega.getCurrentProject())
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites()
@@ -38769,9 +38814,10 @@ function( app, CitationView, Backbone ) {
         },
 
         initialize: function() {
-            /* update the arrow state whenever a frame is rendered */
+
+            console.log("PATH:", app.player.zeega.getRemixPath() );
+
             this.model.on("page:focus", this.updateCitations, this );
-            // this.model.on("data_loaded", this.render, this);
             this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );
@@ -38853,8 +38899,6 @@ function( app, CitationView, Backbone ) {
         toggleMute: function(){
             var soundtrack = this.model.zeega.getSoundtrack();
 
-            console.log( soundtrack.visual.getAudio().paused );
-
             if ( soundtrack.visual.getAudio().paused ) {
                 this.$(".pp-btn").addClass("pause");
                 soundtrack.play();
@@ -38878,7 +38922,8 @@ function( app, CitationView, Backbone ) {
                 this.timer = setTimeout(function(){
                     if ( !this.hover && app.player.state != "paused" ) {
                         this.visible = false;
-                        this.$el.fadeOut();
+                        this.$el.animate({ bottom: ( -1 - this.$(".ZEEGA-chrome-metablock").height() ) + "px" }, 500 );
+                        // this.$(".ZEEGA-chrome-metablock").hide("blind",{direction:"vertical"},500);
                     }
                 }.bind( this ), fadeOutAfter);
             }
@@ -38896,7 +38941,8 @@ function( app, CitationView, Backbone ) {
             if ( this.timer ) {
                 clearTimeout( this.timer );
             }
-            this.$el.fadeIn();
+            this.$el.animate({ bottom: 0 }, 500 );
+            // this.$(".ZEEGA-chrome-metablock").show("blind",{direction:"vertical"},500);
         },
 
         onMouseenter: function() {
@@ -39085,16 +39131,14 @@ function(app, Backbone) {
             if( this.visible && this.sticky === false ) {
                 var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
 
-                if ( this.timer ) {
-                    clearTimeout( this.timer );
-                }
+                if ( this.timer ) clearTimeout( this.timer );
                 this.timer = setTimeout(function(){
                     if ( !this.hover && app.player.state != "paused" ) {
                         this.visible = false;
+                        // this.$(".ZEEGA-tab").hide("blind",{direction:"vertical"},500);
                         this.$el.fadeOut();
                     }
                 }.bind( this ), fadeOutAfter);
-                
             }
         },
 
@@ -39107,9 +39151,8 @@ function(app, Backbone) {
 
         show: function() {
             this.visible = true;
-            if ( this.timer ) {
-                clearTimeout( this.timer );
-            }
+            if ( this.timer ) clearTimeout( this.timer );
+            // this.$(".ZEEGA-tab").show("blind",{direction:"vertical"},500);
             this.$el.fadeIn();
         },
 
