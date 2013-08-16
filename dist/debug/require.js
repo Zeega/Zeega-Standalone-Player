@@ -38910,8 +38910,8 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
                 .show();
 
             this.$(".citation-soundtrack .citation-trackback")
-                .attr("href", soundtrack.get("attr").attribution_uri );
-
+                .attr("href", soundtrack.get("attr").attribution_uri )
+                .attr("target", "blank");
         },
 
         events: {
