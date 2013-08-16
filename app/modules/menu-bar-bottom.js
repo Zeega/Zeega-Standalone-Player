@@ -22,7 +22,6 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
 
         serialize: function() {
             if ( this.model.zeega ) {
-                console.log("remixxxx", this.model.zeega.getCurrentProject())
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites()
