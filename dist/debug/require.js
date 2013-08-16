@@ -34594,9 +34594,7 @@ function( app, _Layer, Visual ){
                 this.audio.addEventListener("canplay", function() {
                     this.model.state = "ready";
 
-                    this.persistentPlay();
-
-                    if ( this.playWhenReady ) this.onPlay();
+                    if ( this.playWhenReady ) this.persistentPlay();
                     else this.audio.pause();
                     this.onCanPlay();
                 }.bind( this ));
@@ -38621,7 +38619,6 @@ function( app, Backbone, Spinner ) {
     Loader.View = Backbone.View.extend({
 
         MIN_LOAD_TIME: 2000,
-        // MIN_LOAD_TIME: 0,
         loadTimer: null,
         playerCanplay: false,
         isReady: false,
