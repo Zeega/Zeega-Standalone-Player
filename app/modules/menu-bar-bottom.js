@@ -75,18 +75,20 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
 
             if ( soundtrack ) this.updateSoundtrackCitation( soundtrack );
 
-            this.$(".citations ul").empty();
-            page.layers.each(function( layer ) {
-                if ( _.contains(["Image"], layer.get("type")) ) {
-                    var citation = new CitationView({
-                        parent: this,
-                        model: layer
-                    });
+            if ( page && page.layers ) {
+                this.$(".citations ul").empty();
+                page.layers.each(function( layer ) {
+                    if ( _.contains(["Image"], layer.get("type")) ) {
+                        var citation = new CitationView({
+                            parent: this,
+                            model: layer
+                        });
 
-                    this.$(".citations ul").append(citation.el);
-                    citation.render();
-                }
-            }, this );
+                        this.$(".citations ul").append(citation.el);
+                        citation.render();
+                    }
+                }, this );
+            }
         },
 
         updateSoundtrackCitation: function( soundtrack ) {

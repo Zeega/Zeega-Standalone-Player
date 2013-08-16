@@ -91,8 +91,8 @@ function( app, Player, PlayerUI, Analytics ) {
             app.analytics = new Analytics();
 
             app.analytics.setGlobals({
-                projectId: app.player.project.get("id"),
-                projectPageCount: app.player.project.sequences.at(0).frames.length,
+                projectId: app.player.zeega.getCurrentProject().id,
+                projectPageCount: app.player.zeega.getCurrentProject().pages.length,
                 userId: app.metadata.userId,
                 userName: app.metadata.userName,
                 app: "player",
