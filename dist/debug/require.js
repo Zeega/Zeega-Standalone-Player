@@ -34534,7 +34534,7 @@ function( app, _Layer, Visual ){
             },
 
             onPlay: function() {
-                if( !this.model.state != "ready") this.playWhenReady = true;
+                if( this.model.state != "ready") this.playWhenReady = true;
                 if ( this.audio ) {
                     this.ended = false;
                     this.audio.play();
@@ -34593,7 +34593,11 @@ function( app, _Layer, Visual ){
                 this.audio.load();
                 this.audio.addEventListener("canplay", function() {
                     this.model.state = "ready";
-                    if( !this.playWhenReady ) this.audio.pause();
+
+                    this.persistentPlay();
+
+                    if ( this.playWhenReady ) this.onPlay();
+                    else this.audio.pause();
                     this.onCanPlay();
                 }.bind( this ));
             },
@@ -34607,6 +34611,17 @@ function( app, _Layer, Visual ){
 
             onVisualReady: function() {
 
+            },
+
+            persistentPlay: function() {
+                this.audio.addEventListener("play", function() {
+                    clearInterval( this.persistPlayInterval );
+                    this.audio.removeEventListener("play");
+                }.bind( this ));
+
+                this.persistPlayInterval = setInterval(function() {
+                    this.audio.play();
+                }.bind(this), 250 );
             },
 
             onCanPlay: function() {}
@@ -38606,6 +38621,7 @@ function( app, Backbone, Spinner ) {
     Loader.View = Backbone.View.extend({
 
         MIN_LOAD_TIME: 2000,
+        // MIN_LOAD_TIME: 0,
         loadTimer: null,
         playerCanplay: false,
         isReady: false,
