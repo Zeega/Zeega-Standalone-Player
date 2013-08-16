@@ -34,10 +34,7 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         },
 
         initialize: function() {
-
-            console.log("PATH:", app.player.zeega.getRemixPath() );
-
-            this.model.on("page:focus", this.updateCitations, this );
+            this.model.on("page:focus soundtrack:ready", this.updateCitations, this );
             this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );

@@ -49,10 +49,10 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, R
             if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
-
-                this.remixEndpage = new RemixEndpage.View({ model: app.player });
-                this.insertView("#overlays", this.remixEndpage );
             }
+
+            this.remixEndpage = new RemixEndpage.View({ model: app.player });
+            this.insertView("#overlays", this.remixEndpage );
             
             this.render();
 

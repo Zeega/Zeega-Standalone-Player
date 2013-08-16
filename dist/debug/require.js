@@ -34525,6 +34525,7 @@ function( app, _Layer, Visual ){
             audio: null,
             ended: false,
             playbackCount: 0,
+            playWhenReady: false,
 
             template: "audio/audio",
 
@@ -34533,6 +34534,7 @@ function( app, _Layer, Visual ){
             },
 
             onPlay: function() {
+                if( !this.model.state != "ready") this.playWhenReady = true;
                 if ( this.audio ) {
                     this.ended = false;
                     this.audio.play();
@@ -34591,6 +34593,7 @@ function( app, _Layer, Visual ){
                 this.audio.load();
                 this.audio.addEventListener("canplay", function() {
                     this.model.state = "ready";
+                    if( !this.playWhenReady ) this.audio.pause();
                     this.onCanPlay();
                 }.bind( this ));
             },
@@ -36503,6 +36506,16 @@ function( app, PageCollection, Layers, SequenceModel ) {
                 this.soundtrack.destroy();
             }
             
+        },
+
+        addPageByItem: function( item ) {
+            console.log("ADD PAGE BY ITEM", item.toJSON() );
+
+            $.post( app.getApi() + "projects/"+ this.id +"/sequences/"+ this.sequence.id +"/itemframes",
+                item.toJSON(),
+                function( response ) {
+                    console.log('get data', response)
+                });
         },
 
 
@@ -38814,10 +38827,7 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         },
 
         initialize: function() {
-
-            console.log("PATH:", app.player.zeega.getRemixPath() );
-
-            this.model.on("page:focus", this.updateCitations, this );
+            this.model.on("page:focus soundtrack:ready", this.updateCitations, this );
             this.model.on("pause", this.fadeIn, this );
 
             this.model.on("endpage_enter", this.endPageEnter, this );
@@ -39413,10 +39423,10 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, R
             if( app.showEndPage ){
                 this.endPage = new EndPage.View({ model: app.player });
                 this.insertView("#overlays", this.endPage );
-
-                this.remixEndpage = new RemixEndpage.View({ model: app.player });
-                this.insertView("#overlays", this.remixEndpage );
             }
+
+            this.remixEndpage = new RemixEndpage.View({ model: app.player });
+            this.insertView("#overlays", this.remixEndpage );
             
             this.render();
 
@@ -39694,7 +39704,7 @@ function( app, Player, PlayerUI, Analytics ) {
             the base layout contains the logic for the player skin (citations, ui, etc)
             */
             this.setContextVariables();
-            // this.initAnalytics();
+            this.initAnalytics();
             app.layout = new PlayerUI();
 
         },
@@ -39711,8 +39721,11 @@ function( app, Player, PlayerUI, Analytics ) {
             } catch ( err ) {
                 app.showEndPage = true;
             }
+        },
 
-            //detect context
+        initAnalytics: function() {
+            var context;
+                        //detect context
             if( window == window.top ) {
                 context = "web";
             } else if ( !app.showChrome ) {
@@ -39720,9 +39733,7 @@ function( app, Player, PlayerUI, Analytics ) {
             } else {
                 context = "embed";
             }
-        },
 
-        initAnalytics: function() {
             app.analytics = new Analytics();
 
             app.analytics.setGlobals({

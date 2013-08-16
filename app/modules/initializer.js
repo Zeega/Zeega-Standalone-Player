@@ -58,7 +58,7 @@ function( app, Player, PlayerUI, Analytics ) {
             the base layout contains the logic for the player skin (citations, ui, etc)
             */
             this.setContextVariables();
-            // this.initAnalytics();
+            this.initAnalytics();
             app.layout = new PlayerUI();
 
         },
@@ -75,8 +75,11 @@ function( app, Player, PlayerUI, Analytics ) {
             } catch ( err ) {
                 app.showEndPage = true;
             }
+        },
 
-            //detect context
+        initAnalytics: function() {
+            var context;
+                        //detect context
             if( window == window.top ) {
                 context = "web";
             } else if ( !app.showChrome ) {
@@ -84,9 +87,7 @@ function( app, Player, PlayerUI, Analytics ) {
             } else {
                 context = "embed";
             }
-        },
 
-        initAnalytics: function() {
             app.analytics = new Analytics();
 
             app.analytics.setGlobals({
