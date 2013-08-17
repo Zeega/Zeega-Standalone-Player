@@ -38630,8 +38630,11 @@ function( app, Backbone, Spinner ) {
             if( window != window.top ){
                 this.MIN_LOAD_TIME =0;
             }
-
-            this.model.once("player:canplay", this.onPlayerCanplay, this );
+            if ( this.model.ready ) {
+                this.onPlayerCanplay();
+            } else {
+                this.model.once("player:canplay", this.onPlayerCanplay, this );
+            }
         },
 
         serialize: function() {
