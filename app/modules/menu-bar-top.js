@@ -19,12 +19,12 @@ function(app, Backbone) {
 
         serialize: function() {
             var showChrome;
-
             if ( this.model.zeega ) {
                 return _.extend({
                         show_chrome: app.showChrome,
                         share_links: this.getShareLinks(),
-                        path: "http:" + app.metadata.hostname + app.metadata.directory
+                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        authenticated: app.metadata.loggedIn
                     },
                     this.model.zeega.projects.at(0).toJSON()
                 );

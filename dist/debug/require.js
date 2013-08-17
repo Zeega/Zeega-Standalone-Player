@@ -494,9 +494,9 @@ __p+='\n';
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
 ;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n       <li>  \n    \n    ';
- if ( favorite ) { 
+ if ( favorite && authenticated ) { 
 ;__p+='\n\n         <a href="#" class="btnz btn-favorite favorited"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        \n    ';
- } else { 
+ } else if ( authenticated) { 
 ;__p+='\n\n        <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n\n     ';
  } 
 ;__p+='\n\n    </li>\n\n        <!--\n        <li>\n            <a href="'+
@@ -39034,12 +39034,12 @@ function(app, Backbone) {
 
         serialize: function() {
             var showChrome;
-
             if ( this.model.zeega ) {
                 return _.extend({
                         show_chrome: app.showChrome,
                         share_links: this.getShareLinks(),
-                        path: "http:" + app.metadata.hostname + app.metadata.directory
+                        path: "http:" + app.metadata.hostname + app.metadata.directory,
+                        authenticated: app.metadata.loggedIn
                     },
                     this.model.zeega.projects.at(0).toJSON()
                 );

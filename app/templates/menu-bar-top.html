@@ -16,11 +16,11 @@
     <ul class="social-actions">
        <li>  
     
-    <% if ( favorite ) { %>
+    <% if ( favorite && authenticated ) { %>
 
          <a href="#" class="btnz btn-favorite favorited"><i class="icon-heart"></i> <span class="content">favorite</span></a>
         
-    <% } else { %>
+    <% } else if ( authenticated) { %>
 
         <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>
 
