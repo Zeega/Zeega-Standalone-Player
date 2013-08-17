@@ -14,9 +14,19 @@
 <div class="menu-right">
 
     <ul class="social-actions">
-        <li>
-            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>
-        </li>
+       <li>  
+    
+    <% if ( favorite ) { %>
+
+         <a href="#" class="btnz btn-favorite favorited"><i class="icon-heart"></i> <span class="content">favorite</span></a>
+        
+    <% } else { %>
+
+        <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>
+
+     <% } %>
+
+    </li>
 
         <!--
         <li>

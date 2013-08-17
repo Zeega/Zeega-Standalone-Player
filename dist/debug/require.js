@@ -493,7 +493,13 @@ __p+='\n';
  } 
 ;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
  } 
-;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n        <li>\n            <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        </li>\n\n        <!--\n        <li>\n            <a href="'+
+;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n       <li>  \n    \n    ';
+ if ( favorite ) { 
+;__p+='\n\n         <a href="#" class="btnz btn-favorite favorited"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n        \n    ';
+ } else { 
+;__p+='\n\n        <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n\n     ';
+ } 
+;__p+='\n\n    </li>\n\n        <!--\n        <li>\n            <a href="'+
 ( path )+
 ''+
 ( id )+
