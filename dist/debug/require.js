@@ -409,7 +409,7 @@ __p+='';
  } 
 ;__p+='\n</div>\n\n';
  } 
-;__p+='\n\n<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n        <li>click arrows and hotspots to explore</li>\n    </ul>\n    <ul class="rotating">\n    </ul>\n</div>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
+;__p+='\n\n<div class="ZEEGA-notices">\n    <ul class="sticky">\n        <li><i class="icon-headphones icon-white"></i> turn up volume</li>\n        <li>click arrows to explore</li>\n    </ul>\n    <ul class="rotating">\n    </ul>\n</div>\n\n<div class="ZEEGA-loader-bg-overlay"></div>\n<div class="ZEEGA-loader-bg"\n    style="\n        background: url('+
 ( cover_image )+
 ');\n        background-position: 50% 50%;\n        background-repeat: no-repeat no-repeat;\n        background-attachment: fixed;\n        -webkit-background-size: cover;\n        -moz-background-size: cover;\n        -o-background-size: cover;\n        background-size: cover;\n    "\n></div>\n<img class="bg-preload" src="'+
 ( cover_image )+
@@ -36479,9 +36479,9 @@ function( app, PageCollection, Layers, SequenceModel ) {
 
         _loadSoundtrack: function() {
             if ( this.get("_soundtrack") ) {
-                this.soundtrack = new Layers["Audio"]( _.extend( this.get("_soundtrack"), { type: "Audio" }) );
+                this.soundtrack = new Layers.Audio( _.extend( this.get("_soundtrack"), { type: "Audio" }) );
 
-                this.soundtrack.visual = new Layers["Audio"].Visual({
+                this.soundtrack.visual = new Layers.Audio.Visual({
                         model: this.soundtrack,
                         attributes: {
                             "data-id": this.get("_soundtrack").id
@@ -37308,18 +37308,16 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 var remixObj = project.get("remix");
 
                 //isComplete = temp.parent.id == temp.root.id;
-project.getSimpleJSON();
+                project.getSimpleJSON();
                 // temp = project.get("remix");
 
                 return project.get("remix");
             });
 
-            console.log("__path", path)
-
             return {
                 complete: isComplete,
                 path: path
-            }
+            };
         },
 
         _onDataLoaded: function( data ) {
@@ -38412,7 +38410,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                 this.state = "playing";
                 this.zeega.focusPage( page );
             } else {
-                this.playAndWaitForPageLoad( page )
+                this.playAndWaitForPageLoad( page );
             }
             this.preloadPage( page );
         },

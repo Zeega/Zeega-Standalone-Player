@@ -18,7 +18,7 @@ function( app, Backbone ) {
                     app.metadata,
                     this.model.zeega.getCurrentProject().toJSON()
                 );
-        },
+        }
 
     });
 
