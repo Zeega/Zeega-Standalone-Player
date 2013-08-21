@@ -36479,9 +36479,9 @@ function( app, PageCollection, Layers, SequenceModel ) {
 
         _loadSoundtrack: function() {
             if ( this.get("_soundtrack") ) {
-                this.soundtrack = new Layers.Audio( _.extend( this.get("_soundtrack"), { type: "Audio" }) );
+                this.soundtrack = new Layers["Audio"]( _.extend( this.get("_soundtrack"), { type: "Audio" }) );
 
-                this.soundtrack.visual = new Layers.Audio.Visual({
+                this.soundtrack.visual = new Layers["Audio"].Visual({
                         model: this.soundtrack,
                         attributes: {
                             "data-id": this.get("_soundtrack").id
@@ -37308,16 +37308,18 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 var remixObj = project.get("remix");
 
                 //isComplete = temp.parent.id == temp.root.id;
-                project.getSimpleJSON();
+project.getSimpleJSON();
                 // temp = project.get("remix");
 
                 return project.get("remix");
             });
 
+            console.log("__path", path)
+
             return {
                 complete: isComplete,
                 path: path
-            };
+            }
         },
 
         _onDataLoaded: function( data ) {
@@ -38410,7 +38412,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                 this.state = "playing";
                 this.zeega.focusPage( page );
             } else {
-                this.playAndWaitForPageLoad( page );
+                this.playAndWaitForPageLoad( page )
             }
             this.preloadPage( page );
         },
