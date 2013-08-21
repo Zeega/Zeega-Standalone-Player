@@ -161,7 +161,7 @@ __p+='\n';
  } else if ( authenticated) { 
 ;__p+='\n\n        <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n\n     ';
  } 
-;__p+='\n\n    </li>\n\n        <!--\n        <li>\n            <a href="'+
+;__p+='\n\n    </li>\n\n        \n        <li>\n            <a href="'+
 ( path )+
 ''+
 ( id )+
@@ -169,7 +169,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    -->\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
+;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    \n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
