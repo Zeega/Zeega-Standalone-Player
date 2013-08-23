@@ -2777,6 +2777,24 @@ a:active {
 .ZEEGA-player-citations .citation-soundtrack .play-pause .pp-btn:hover {
   opacity: 0.85;
 }
+.ZEEGA-player-citations .ZEEGA-fullscreen {
+  position: relative;
+  background-image: url(../img/fullscreen.png);
+  background-size: 45px;
+  background-repeat: no-repeat;
+  width: 45px;
+  height: 45px;
+  float: right;
+  margin-left: 10px;
+  opacity: 0.75;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+}
+.ZEEGA-player-citations .ZEEGA-fullscreen:hover {
+  opacity: 1;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+}
 .ZEEGA-player-citations .ZEEGA-home {
   position: relative;
   background-image: url(../img/restart.png);
@@ -2794,9 +2812,6 @@ a:active {
   opacity: 1;
   transition: opacity 0.5s;
   -webkit-transition: opacity 0.5s;
-}
-.ZEEGA-player-citations .ZEEGA-home img {
-  width: 100%;
 }
 .remix-meta {
   position: relative;
@@ -3348,6 +3363,33 @@ a:active {
   width: 75px;
   border-radius: 150px;
   border: 6px solid white;
+}
+.endpage-embed-inner {
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  width: 50%;
+  height: 100px;
+}
+.endpage-embed-inner .btnz {
+  width: 100%;
+  text-align: center;
+  font-size: 23px;
+  background-color: orangered;
+  text-shadow: 0 0 5px white;
+  color: white;
+  border: 2px solid white;
+}
+.endpage-embed-inner .btnz.watch-more {
+  background-color: aquamarine;
+  color: #333;
+  text-shadow: 0 0 5px #333;
+}
+.endpage-embed-inner .btnz.create-zeega {
+  background-color: orangered;
 }
 .pause-overlay {
   color: white;

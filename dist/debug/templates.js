@@ -155,7 +155,7 @@ __p+='';
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citation-soundtrack">\n            <a class="citation-trackback"><i class="itemz-soundcloud"></i></a>\n            <a href="#" class="play-pause"><i class="pp-btn pause"></i></a>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='</span>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-fullscreen"></a>\n\n        <div class="citation-soundtrack">\n            <a class="citation-trackback"><i class="itemz-soundcloud"></i></a>\n            <a href="#" class="play-pause"><i class="pp-btn pause"></i></a>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };

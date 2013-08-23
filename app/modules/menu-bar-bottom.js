@@ -24,7 +24,8 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
             if ( this.model.zeega ) {
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
-                    favorites: this.getFavorites()
+                    favorites: this.getFavorites(),
+                    isEmbed: app.isEmbed()
                 },
                     app.metadata,
                     this.model.zeega.getCurrentProject().toJSON()
@@ -111,7 +112,44 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
             "click .ZEEGA-home": "startOver",
             "click .favorite-btnz": "toggleFavorite",
             "click .profile-link": "onProfile",
-            "click .play-pause": "toggleMute"
+            "click .play-pause": "toggleMute",
+            "click .ZEEGA-fullscreen": "toggleFullscreen" 
+        },
+
+        fullscreen: false,
+
+        toggleFullscreen: function() {
+            if ( this.fullscreen ) {
+                this.exitFullscreen();
+            } else {
+                this.requestFullScreen( app.layout.el );
+            }
+        },
+
+        requestFullScreen: function(element) {
+            var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+            if (requestMethod) {
+                requestMethod.call(element);
+                this.fullscreen = true;
+            } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+                this.fullscreen = true;
+            }
+        },
+
+        exitFullscreen: function() {
+
+            if ( document.webkitCancelFullScreen ) {
+                document.webkitCancelFullScreen();
+            } else if ( document.cancelFullScreen ) {
+                document.cancelFullScreen();
+            } else if ( document.mozCancelFullScreen ) {
+                document.mozCancelFullScreen();
+            }
         },
 
         toggleMute: function(){
