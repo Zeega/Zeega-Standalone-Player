@@ -20,6 +20,30 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
+this["JST"]["app/templates/endpage-embed.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="endpage-embed-inner">\n    <a href="'+
+( path )+
+'@'+
+( user.username )+
+'" class="btnz watch-more">Explore more Zeegas by '+
+( user.display_name )+
+'</a>\n    ';
+ if ( authenticated ) { 
+;__p+='\n    <a href="'+
+( path )+
+'project/new" class="btnz create-zeega">Create Your Own Zeega</a>\n    ';
+ } else { 
+;__p+='\n    <a href="'+
+( path )+
+'register" class="btnz create-zeega">Create Your Own Zeega</a>\n    ';
+ } 
+;__p+='\n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/endpage.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -131,7 +155,7 @@ __p+='';
  } else { 
 ;__p+='view';
  } 
-;__p+='</span>\n            </div>\n        </div>\n\n        <div class="citation-soundtrack">\n            <a class="citation-trackback"><i class="itemz-soundcloud"></i></a>\n            <a href="#" class="play-pause"><i class="pp-btn pause"></i></a>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
+;__p+='</span>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-fullscreen"></a>\n\n        <div class="citation-soundtrack">\n            <a class="citation-trackback"><i class="itemz-soundcloud"></i></a>\n            <a href="#" class="play-pause"><i class="pp-btn pause"></i></a>\n        </div>\n\n        <div class="citations">\n            <ul></ul>\n            <div class="citation-meta">\n                <div class="citation-title"></div>\n            </div>\n        </div>\n\n        <a href="#" class="ZEEGA-home"></a>\n    </div>\n</div>';
 }
 return __p;
 };
@@ -147,13 +171,25 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n';
+ } 
+;__p+='\n\n';
+ if ( authenticated ) { 
+;__p+='\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
+;__p+=' data-bypass="true" class="btnz btnz-join">Create Your Own Zeegas</a>\n';
+ } else { 
+;__p+='\n<a href="'+
+( path )+
+'project/new" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' data-bypass="true" class="btnz btnz-join">Create Your Own Zeega</a>\n';
  } 
 ;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n       <li>  \n    \n    ';
  if ( favorite && authenticated ) { 

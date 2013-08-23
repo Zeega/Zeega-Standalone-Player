@@ -25,8 +25,20 @@ function( $, _, Backbone, State, Spinner ) {
             return this.getWebRoot() + "api/";
         },
 
-        getUserId: function(){
+        getUserId: function() {
             return this.metadata.userId;
+        },
+
+        isEmbed: function() {
+            var isEmbed;
+
+            try {
+                isEmbed = window.frameElement !== null;
+            } catch ( err ) {
+                isEmbed = false;
+            }
+
+            return isEmbed;
         },
 
       /*

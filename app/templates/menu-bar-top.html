@@ -7,8 +7,12 @@
     </div>
 </a>
 
-<a href="<%= path %>register/" <% if (window!=window.top) { %> target="blank" <% } %> data-bypass="true" class="btnz btnz-join">Join Zeega</a>
+<% } %>
 
+<% if ( authenticated ) { %>
+<a href="<%= path %>register/" <% if (window!=window.top) { %> target="blank" <% } %> data-bypass="true" class="btnz btnz-join">Create Your Own Zeegas</a>
+<% } else { %>
+<a href="<%= path %>project/new" <% if (window!=window.top) { %> target="blank" <% } %> data-bypass="true" class="btnz btnz-join">Create Your Own Zeega</a>
 <% } %>
 
 <div class="menu-right">

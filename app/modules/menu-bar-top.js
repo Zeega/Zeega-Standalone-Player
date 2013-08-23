@@ -74,13 +74,6 @@ function(app, Backbone) {
             this.model.on("player:canplay", this.onCanplay, this);
         },
 
-        afterRender: function(){
-
-            if( app.metadata.loggedIn ){
-                this.$(".btnz-join").hide();
-            }
-        },
-
         onCanplay: function(){
             var soundtrack = this.model.zeega.getSoundtrack();
 
