@@ -365,17 +365,17 @@ __p+='<div class="endpage-embed-inner">\n    <a href="'+
 ( path )+
 '@'+
 ( user.username )+
-'" class="btnz watch-more">Explore more Zeegas by '+
+'" class="btnz watch-more" target="blank" data-bypass="true">Explore more Zeegas by '+
 ( user.display_name )+
 '</a>\n    ';
  if ( authenticated ) { 
 ;__p+='\n    <a href="'+
 ( path )+
-'project/new" class="btnz create-zeega">Create Your Own Zeega</a>\n    ';
+'project/new" class="btnz create-zeega" target="blank" data-bypass="true">Create Your Own Zeega</a>\n    ';
  } else { 
 ;__p+='\n    <a href="'+
 ( path )+
-'register" class="btnz create-zeega">Create Your Own Zeega</a>\n    ';
+'register" class="btnz create-zeega" target="blank" data-bypass="true">Create Your Own Zeega</a>\n    ';
  } 
 ;__p+='\n</div>';
 }
