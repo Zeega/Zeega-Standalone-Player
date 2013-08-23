@@ -17194,6 +17194,18 @@ function( $, _, Backbone, State, Spinner ) {
             return isEmbed;
         },
 
+        hasEndpage: function() {
+            var hasEndpage;
+
+            try {
+                hasEndpage= ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
+            } catch ( err ) {
+                hasEndpage = true;
+            }
+
+            return hasEndpage;
+        },
+
       /*
         app.state stores information on the current state of the application
       */
@@ -39286,7 +39298,8 @@ function(app, Backbone) {
         className: "ZEEGA-end-page",
 
         initialize: function() {
-            if ( app.isEmbed() ) this.template = "app/templates/endpage-embed";
+            if ( !app.hasEndpage() ) this.template = "app/templates/endpage-embed";
+
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
             this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
@@ -39304,11 +39317,6 @@ function(app, Backbone) {
             }
         },
 
-        afterRender: function(){
-            if( app.metadata.loggedIn ){
-                this.$(".btnz-join").hide();
-            }
-        },
         endPageEnter: function() {
             if ( !this.model.zeega.getNextPage() ) {
                 this.show();

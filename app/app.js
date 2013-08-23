@@ -41,6 +41,18 @@ function( $, _, Backbone, State, Spinner ) {
             return isEmbed;
         },
 
+        hasEndpage: function() {
+            var hasEndpage;
+
+            try {
+                hasEndpage= ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
+            } catch ( err ) {
+                hasEndpage = true;
+            }
+
+            return hasEndpage;
+        },
+
       /*
         app.state stores information on the current state of the application
       */

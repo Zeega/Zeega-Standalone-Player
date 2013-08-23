@@ -22,7 +22,8 @@ function(app, Backbone) {
         className: "ZEEGA-end-page",
 
         initialize: function() {
-            if ( app.isEmbed() ) this.template = "app/templates/endpage-embed";
+            if ( !app.hasEndpage() ) this.template = "app/templates/endpage-embed";
+
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
             this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
@@ -40,11 +41,6 @@ function(app, Backbone) {
             }
         },
 
-        afterRender: function(){
-            if( app.metadata.loggedIn ){
-                this.$(".btnz-join").hide();
-            }
-        },
         endPageEnter: function() {
             if ( !this.model.zeega.getNextPage() ) {
                 this.show();
