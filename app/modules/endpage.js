@@ -22,6 +22,7 @@ function(app, Backbone) {
         className: "ZEEGA-end-page",
 
         initialize: function() {
+            if ( app.isEmbed() ) this.template = "app/templates/endpage-embed";
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
             this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
@@ -30,8 +31,9 @@ function(app, Backbone) {
         serialize: function() {
             if ( this.model.zeega.getCurrentProject() ) {
                 return _.extend({
-                        path: "http:" + app.metadata.hostname + app.metadata.directory,
-                        projects: this.relatedProjects
+                        path: app.getWebRoot(),
+                        projects: this.relatedProjects,
+                        authenticated: app.metadata.loggedIn
                     },
                     this.model.zeega.getCurrentProject().toJSON()
                 );

@@ -358,6 +358,30 @@ __p+='<a href="#" class="arrow arrow-left prev disabled"></a>\n<a href="#" class
 return __p;
 };
 
+this["JST"]["app/templates/endpage-embed.html"] = function(obj){
+var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
+with(obj||{}){
+__p+='<div class="endpage-embed-inner">\n    <a href="'+
+( path )+
+'@'+
+( user.username )+
+'" class="btnz watch-more">Explore more Zeegas by '+
+( user.display_name )+
+'</a>\n    ';
+ if ( authenticated ) { 
+;__p+='\n    <a href="'+
+( path )+
+'project/new" class="btnz create-zeega">Create Your Own Zeega</a>\n    ';
+ } else { 
+;__p+='\n    <a href="'+
+( path )+
+'register" class="btnz create-zeega">Create Your Own Zeega</a>\n    ';
+ } 
+;__p+='\n</div>';
+}
+return __p;
+};
+
 this["JST"]["app/templates/endpage.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
@@ -485,13 +509,25 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n<a href="'+
+;__p+=' data-bypass="true" >\n    <div class="ZEEGA-tab">\n        <div class="ZTab-logo"></div>\n    </div>\n</a>\n\n';
+ } 
+;__p+='\n\n';
+ if ( authenticated ) { 
+;__p+='\n<a href="'+
 ( path )+
 'register/" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btnz-join">Join Zeega</a>\n\n';
+;__p+=' data-bypass="true" class="btnz btnz-join">Create Your Own Zeegas</a>\n';
+ } else { 
+;__p+='\n<a href="'+
+( path )+
+'project/new" ';
+ if (window!=window.top) { 
+;__p+=' target="blank" ';
+ } 
+;__p+=' data-bypass="true" class="btnz btnz-join">Create Your Own Zeega</a>\n';
  } 
 ;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n       <li>  \n    \n    ';
  if ( favorite && authenticated ) { 
@@ -507,7 +543,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    -->\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
+;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n        -->\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
@@ -17142,8 +17178,20 @@ function( $, _, Backbone, State, Spinner ) {
             return this.getWebRoot() + "api/";
         },
 
-        getUserId: function(){
+        getUserId: function() {
             return this.metadata.userId;
+        },
+
+        isEmbed: function() {
+            var isEmbed;
+
+            try {
+                isEmbed = window.frameElement !== null;
+            } catch ( err ) {
+                isEmbed = false;
+            }
+
+            return isEmbed;
         },
 
       /*
@@ -39089,13 +39137,6 @@ function(app, Backbone) {
             this.model.on("player:canplay", this.onCanplay, this);
         },
 
-        afterRender: function(){
-
-            if( app.metadata.loggedIn ){
-                this.$(".btnz-join").hide();
-            }
-        },
-
         onCanplay: function(){
             var soundtrack = this.model.zeega.getSoundtrack();
 
@@ -39245,6 +39286,7 @@ function(app, Backbone) {
         className: "ZEEGA-end-page",
 
         initialize: function() {
+            if ( app.isEmbed() ) this.template = "app/templates/endpage-embed";
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
             this.relatedProjects = $.parseJSON( window.relatedProjectsJSON ).projects;
@@ -39253,8 +39295,9 @@ function(app, Backbone) {
         serialize: function() {
             if ( this.model.zeega.getCurrentProject() ) {
                 return _.extend({
-                        path: "http:" + app.metadata.hostname + app.metadata.directory,
-                        projects: this.relatedProjects
+                        path: app.getWebRoot(),
+                        projects: this.relatedProjects,
+                        authenticated: app.metadata.loggedIn
                     },
                     this.model.zeega.getCurrentProject().toJSON()
                 );
