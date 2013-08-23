@@ -40,16 +40,13 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, R
             this.controls = new Controls.View({ model: app.player });
             this.bottomBar = new MenuBarBottom({ model: app.player });
             this.topBar = new MenuBarTop.View({ model: app.player });
+            this.endPage = new EndPage.View({ model: app.player });
 
             this.insertView("#overlays", this.loader );
             this.insertView("#overlays", this.controls );
             this.insertView("#overlays", this.bottomBar );
             this.insertView("#overlays", this.topBar );
-
-            if( app.showEndPage ){
-                this.endPage = new EndPage.View({ model: app.player });
-                this.insertView("#overlays", this.endPage );
-            }
+            this.insertView("#overlays", this.endPage );
 
             this.remixEndpage = new RemixEndpage.View({ model: app.player });
             this.insertView("#overlays", this.remixEndpage );
