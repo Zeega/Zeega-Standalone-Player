@@ -150,6 +150,7 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
             } else if ( document.mozCancelFullScreen ) {
                 document.mozCancelFullScreen();
             }
+            this.fullscreen = false;
         },
 
         toggleMute: function(){
