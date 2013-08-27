@@ -34682,7 +34682,7 @@ function( app, _Layer, Visual ){
                         if ( this.audio ) {
                             this.model.trigger("timeupdate", {
                                 currentTime: this.audio.currentTime,
-                                duration: this.audio.duration,
+                                duration: this.audio.duration
                             });
                         }
                     }.bind(this));
@@ -36534,9 +36534,9 @@ function( app, PageCollection, Layers, SequenceModel ) {
 
         _loadSoundtrack: function() {
             if ( this.get("_soundtrack") ) {
-                this.soundtrack = new Layers["Audio"]( _.extend( this.get("_soundtrack"), { type: "Audio" }) );
+                this.soundtrack = new Layers.Audio( _.extend( this.get("_soundtrack"), { type: "Audio" }) );
 
-                this.soundtrack.visual = new Layers["Audio"].Visual({
+                this.soundtrack.visual = new Layers.Audio.Visual({
                         model: this.soundtrack,
                         attributes: {
                             "data-id": this.get("_soundtrack").id
@@ -36578,7 +36578,7 @@ function( app, PageCollection, Layers, SequenceModel ) {
                 .success(function( response ) {
                     this.soundtrack = newLayer;
 
-                    newLayer.visual = new Layers["Audio"].Visual({
+                    newLayer.visual = new Layers.Audio.Visual({
                             model: this.soundtrack,
                             attributes: {
                                 "data-id": newLayer.id
@@ -37203,10 +37203,11 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         },
 
         onNewProject: function( previous, next ) {
-            if ( previous.soundtrack.get("attr").uri != next.soundtrack.get("attr").uri ) {
+            if ( (!previous.soundtrack && next.soundtrack) || (previous.soundtrack && !next.soundtrack) || (previous.soundtrack && next.soundtrack) && (previous.soundtrack.get("attr").uri != next.soundtrack.get("attr").uri) ) {
                 this.emit("project:soundtrack_switch", {
-                    next: next.soundtrack,
-                    previous: previous.soundtrack });
+                        next: next ? next.soundtrack : false,
+                        previous: previous ? previous.soundtrack : false
+                    });
             }
         },
 
@@ -37381,12 +37382,10 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 return project.get("remix");
             });
 
-            console.log("__path", path)
-
             return {
                 complete: isComplete,
                 path: path
-            }
+            };
         },
 
         _onDataLoaded: function( data ) {
@@ -38497,7 +38496,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                 this.state = "playing";
                 this.zeega.focusPage( page );
             } else {
-                this.playAndWaitForPageLoad( page )
+                this.playAndWaitForPageLoad( page );
             }
             this.preloadPage( page );
         },
