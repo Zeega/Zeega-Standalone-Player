@@ -39356,6 +39356,7 @@ function(app, Backbone) {
 
         onExitEvent: function( event ){
             if(event.currentTarget.className.indexOf("btn-remix")>-1){
+                app.layout.bottomBar.toggleMute();
                 app.emit("exit_remix", {"view":"menu-bar-top"});
             } else if(event.currentTarget.className.indexOf("btnz-join")>-1){
                 app.emit("exit_create", {"view":"menu-bar-top"});
