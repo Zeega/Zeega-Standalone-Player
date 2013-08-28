@@ -17294,7 +17294,6 @@ function( $, _, Backbone, State, Spinner ) {
 
 });
 
-// layer.js
 define('engine/modules/layer.collection',[
     "app"
 ],
@@ -33761,8 +33760,7 @@ function( app, Controls ) {
             this.visual.player_onExit();
         },
 
-        // removes the layer. destroys players, removes from dom, etc
-        destroy: function() {
+        softDestroy: function() {
             // do not attempt to destroy if the layer is waiting or destroyed
             if ( this.state != "waiting" && this.state != "destroyed" ) {
                 this.state = "destroyed";
@@ -33770,7 +33768,6 @@ function( app, Controls ) {
                 if ( this.visual.destroy ) {
                     this.visual.destroy();
                 }
-
             }
         }
 
@@ -36218,7 +36215,7 @@ function( app, Backbone, LayerCollection, Layers ) {
 
         destroy: function() {
             this.layers.each(function( layer ) {
-                layer.destroy();
+                layer.softDestroy();
             });
             this.state = "destroyed";
         }
@@ -38622,7 +38619,6 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                             this.cuePrev();
                             break;
                         case 39: // right arrow
-                        console.log("RIGHT")
                             this.cueNext();
                             break;
                         case 32: // spacebar
@@ -38631,20 +38627,6 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                     }
                 }.bind( this ));
 
-
-                // app.$(window).keyup(function( event ) {
-                //     switch( event.which ) {
-                //         case 37: // left arrow
-                //             this.cuePrev();
-                //             break;
-                //         case 39: // right arrow
-                //             this.cueNext();
-                //             break;
-                //         case 32: // spacebar
-                //             this.playPause();
-                //             break;
-                //     }
-                // }.bind( this ));
             }
         },
 
@@ -38655,23 +38637,17 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
             this.zeega.off("all");
 
-            // this.off("cue_frame");
-            // this.off("size_toggle");
-            // relays
+            this.off("cue_frame");
+            this.off("size_toggle");
         },
-
-
 
 
 /////
 
 
 
-
-
         // attach listeners
         _listen: function() {
-            console.log("**************_listen")
             this.on("cue_frame", this.cueFrame, this );
             this.on("size_toggle", this.toggleSize, this );
         },
@@ -39217,7 +39193,7 @@ function(app, Backbone) {
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
                         authenticated: app.metadata.loggedIn
                     },
-                    this.model.zeega.projects.at(0).toJSON()
+                    this.model.zeega.getCurrentProject().toJSON()
                 );
             }
         },
@@ -39263,6 +39239,7 @@ function(app, Backbone) {
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
             this.model.on("player:canplay", this.onCanplay, this);
+            this.model.on("project:project_switch ", this.render, this );
         },
 
         onCanplay: function(){
@@ -39373,6 +39350,7 @@ function(app, Backbone) {
         startOver: function() {
             this.model.cueFrame( this.model.get("startFrame") );
             app.emit("start_over", {source: "title"});
+
             return false;
         },
 

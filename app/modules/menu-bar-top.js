@@ -26,7 +26,7 @@ function(app, Backbone) {
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
                         authenticated: app.metadata.loggedIn
                     },
-                    this.model.zeega.projects.at(0).toJSON()
+                    this.model.zeega.getCurrentProject().toJSON()
                 );
             }
         },
@@ -72,6 +72,7 @@ function(app, Backbone) {
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
             this.model.on("player:canplay", this.onCanplay, this);
+            this.model.on("project:project_switch ", this.render, this );
         },
 
         onCanplay: function(){
@@ -182,6 +183,7 @@ function(app, Backbone) {
         startOver: function() {
             this.model.cueFrame( this.model.get("startFrame") );
             app.emit("start_over", {source: "title"});
+
             return false;
         },
 
