@@ -177,7 +177,7 @@ __p+='\n';
  if ( authenticated ) { 
 ;__p+='\n<a href="'+
 ( path )+
-'register/" ';
+'project/new" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
@@ -185,7 +185,7 @@ __p+='\n';
  } else { 
 ;__p+='\n<a href="'+
 ( path )+
-'project/new" ';
+'register" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 

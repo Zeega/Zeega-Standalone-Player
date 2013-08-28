@@ -515,7 +515,7 @@ __p+='\n';
  if ( authenticated ) { 
 ;__p+='\n<a href="'+
 ( path )+
-'register/" ';
+'project/new" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
@@ -523,7 +523,7 @@ __p+='\n';
  } else { 
 ;__p+='\n<a href="'+
 ( path )+
-'project/new" ';
+'register" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
@@ -39266,7 +39266,7 @@ function(app, Backbone) {
             "click .project-title": "startOver",
             "click .share-network a": "onShare",
             "click .ZEEGA-tab": "onHome",
-
+            "click .btn-remix": "onExitEvent",
             "click .btn-favorite": "toggleFavorite"
         },
 
@@ -39354,6 +39354,14 @@ function(app, Backbone) {
             return false;
         },
 
+        onExitEvent: function( event ){
+            if(event.currentTarget.className.indexOf("btn-remix")>-1){
+                app.emit("exit_remix", {"view":"menu-bar-top"});
+            } else if(event.currentTarget.className.indexOf("btnz-join")>-1){
+                app.emit("exit_create", {"view":"menu-bar-top"});
+            }
+        },
+
         onShare: function( event ){
             app.emit( "share", {
                 "type": event.currentTarget.name
@@ -39409,6 +39417,25 @@ function(app, Backbone) {
                     this.model.zeega.getCurrentProject().toJSON()
                 );
             }
+        },
+
+        events: {
+            "click .create-zeega, .watch-more": "onExitEvent"
+        },
+
+        onExitEvent:function(event){
+            if(event.currentTarget.className.indexOf("watch-more")>-1){
+                app.emit("exit_watch_more", {"view":"endpage"});
+            } else {
+                app.emit("exit_create", {"view":"endpage"});
+            }
+        },
+        onCreateZeegaRegister:function(a,b){
+            console.log(a,b);
+        },
+
+        onWatchMore:function(a,b){
+            console.log(a,b);
         },
 
         endPageEnter: function() {
@@ -39811,6 +39838,9 @@ function( app ) {
             "favorite",
             "unfavorite",
             "viewed_to_end",
+            "exit_create",
+            "exit_remix",
+            "exit_watch_more",
 
 
             //mobile player
@@ -39983,7 +40013,8 @@ function( app, Player, PlayerUI, Analytics ) {
                 userId: app.metadata.userId,
                 userName: app.metadata.userName,
                 app: "player",
-                context: context
+                context: context,
+                authenticated: app.metadata.loggedIn
             });
 
             app.analytics.trackEvent("zeega_view");
