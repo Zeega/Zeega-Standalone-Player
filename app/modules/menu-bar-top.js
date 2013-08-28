@@ -99,7 +99,7 @@ function(app, Backbone) {
             "click .project-title": "startOver",
             "click .share-network a": "onShare",
             "click .ZEEGA-tab": "onHome",
-
+            "click .btn-remix": "onExitEvent",
             "click .btn-favorite": "toggleFavorite"
         },
 
@@ -185,6 +185,14 @@ function(app, Backbone) {
             app.emit("start_over", {source: "title"});
 
             return false;
+        },
+
+        onExitEvent: function( event ){
+            if(event.currentTarget.className.indexOf("btn-remix")>-1){
+                app.emit("exit_remix", {"view":"menu-bar-top"});
+            } else if(event.currentTarget.className.indexOf("btnz-join")>-1){
+                app.emit("exit_create", {"view":"menu-bar-top"});
+            }
         },
 
         onShare: function( event ){
