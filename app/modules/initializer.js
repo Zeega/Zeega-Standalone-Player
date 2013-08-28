@@ -96,7 +96,8 @@ function( app, Player, PlayerUI, Analytics ) {
                 userId: app.metadata.userId,
                 userName: app.metadata.userName,
                 app: "player",
-                context: context
+                context: context,
+                authenticated: app.metadata.loggedIn
             });
 
             app.analytics.trackEvent("zeega_view");

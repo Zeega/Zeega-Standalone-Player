@@ -41,6 +41,25 @@ function(app, Backbone) {
             }
         },
 
+        events: {
+            "click .create-zeega, .watch-more": "onExitEvent"
+        },
+
+        onExitEvent:function(event){
+            if(event.currentTarget.className.indexOf("watch-more")>-1){
+                app.emit("exit_watch_more", {"view":"endpage"});
+            } else {
+                app.emit("exit_create", {"view":"endpage"});
+            }
+        },
+        onCreateZeegaRegister:function(a,b){
+            console.log(a,b);
+        },
+
+        onWatchMore:function(a,b){
+            console.log(a,b);
+        },
+
         endPageEnter: function() {
             if ( !this.model.zeega.getNextPage() ) {
                 this.show();
