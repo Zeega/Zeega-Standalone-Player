@@ -3,13 +3,13 @@
 <% _.each(projects, function( project ) { %>
     <div class="suggested-zeega">
 
-        <div class="top"><%=project.user.display_name%></div>
+        <div class="top"><%= project.user.display_name%></div>
 
-        <a href="<%=path %><%=project.id %>"
+        <a href="<%=path %><%= project.id %>"
                 class="middle zeega-thumb play-next"
-                data-id="<%=project.id %>"
+                data-id="<%= project.id %>"
                 data-bypass="true"
-                style="background-image: url(<%=project.cover_image %>);">
+                style="background-image: url(<%= project.cover_image %>);">
 
             <div class="profile-token"
                     style="background-image: url(<%= project.user.thumbnail_url %>);
