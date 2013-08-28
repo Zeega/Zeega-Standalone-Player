@@ -535,7 +535,9 @@ __p+='\n';
  } else if ( authenticated) { 
 ;__p+='\n\n        <a href="#" class="btnz btn-favorite"><i class="icon-heart"></i> <span class="content">favorite</span></a>\n\n     ';
  } 
-;__p+='\n\n    </li>\n\n        <!--\n        <li>\n            <a href="'+
+;__p+='\n\n    </li>\n\n    ';
+ if ( remixable ) { 
+;__p+='\n        <li>\n            <a href="'+
 ( path )+
 ''+
 ( id )+
@@ -543,7 +545,9 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n        -->\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
+;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    ';
+ } 
+;__p+='\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
 '" target="blank"><i class="zsocial-twitter"></i></a>\n        </li>\n        <li>\n            <a name="facebook" class="social-share-icon" href="'+
 ( share_links.facebook )+
@@ -35901,12 +35905,21 @@ function( app, Layer, Visual ){
         ],
 
         onPlay: function() {
-            this.model.zeega.emit("endpage_enter", this.model );
+            this.endEnterEmit();
         },
 
         onExit: function() {
+            this.endExitEmit();
+        },
+
+        endEnterEmit: _.debounce(function() {
+            this.model.zeega.emit("endpage_enter", this.model );
+        }, 250, { leading: true }),
+
+        endExitEmit: _.debounce(function() {
             this.model.zeega.emit("endpage_exit", this.model );
-        }
+        }, 250, { leading: true })
+
     });
 
     return L;
@@ -36445,6 +36458,12 @@ function( app, Layers ) {
             if ( currentIndex != -1 && this.frames.length > currentIndex + 1 ) {
                 this.frames.at( currentIndex + 1 ).layers.push( layer );
             }
+        },
+
+        clearVirtualPages: function() {
+            var pages = _.without( this.get("frames"), -1 );
+
+            this.set("frames", pages );
         }
 
     });
@@ -37239,7 +37258,6 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         getPreviousPage: function( page ) {
             var p = page || this.getCurrentPage();
             var previousPage = false;
-
             if ( p.get("_order") > 0 ) {
                 previousPage = this.getCurrentProject().pages.at( p.get("_order") - 1 );
             } else if ( this.getPreviousProject() ) {
@@ -37270,20 +37288,20 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         },
 
         setCurrentPage: function( page ) {
-            // var oldPage = this.get("currentPage");
+            var oldPage = this.get("currentPage");
 
-            // this.setCurrentLayer( null );
+            this.setCurrentLayer( null );
 
-            // if ( oldPage && page ) {
-            //     oldPage.trigger("blur");
-            // }
+            if ( oldPage && page ) {
+                oldPage.trigger("blur");
+            }
 
-            // if ( page ) {
-            //     this.set("currentPage", page );
-            //     page.trigger("focus");
-            // } else if ( page === null ) { // should this be allowed?
-            //     this.set("currentPage", null);
-            // }
+            if ( page ) {
+                this.set("currentPage", page );
+                page.trigger("focus");
+            } else if ( page === null ) { // should this be allowed?
+                this.set("currentPage", null);
+            }
         },
 
         getPages: function() {
@@ -37417,6 +37435,8 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
 
             layers.push( soundtrack );
 
+            currentProject.sequence.clearVirtualPages();
+
             _.extend( pData, currentProject.toJSON(), {
                 sequences: [ currentProject.sequence.toJSON() ],
                 frames: currentProject.pages.toJSON(),
@@ -37456,7 +37476,6 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         },
 
         destroy: function() {
-
             this.projects.each(function( project ) {
                 project.destroy();
             });
@@ -37880,6 +37899,7 @@ function( app, ArrowView, CloseView, PlayPauseView, SizeToggle ) {
 
         cleanup: function() {
             $(".tipsy").remove();
+            this.undelegateEvents();
         }
 
     });
@@ -38504,7 +38524,6 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
         },
 
         playAndWaitForPageLoad: function( page ) {
-            console.log("play & wait", page);
             this.state = "playing";
             this.zeega.focusPage( page );
         },
@@ -38578,35 +38597,67 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
         cueNext: function() {
             var nextPage = this.zeega.getNextPage();
 
-            if ( nextPage ) this.cuePage( this.zeega.getNextPage() );
+            if ( nextPage ) {
+                this.cuePage( this.zeega.getNextPage() );
+            }
         },
 
         // goes to the prev frame after n ms
         cuePrev: function( ms ) {
             var prevPage = this.zeega.getPreviousPage();
 
-            if ( prevPage ) this.cuePage( this.zeega.getPreviousPage() );
+            if ( prevPage ) {
+                this.cuePage( this.zeega.getPreviousPage() );
+            }
         },
 
         // move this to layout
         _initEvents: function() {
-            var _this = this;
 
             if ( this.get("keyboard") ) {
-                app.$(window).keyup(function( event ) {
+
+                app.$(window).bind("keyup.preview",function( event ) {
                     switch( event.which ) {
                         case 37: // left arrow
-                            _this.cuePrev();
+                            this.cuePrev();
                             break;
                         case 39: // right arrow
-                            _this.cueNext();
+                        console.log("RIGHT")
+                            this.cueNext();
                             break;
                         case 32: // spacebar
-                            _this.playPause();
+                            this.playPause();
                             break;
                     }
                 }.bind( this ));
+
+
+                // app.$(window).keyup(function( event ) {
+                //     switch( event.which ) {
+                //         case 37: // left arrow
+                //             this.cuePrev();
+                //             break;
+                //         case 39: // right arrow
+                //             this.cueNext();
+                //             break;
+                //         case 32: // spacebar
+                //             this.playPause();
+                //             break;
+                //     }
+                // }.bind( this ));
             }
+        },
+
+        _removeListeners: function() {
+            if ( this.get("keyboard") ) {
+                app.$(window).unbind("keyup.preview");
+            }
+
+            this.zeega.off("all");
+
+            // this.off("cue_frame");
+            // this.off("size_toggle");
+            // relays
         },
 
 
@@ -38620,10 +38671,9 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         // attach listeners
         _listen: function() {
+            console.log("**************_listen")
             this.on("cue_frame", this.cueFrame, this );
             this.on("size_toggle", this.toggleSize, this );
-            // relays
-            this.relay.on("change:current_frame", this._remote_cueFrame, this );
         },
 
         toggleSize: function() {
@@ -38676,11 +38726,12 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         // completely obliterate the player. triggers event
         destroy: function() {
-
+            this._removeListeners();
             this.layout.$el.fadeOut( this.get("fadeOut"), function() {
                 this.zeega.destroy();
                 this.layout.remove();
                 this.emit("player_destroyed");
+                this.clear();
             }.bind( this ));
         },
 
@@ -39647,6 +39698,17 @@ function( app ) {
 
         loggingEnabled: true,
 
+        mediaCategories: [
+            "sports",
+            "animals",
+            "reaction",
+            "texture",
+            "pop",
+            "GIFart",
+            "news"
+        ],
+
+
         initialize: function() {
             app.on( "all", this.onEvent, this );
             if( !window.mixpanel ){
@@ -39669,10 +39731,9 @@ function( app ) {
             if( model.modelType == "frame" ){
                 params.layerCount = model.layers.length;
             } else if ( model.modelType == "layer" ){
-                params = {
-                    type: model.get("type"),
-                    source: model.get("attr").archive ?  model.get("attr").archive : "none"
-                };
+
+                params = this.getLayerParams( model );
+
             } else if ( model.modelType == "sequence" ){
                 params = {
                     pageCount: model.frames.length
@@ -39680,7 +39741,7 @@ function( app ) {
             } else if ( model.modelType == "item" ){
                 params = {
                     type: model.get("media_type"),
-                    source: model.get("archive") ?  model.get("archive") : "none"
+                    api: model.get("archive") ?  model.get("archive") : "none"
                 };
             }
             
@@ -39689,6 +39750,49 @@ function( app ) {
             this.trackEvent( event, params );
 
 
+        },
+
+
+        getLayerParams: function( layer ){
+
+
+
+                params = {
+                    type: layer.get("type"),
+                    api: layer.get("attr").archive ?  layer.get("attr").archive : "none",
+                    category: "unknown",
+                    trending: false,
+                    favorite: false
+                };
+
+                if( layer.get("attr") && layer.get("attr").user && layer.get("attr").user.username == "admin" ){
+                    params.category = _.intersection( layer.get("attr").tags, this.mediaCategories ) ?
+                        _.intersection( layer.get("attr").tags, this.mediaCategories )[0] : "unknown";
+                    params.trending = _.contains( layer.get("attr").tags, "trending" );
+                    params.favorite = true;
+
+                    if(_.isNumber(layer.get("attr").id)){
+                        params.row = Math.floor( layer.get("attr").id / 3 );
+                        params.column = layer.get("attr").id % 3;
+                    }
+
+                }
+                return params;
+
+
+        },
+
+        people: {
+            increment:function( attr ){
+                mixpanel.people.increment( attr );
+            },
+            set: function( obj ){
+                mixpanel.people.set( obj );
+            }
+        },
+
+        identify: function( id ){
+            mixpanel.identify( id );
         },
 
         setGlobals: function ( args ){
@@ -39715,6 +39819,7 @@ function( app ) {
             "preview_toggle_view",
             "toggle_page_background",
             "new_zeega",
+            "new_user",
             "advance_toggle",
           
            // "view_item",
@@ -39736,6 +39841,7 @@ function( app ) {
             //community
 
             "to_signup",
+            "delete-zeega",
 
         //shared
 
@@ -39753,11 +39859,12 @@ function( app ) {
             "soundtrack_added_success",
             "soundtrack_delete",
             "pages_reordered",
-            "layers_reordered",
-            "select_link_page",
-            "link_new_page",
-            "unlink",
-            "init_link"
+            "layers_reordered"
+
+            // "select_link_page",
+            // "link_new_page",
+            // "unlink",
+            // "init_link"
 
 
         ],
@@ -39771,10 +39878,27 @@ function( app ) {
                     if( debug ){
                         console.log("registering global property::  " + _.keys(obj) + " : " + _.values(obj) );
                     }
-                },                
+                },
                 track: function ( event, params ){
                     if( debug ){
                         console.log( "tracking event:: " + event, params );
+                    }
+                },
+                people: {
+                    set: function( obj ){
+                        if( debug ){
+                            console.log( "setting people", obj );
+                        }
+                    },
+                    increment: function( obj ){
+                        if( debug ){
+                            console.log( "increment", obj );
+                        }
+                    }
+                },
+                identify: function( id ){
+                    if( debug ){
+                        console.log( "identify", id );
                     }
                 }
             };
