@@ -388,15 +388,15 @@ with(obj||{}){
 __p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
  _.each(projects, function( project ) { 
 ;__p+='\n    <div class="suggested-zeega">\n\n        <div class="top">'+
-(project.user.display_name)+
+( project.user.display_name)+
 '</div>\n\n        <a href="'+
 (path )+
 ''+
-(project.id )+
+( project.id )+
 '"\n                class="middle zeega-thumb play-next"\n                data-id="'+
-(project.id )+
+( project.id )+
 '"\n                data-bypass="true"\n                style="background-image: url('+
-(project.cover_image )+
+( project.cover_image )+
 ');">\n\n            <div class="profile-token"\n                    style="background-image: url('+
 ( project.user.thumbnail_url )+
 ');\n                            background-size: cover;\n                            background-position: center;"></div>\n            <span class="playbutton"></span>\n        </a>\n\n        <div class="bottom">'+
@@ -17374,7 +17374,6 @@ function( app ) {
         onRemove: function( layer ) {
             layer.trigger("blur");
             layer.editorCleanup();
-            layer.destroy();
             app.trigger("layer_remove", layer );
         },
 
@@ -33760,7 +33759,7 @@ function( app, Controls ) {
             this.visual.player_onExit();
         },
 
-        softDestroy: function() {
+        finish: function() {
             // do not attempt to destroy if the layer is waiting or destroyed
             if ( this.state != "waiting" && this.state != "destroyed" ) {
                 this.state = "destroyed";
@@ -34634,7 +34633,7 @@ function( app, _Layer, Visual ){
             editor_onLayerEnter: function() {},
 
             editor_onLayerExit: function() {
-                this.destroy();
+                this.finish();
             },
 
             playPause: function() {
@@ -36013,7 +36012,8 @@ function( app, Backbone, LayerCollection, Layers ) {
         initEditorListeners: function() {
             this.stopListening( this.layers );
             this.layers.on("sort", this.onLayerSort, this );
-            this.layers.on("add remove", this.onLayerAddRemove, this );
+            this.layers.on("add", this.onLayerAdd, this );
+            this.layers.on("remove", this.onLayerRemove, this );
         },
 
         loadLayers: function( layers ) {
@@ -36106,10 +36106,16 @@ function( app, Backbone, LayerCollection, Layers ) {
             return this.zeega.getPreviousPage( this );
         },
 
-
         // editor
+        onLayerAdd: function() {
+            this.onLayerSort();
+            this.updateThumbUrl();
+        },
 
-        onLayerAddRemove: function() {
+        onLayerRemove: function( layer ) {
+            this.once("sync", function() {
+                layer.destroy();
+            });
             this.onLayerSort();
             this.updateThumbUrl();
         },
@@ -36213,9 +36219,9 @@ function( app, Backbone, LayerCollection, Layers ) {
             this.lazySave();
         },
 
-        destroy: function() {
+        finish: function() {
             this.layers.each(function( layer ) {
-                layer.softDestroy();
+                layer.finish();
             });
             this.state = "destroyed";
         }
@@ -36351,6 +36357,7 @@ function( app, PageModel, LayerCollection ) {
             }
 
             app.trigger("frame_remove", pageModel );
+            pageModel.finish();
             pageModel.destroy();
         },
 
@@ -36444,6 +36451,7 @@ function( app, Layers ) {
             var attr = this.get("attr");
             
             app.emit("soundtrack_delete", layer);
+            layer.finish();
             layer.destroy();
             attr.soundtrack = false;
             this.set("attr", attr );
@@ -36459,7 +36467,7 @@ function( app, Layers ) {
 
         clearVirtualPages: function() {
             var pages = _.without( this.get("frames"), -1 );
-
+console.log("CLEAR")
             this.set("frames", pages );
         }
 
@@ -36616,6 +36624,7 @@ function( app, PageCollection, Layers, SequenceModel ) {
                         attr: _.extend({}, this.sequence.get("attr"), { soundtrack: false })
                     });
                 app.emit("soundtrack_delete", this.soundtrack);
+                this.soundtrack.finish();
                 this.soundtrack.destroy();
             }
             
@@ -36691,10 +36700,10 @@ function( app, PageCollection, Layers, SequenceModel ) {
             this.set({ publish_update: 0 });
         },
 
-        destroy: function() {
-            if ( this.soundtrack ) this.soundtrack.destroy();
+        finish: function() {
+            if ( this.soundtrack ) this.soundtrack.finish();
             this.pages.each(function( page ) {
-                page.destroy();
+                page.finish();
             });
         }
 
@@ -36770,6 +36779,9 @@ function() {
     Parser[type].parse = function( response, opts ) {
         removeDupeSoundtrack( response.project );
         response.project._soundtrack = getSoundtrackLayer( response.project );
+
+        // remove erroneous -1 pages
+        response.project.sequences[0].frames = _.without(response.project.sequences[0].frames, -1);
 
         if ( opts.endPage ) {
             var endId, lastPageId, lastPage, endPage, endLayers;
@@ -37255,6 +37267,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         getPreviousPage: function( page ) {
             var p = page || this.getCurrentPage();
             var previousPage = false;
+
             if ( p.get("_order") > 0 ) {
                 previousPage = this.getCurrentProject().pages.at( p.get("_order") - 1 );
             } else if ( this.getPreviousProject() ) {
@@ -37474,7 +37487,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
 
         destroy: function() {
             this.projects.each(function( project ) {
-                project.destroy();
+                project.finish();
             });
         }
     });

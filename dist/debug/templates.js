@@ -50,15 +50,15 @@ with(obj||{}){
 __p+='<div class="end-page-wrapper" >\n    <h2>Explore More Zeegas</h2>\n';
  _.each(projects, function( project ) { 
 ;__p+='\n    <div class="suggested-zeega">\n\n        <div class="top">'+
-(project.user.display_name)+
+( project.user.display_name)+
 '</div>\n\n        <a href="'+
 (path )+
 ''+
-(project.id )+
+( project.id )+
 '"\n                class="middle zeega-thumb play-next"\n                data-id="'+
-(project.id )+
+( project.id )+
 '"\n                data-bypass="true"\n                style="background-image: url('+
-(project.cover_image )+
+( project.cover_image )+
 ');">\n\n            <div class="profile-token"\n                    style="background-image: url('+
 ( project.user.thumbnail_url )+
 ');\n                            background-size: cover;\n                            background-position: center;"></div>\n            <span class="playbutton"></span>\n        </a>\n\n        <div class="bottom">'+
