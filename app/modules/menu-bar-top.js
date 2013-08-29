@@ -21,6 +21,7 @@ function(app, Backbone) {
             var showChrome;
             if ( this.model.zeega ) {
                 return _.extend({
+                        remixable: false, // default
                         show_chrome: app.showChrome,
                         share_links: this.getShareLinks(),
                         path: "http:" + app.metadata.hostname + app.metadata.directory,
