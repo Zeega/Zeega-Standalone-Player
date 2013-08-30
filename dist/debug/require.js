@@ -38942,6 +38942,7 @@ function( app, Backbone, Spinner ) {
             }.bind( this ));
             app.layout.hasPlayed = true;
             this.model.play();
+            app.trigger("loader:complete");
         })
 
   });
@@ -38967,6 +38968,11 @@ function(app, Backbone) {
         className: "ZEEGA-player-controls",
 
         initialize: function() {
+            app.once("loader:complete", this.onLoaderComplete, this );
+        },
+
+        onLoaderComplete: function() {
+            this.updateArrowState( this.model.zeega.getCurrentPage() );
             this.model.on("page:play", this.updateArrowState, this);
         },
 
