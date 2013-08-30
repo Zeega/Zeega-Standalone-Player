@@ -77,6 +77,7 @@ function( app, Backbone, Spinner ) {
             }.bind( this ));
             app.layout.hasPlayed = true;
             this.model.play();
+            app.trigger("loader:complete");
         })
 
   });
