@@ -16319,7 +16319,7 @@ function( Spinner ) {
         },
 
         getMediaServerUrl: function() {
-            return this.getWebRoot() + this.metadata.mediaRoot;
+            return "http:" + this.metadata.hostname + this.metadata.mediaRoot;
         },
 
         emit: function( event, args ) {
@@ -36434,9 +36434,7 @@ function( app, PageModel, LayerCollection ) {
     return app.Backbone.Collection.extend({
 
         model: PageModel,
-
         zeega: null,
-        remixPageMax: 5,
 
         initialize: function() {
             if ( this.zeega.get("mode") == "editor" ) {
