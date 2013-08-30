@@ -37,10 +37,7 @@ function( app, Player, PlayerUI, Analytics ) {
                 target: "#player",
                 preview: false,
                 data: $.parseJSON( window.projectJSON ) || null,
-                url: window.projectJSON ? null :
-                    app.state.get("projectID") !== null ? app.metadata.api + "/items/" + app.state.get("projectID") :
-                    "testproject.json",
-                startFrame: app.state.get("frameID")
+                url: window.projectJSON ? null : "testproject.json"
             });
 
             if( window.projectJSON ) {

@@ -15905,32 +15905,6 @@ define("backbone", ["jquery","lodash"], (function (global) {
     };
 }(this)));
 
-define('modules/state',[
-    "app",
-    // Libs
-    "backbone"
-],
-
-function( app, Backbone ) {
-
-    return Backbone.Model.extend({
-        defaults: {
-            baseRendered: false,
-            firstVisit: true,
-            fullscreen: false,
-            initialized: false,
-            projectID: null,
-            frameID: null,
-            windowWidth: 0,
-            windowHeight: 0
-        },
-
-        emit: function() {
-            // empty fxn
-        }
-    });
-
-});
 //fgnass.github.com/spin.js#v1.3
 
 /**
@@ -16280,6 +16254,110 @@ function( app, Backbone ) {
   return Spinner
 
 }));
+/*
+
+metatags
+
+
+// editor
+<meta name="zeega" content="zeega-editor"
+    data-api-root=""
+    data-root=""
+    data-api-root=""
+    data-hostname="//zeega.com/"
+    data-editor="editor"
+
+    data-user-id="51afee498d34d4d711002a33"
+    data-user-name="Joseph Bergen"
+    data-user-thumbnail="http://static.zeega.org/community/users/36/profile/502539ff1d03e.gif"
+    data-user-username="jbergen"
+
+
+    data-media-root="kinok/"
+    data-project-id="521c157a7131b2085800001e"
+    data-user-email="joseph@zeega.com"
+
+    data-fav-id="51afedf18d34d4d711000000"
+    data-new-user="false"
+    data-new-zeega="false"
+/>
+
+
+// player-standalone
+<meta name="zeega" content="zeega-player"
+    data-user-thumbnail="http://static.zeega.org/community/users/36/profile/502539ff1d03e.gif"
+    data-views="65"
+    data-directory=""
+    data-hostname="//zeega.com/"
+    data-user-id="51afee498d34d4d711002a33"
+    data-logged-in=true
+/>
+
+*/
+
+define('common/_app.common',[
+    "engineVendor/spin",
+    "backbone"
+],
+
+function( Spinner ) {
+
+    return {
+
+        metadata: $("meta[name=zeega]").data(),
+
+        getWebRoot: function() {
+            return "http:" + this.metadata.hostname + this.metadata.root;
+        },
+
+        getApi: function() {
+            return this.getWebRoot() + "api/";
+        },
+
+        getUserId: function() {
+            return this.metadata.userId;
+        },
+
+        getMediaServerUrl: function() {
+            return this.getWebRoot() + this.metadata.mediaRoot;
+        },
+
+        emit: function( event, args ) {
+            // other things can be done here as well
+            this.trigger( event, args );
+        },
+
+        spinner: new Spinner({
+            lines: 13, // The number of lines to draw
+            length: 10, // The length of each line
+            width: 4, // The line thickness
+            radius: 30, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            color: '#FFF', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        }),
+
+        spin: function( el ) {
+            var target = el || this.layout.el;
+
+            this.spinner.spin( target );
+        },
+
+        spinStop: function() {
+            this.spinner.stop();
+        }
+    }
+});
+
 /*!
  * backbone.layoutmanager.js v0.8.8
  * Copyright 2013, Tim Branyen (@tbranyen)
@@ -17173,30 +17251,16 @@ define('app',[
     "lodash",
     "backbone",
 
-    "modules/state",
-    "engineVendor/spin",
+    "common/_app.common",
     // Plugins.
     "plugins/backbone.layoutmanager"
 ],
 
-function( $, _, Backbone, State, Spinner ) {
+function( $, _, Backbone, _App ) {
     
     var app = {
         // The root path to run the application.
         root: "/",
-        metadata: $("meta[name=zeega]").data(),
-
-        getWebRoot: function() {
-            return "http:" + this.metadata.hostname + this.metadata.directory;
-        },
-
-        getApi: function() {
-            return this.getWebRoot() + "api/";
-        },
-
-        getUserId: function() {
-            return this.metadata.userId;
-        },
 
         isEmbed: function() {
             var isEmbed;
@@ -17222,48 +17286,10 @@ function( $, _, Backbone, State, Spinner ) {
             return hasEndpage;
         },
 
-      /*
-        app.state stores information on the current state of the application
-      */
-        state: new State(),
-
         Backbone: Backbone,
-        $: $,
-        
-        emit: function( event, args ) {
-            // other things can be done here as well
-            this.trigger( event, args );
-        }
+        $: $
+
     };
-
-    app.spinner = new Spinner({
-            lines: 13, // The number of lines to draw
-            length: 10, // The length of each line
-            width: 4, // The line thickness
-            radius: 30, // The radius of the inner circle
-            corners: 1, // Corner roundness (0..1)
-            rotate: 0, // The rotation offset
-            direction: 1, // 1: clockwise, -1: counterclockwise
-            color: '#FFF', // #rgb or #rrggbb
-            speed: 1, // Rounds per second
-            trail: 60, // Afterglow percentage
-            shadow: false, // Whether to render a shadow
-            hwaccel: false, // Whether to use hardware acceleration
-            className: 'spinner', // The CSS class to assign to the spinner
-            zIndex: 2e9, // The z-index (defaults to 2000000000)
-            top: 'auto', // Top position relative to parent in px
-            left: 'auto' // Left position relative to parent in px
-        });
-
-    app.spin = function( el ) {
-        var target = el || app.layout.el;
-
-        app.spinner.spin( target );
-    }
-
-    app.spinStop = function() {
-        app.spinner.stop();
-    }
 
     // Localize or create a new JavaScript Template object.
     var JST = window.JST = window.JST || {};
@@ -17275,23 +17301,20 @@ function( $, _, Backbone, State, Spinner ) {
         return this.set.apply( this, args );
     };
 
-
     Backbone.Layout.configure({
         // Allow LayoutManager to augment Backbone.View.prototype.
         manage: true,
 
         fetch: function( path ) {
-            // Initialize done for use in async-mode
             var done;
-            // Concatenate the file extension.
+
             path = path + ".html";
-            // If cached, use the compiled template.
+
             if (JST[path]) {
                 return JST[path];
             } else {
-                // Put fetch into `async-mode`.
                 done = this.async();
-                // Seek out the template asynchronously.
+
                 return $.ajax({ url: app.root + path }).then(function(contents) {
                     done(JST[path] = _.template(contents));
                 });
@@ -17299,11 +17322,7 @@ function( $, _, Backbone, State, Spinner ) {
         }
     });
     
-    // Mix Backbone.Events, modules, and layout management into the app object.
-    return _.extend(app, {
-        
-    }, Backbone.Events);
-
+    return _.extend(app, _App, Backbone.Events);
 });
 
 define('engine/modules/layer.collection',[
@@ -39780,11 +39799,6 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, R
             app.player.once("player:play", this.onPlay, this );
         },
 
-        afterRender: function() {
-            // app.state.set("baseRendered", true );
-            // this.resetFadeOutTimer();
-        },
-
         // sets the window size lazily so we don't have to do it elsewhere
         setWindowSize: function() {
             this.windowWidth = window.innerWidth;
@@ -40102,10 +40116,7 @@ function( app, Player, PlayerUI, Analytics ) {
                 target: "#player",
                 preview: false,
                 data: $.parseJSON( window.projectJSON ) || null,
-                url: window.projectJSON ? null :
-                    app.state.get("projectID") !== null ? app.metadata.api + "/items/" + app.state.get("projectID") :
-                    "testproject.json",
-                startFrame: app.state.get("frameID")
+                url: window.projectJSON ? null : "testproject.json"
             });
 
             if( window.projectJSON ) {

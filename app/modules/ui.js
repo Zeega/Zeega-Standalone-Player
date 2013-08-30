@@ -60,11 +60,6 @@ function( app, Backbone, Loader, Controls, MenuBarBottom, MenuBarTop, EndPage, R
             app.player.once("player:play", this.onPlay, this );
         },
 
-        afterRender: function() {
-            // app.state.set("baseRendered", true );
-            // this.resetFadeOutTimer();
-        },
-
         // sets the window size lazily so we don't have to do it elsewhere
         setWindowSize: function() {
             this.windowWidth = window.innerWidth;

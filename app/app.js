@@ -4,13 +4,12 @@ define([
     "lodash",
     "backbone",
 
-    "modules/state",
     "common/_app.common",
     // Plugins.
     "plugins/backbone.layoutmanager"
 ],
 
-function( $, _, Backbone, State, _App ) {
+function( $, _, Backbone, _App ) {
     
     var app = {
         // The root path to run the application.
@@ -39,11 +38,6 @@ function( $, _, Backbone, State, _App ) {
 
             return hasEndpage;
         },
-
-      /*
-        app.state stores information on the current state of the application
-      */
-        state: new State(),
 
         Backbone: Backbone,
         $: $
