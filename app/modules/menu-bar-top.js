@@ -144,18 +144,18 @@ function(app, Backbone) {
         },
 
         fadeOut: function( stay ) {
-            if( this.visible && this.sticky === false ) {
-                var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
+            // if( this.visible && this.sticky === false ) {
+            //     var fadeOutAfter = ( stay === 0 ) ? 0 : stay ? stay : 2000;
 
-                if ( this.timer ) clearTimeout( this.timer );
-                this.timer = setTimeout(function(){
-                    if ( !this.hover && app.player.state != "paused" ) {
-                        this.visible = false;
-                        // this.$(".ZEEGA-tab").hide("blind",{direction:"vertical"},500);
-                        this.$el.fadeOut();
-                    }
-                }.bind( this ), fadeOutAfter);
-            }
+            //     if ( this.timer ) clearTimeout( this.timer );
+            //     this.timer = setTimeout(function(){
+            //         if ( !this.hover && app.player.state != "paused" ) {
+            //             this.visible = false;
+            //             // this.$(".ZEEGA-tab").hide("blind",{direction:"vertical"},500);
+            //             this.$el.fadeOut();
+            //         }
+            //     }.bind( this ), fadeOutAfter);
+            // }
         },
 
         fadeIn: function( stay ) {
