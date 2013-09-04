@@ -2,8 +2,8 @@ define([
     "app",
     // Libs
     "backbone",
-    "engineVendor/spin",
-    "engineVendor/jquery.imagesloaded.min"
+    "common/libs/spin",
+    "common/libs/imagesloaded"
 ],
 
 function( app, Backbone, Spinner ) {

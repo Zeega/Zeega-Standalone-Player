@@ -20,12 +20,8 @@ require.config({
         zeega: "../assets/js/zeega",
 
         player: "player",
-        spin: "../assets/js/libs/spin",
         swfObject: "engine/vendor/swfobject"
 
-        // // libs
-        // imagesLoaded: "engine/vendor/jquery.images."
-        // ddslick: "engine/vendor/ddslick"
     },
 
     shim: {

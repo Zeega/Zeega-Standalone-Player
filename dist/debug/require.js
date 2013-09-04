@@ -15917,7 +15917,7 @@ define("backbone", ["jquery","lodash"], (function (global) {
   if (typeof exports == 'object')  module.exports = factory()
 
   /* AMD module */
-  else if (typeof define == 'function' && define.amd) define('engineVendor/spin',[],factory)
+  else if (typeof define == 'function' && define.amd) define('common/libs/spin',[],factory)
 
   /* Browser global */
   else root.Spinner = factory()
@@ -16296,7 +16296,7 @@ metatags
 */
 
 define('common/_app.common',[
-    "engineVendor/spin",
+    "common/libs/spin",
     "backbone"
 ],
 
@@ -16306,8 +16306,12 @@ function( Spinner ) {
 
         metadata: $("meta[name=zeega]").data(),
 
+        getHostname: function() {
+            return "http:" + this.metadata.hostname;
+        },
+
         getWebRoot: function() {
-            return "http:" + this.metadata.hostname + this.metadata.root;
+            return this.getHostname() + ( this.metadata.root || this.metadata.directory );
         },
 
         getApi: function() {
@@ -16355,7 +16359,7 @@ function( Spinner ) {
         spinStop: function() {
             this.spinner.stop();
         }
-    }
+    };
 });
 
 /*!
@@ -34069,7 +34073,7 @@ function( app, Controls ) {
 
 (function(c,n){var k="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";c.fn.imagesLoaded=function(l){function m(){var b=c(h),a=c(g);d&&(g.length?d.reject(e,b,a):d.resolve(e));c.isFunction(l)&&l.call(f,e,b,a)}function i(b,a){b.src===k||-1!==c.inArray(b,j)||(j.push(b),a?g.push(b):h.push(b),c.data(b,"imagesLoaded",{isBroken:a,src:b.src}),o&&d.notifyWith(c(b),[a,e,c(h),c(g)]),e.length===j.length&&(setTimeout(m),e.unbind(".imagesLoaded")))}var f=this,d=c.isFunction(c.Deferred)?c.Deferred():
 0,o=c.isFunction(d.notify),e=f.find("img").add(f.filter("img")),j=[],h=[],g=[];e.length?e.bind("load.imagesLoaded error.imagesLoaded",function(b){i(b.target,"error"===b.type)}).each(function(b,a){var e=a.src,d=c.data(a,"imagesLoaded");if(d&&d.src===e)i(a,d.isBroken);else if(a.complete&&a.naturalWidth!==n)i(a,0===a.naturalWidth||0===a.naturalHeight);else if(a.readyState||a.complete)a.src=k,a.src=e}):m();return d?d.promise(f):f}})(jQuery);
-define("engineVendor/jquery.imagesloaded.min", function(){});
+define("common/libs/imagesloaded", function(){});
 
 define('engine/plugins/layers/image/image',[
     "app",
@@ -34077,7 +34081,7 @@ define('engine/plugins/layers/image/image',[
     "engine/modules/layer.visual.view",
 
     //plugins
-    "engineVendor/jquery.imagesloaded.min"
+    "common/libs/imagesloaded"
 ],
 
 function( app, Layer, Visual ){
@@ -37039,6 +37043,8 @@ function() {
         response = response.items[0].text;
         removeDupeSoundtrack( response );
 
+        response.project.sequences[0].frames = _.without(response.project.sequences[0].frames, -1);
+
         if ( opts.endPage ) {
             var endId, lastPageId, lastPage, endPage, endLayers;
 
@@ -38666,6 +38672,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
                 this.emit("soundtrack soundtrack:loading", soundtrack );
                 soundtrack.once("layer:ready", function() {
                         this._onSoundtrackReady( soundtrack, autoplay );
+                        this.emit("soundtrack soundtrack:ready", soundtrack );
                     }, this );
                 soundtrack.set("_target", this.layout.$(".ZEEGA-soundtrack") );
                 soundtrack.render();
@@ -38932,8 +38939,8 @@ define('modules/loader',[
     "app",
     // Libs
     "backbone",
-    "engineVendor/spin",
-    "engineVendor/jquery.imagesloaded.min"
+    "common/libs/spin",
+    "common/libs/imagesloaded"
 ],
 
 function( app, Backbone, Spinner ) {
@@ -40326,12 +40333,8 @@ require.config({
         zeega: "../assets/js/zeega",
 
         player: "player",
-        spin: "../assets/js/libs/spin",
         swfObject: "engine/vendor/swfobject"
 
-        // // libs
-        // imagesLoaded: "engine/vendor/jquery.images."
-        // ddslick: "engine/vendor/ddslick"
     },
 
     shim: {
