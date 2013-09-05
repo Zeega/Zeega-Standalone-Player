@@ -120,7 +120,7 @@ function(app, Backbone) {
                 this.incFavorites(1);
                 app.emit("favorite");
             }
-            $.ajax({ url: url, type: 'POST', success: function(){  }  });
+            $.ajax({ url: url, type: 'POST',  xhrFields: {withCredentials: true}, success: function(){  }  });
 
             return false;
         },
