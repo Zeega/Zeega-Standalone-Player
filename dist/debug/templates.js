@@ -74,7 +74,7 @@ this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
- if ( remix.remix ) { 
+ if ( remix.remix && false ) { 
 ;__p+='\n\n<div class="loader-remix-meta" class="'+
 ( token_class )+
 '">\n\n    <div class="column project-current">\n        <div class="title">a remix by</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
@@ -108,18 +108,24 @@ this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
- if( remix.remix ) { 
-;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        <li>\n            <a class="profile-link" href="';
+ if( remixData.remix ) { 
+;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        ';
+ _.each( remixData.descendants, function( child ) { 
+;__p+='\n        <li data-project-id="'+
+( child.id )+
+'">\n            <a class="profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
 '" ';
- if (window!=window.top) { 
+ if ( window != window.top ) { 
 ;__p+=' target="blank" ';
  } 
 ;__p+=' data-bypass="true">\n                <div class="user-token token-small"\n                    style="\n                        background-image: url('+
-( user.thumbnail_url )+
-');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n    </ul>\n</div>\n\n';
+( child.user.thumbnail_url )+
+');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n        ';
+ }); 
+;__p+='\n\n    </ul>\n</div>\n\n';
  } 
 ;__p+='\n\n<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
@@ -238,7 +244,7 @@ __p+='<div class="end-page-wrapper" >\n\n    <div class="column project-current"
 ');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
 ( user.display_name )+
 '</div>\n    </div>\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient1"></div>\n    </div>\n\n';
- if ( remix.remix ) { 
+ if ( remix.remix && false ) { 
 ;__p+='\n    <div class="column project-parent">\n        <div class="title">up next</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
 ( remix.parent.user.thumbnail_url )+
 ');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+

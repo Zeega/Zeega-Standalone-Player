@@ -412,7 +412,7 @@ this["JST"]["app/templates/loader.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
- if ( remix.remix ) { 
+ if ( remix.remix && false ) { 
 ;__p+='\n\n<div class="loader-remix-meta" class="'+
 ( token_class )+
 '">\n\n    <div class="column project-current">\n        <div class="title">a remix by</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
@@ -446,18 +446,24 @@ this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
- if( remix.remix ) { 
-;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        <li>\n            <a class="profile-link" href="';
+ if( remixData.remix ) { 
+;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        ';
+ _.each( remixData.descendants, function( child ) { 
+;__p+='\n        <li data-project-id="'+
+( child.id )+
+'">\n            <a class="profile-link" href="';
  path 
 ;__p+='profile/'+
 ( userId )+
 '" ';
- if (window!=window.top) { 
+ if ( window != window.top ) { 
 ;__p+=' target="blank" ';
  } 
 ;__p+=' data-bypass="true">\n                <div class="user-token token-small"\n                    style="\n                        background-image: url('+
-( user.thumbnail_url )+
-');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n    </ul>\n</div>\n\n';
+( child.user.thumbnail_url )+
+');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n        ';
+ }); 
+;__p+='\n\n    </ul>\n</div>\n\n';
  } 
 ;__p+='\n\n<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
@@ -576,7 +582,7 @@ __p+='<div class="end-page-wrapper" >\n\n    <div class="column project-current"
 ');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
 ( user.display_name )+
 '</div>\n    </div>\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient1"></div>\n    </div>\n\n';
- if ( remix.remix ) { 
+ if ( remix.remix && false ) { 
 ;__p+='\n    <div class="column project-parent">\n        <div class="title">up next</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
 ( remix.parent.user.thumbnail_url )+
 ');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
@@ -37582,39 +37588,36 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         preloadNextZeega: function() {
             var remixData = this.getCurrentProject().getRemixData();
 
-            if ( remixData.remix && !this.projects.get( remixData.parent.id ) && !this.waiting ) {
-                var projectUrl = app.getApi() + "projects/" + remixData.parent.id;
+            if ( remixData.remix && !this.waiting ) {
+                var existingProjectIDs, projectUrl;
 
-                this.waiting = true;
-                this.emit("project:fetching");
+                existingProjectIDs = _.difference( _.pluck( remixData.descendants, "id"), this.projects.pluck("id") );
+                
+                if ( existingProjectIDs.length ) {
+                    var projectUrl = app.getApi() + "projects/" + existingProjectIDs[0];
 
-                $.getJSON( projectUrl, function( data ) {
-                    this._onDataLoaded( data );
-                    this.waiting = false;
-                    this.emit("project:fetch_success");
-                }.bind(this));
+                    this.waiting = true;
+                    this.emit("project:fetching", existingProjectIDs[0] );
+
+                    $.getJSON( projectUrl, function( data ) {
+                        this._onDataLoaded( data );
+                        this.waiting = false;
+                        this.emit("project:fetch_success");
+                    }.bind(this));
+                }
             }
         },
 
-        getRemixPath: function() {
-            var isComplete, path, temp;
+        getRemixData: function() {
+            var remix = _.extend({}, this.projects.at(0).get("remix"));
 
-            path = [ this.projects.at(0).getSimpleJSON() ];
+            if ( remix.descendants ) {
+                var desc = remix.descendants;
 
-            path = this.projects.map(function( project ) {
-                var remixObj = project.get("remix");
-
-                //isComplete = temp.parent.id == temp.root.id;
-                project.getSimpleJSON();
-                // temp = project.get("remix");
-
-                return project.get("remix");
-            });
-
-            return {
-                complete: isComplete,
-                path: path
-            };
+                remix.descendants = [ this.projects.at(0).getSimpleJSON() ].concat( desc );
+            }
+            
+            return remix;
         },
 
         _onDataLoaded: function( data ) {
@@ -37622,6 +37625,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 _.extend({},
                     this.toJSON(),
                     {
+                        endPage: false,
                         mode: "player"
                     })
                 );
@@ -38579,6 +38583,7 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         // prefers 'fresh' data from url
         getData: function() {
+            console.log("GET DATA:", this, projectJSON)
             if ( this.get("url") ) {
                 $.getJSON( this.get("url"), function( data ) {
                     this.initialParse( data );
@@ -38974,8 +38979,8 @@ function( app, Backbone, Spinner ) {
                 var r = p.get("remix");
 
                 return _.extend({
-                        token_class: r.remix && r.parent.id == r.root.id ? "two-up":
-                                        r.remix ? "three-up" : ""
+                        token_class: "poop" //r.remix && r.parent.id == r.root.id ? "two-up":
+                                        // r.remix ? "three-up" : ""
                     },
                     app.metadata,
                     p.toJSON()
@@ -39175,7 +39180,8 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites(),
-                    isEmbed: app.isEmbed()
+                    isEmbed: app.isEmbed(),
+                    remixData: this.model.zeega.getRemixData()
                 },
                     app.metadata,
                     this.model.zeega.getCurrentProject().toJSON()
@@ -39190,7 +39196,20 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
 
-            this.model.on("change:currentProject", this.render, this );
+            this.model.on("change:currentProject", this.onProjectChange, this );
+        },
+
+        onProjectChange: function( project ) {
+            this.render();
+
+            var newID = this.model.zeega.getCurrentProject().id;
+
+            // do something here to indicate that a new project has been reached
+
+            // this.$("[data-project-id='" + newID + "'] .user-token").css({
+            //     height: "50px",
+            //     width: "50px"
+            // });
         },
 
         getFavorites: function(){
@@ -40156,20 +40175,24 @@ function( app, Player, PlayerUI, Analytics ) {
         },
 
         initPlayer: function() {
-            var context, showChrome;
+            var projectData, hasEndpage;
+
+            projectData = _.isObject( window.projectJSON ) ? window.projectJSON : $.parseJSON( window.projectJSON ) || null;
+            console.log("INIT", projectData)
+            hasEndpage = !(projectData && projectData.project.remix.remix);
 
             app.player = new Player({
                 // debugEvents: true,
                 // cover: false,
 
                 scalable: true,
-                endPage: true,
+                endPage: hasEndpage,
                 controls: false,
-                autoplay: false, // for testing
+                autoplay: false,
                 preloadRadius: 2,
                 target: "#player",
                 preview: false,
-                data: $.parseJSON( window.projectJSON ) || null,
+                data: projectData,
                 url: window.projectJSON ? null : "testproject.json"
             });
 
