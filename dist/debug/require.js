@@ -459,7 +459,11 @@ __p+='';
  if ( window != window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true">\n                <div class="user-token token-small"\n                    style="\n                        background-image: url('+
+;__p+=' data-bypass="true">\n                <div class="user-token token-small';
+ if ( child.id == id ) { 
+;__p+=' remix-current';
+ } 
+;__p+='"\n                    style="\n                        background-image: url('+
 ( child.user.thumbnail_url )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n        ';
  }); 
