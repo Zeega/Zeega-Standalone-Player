@@ -23,20 +23,24 @@ function( app, Player, PlayerUI, Analytics ) {
         },
 
         initPlayer: function() {
-            var context, showChrome;
+            var projectData, hasEndpage;
+
+            projectData = _.isObject( window.projectJSON ) ? window.projectJSON : $.parseJSON( window.projectJSON ) || null;
+            console.log("INIT", projectData)
+            hasEndpage = !(projectData && projectData.project.remix.remix);
 
             app.player = new Player({
                 // debugEvents: true,
                 // cover: false,
 
                 scalable: true,
-                endPage: true,
+                endPage: hasEndpage,
                 controls: false,
-                autoplay: false, // for testing
+                autoplay: false,
                 preloadRadius: 2,
                 target: "#player",
                 preview: false,
-                data: $.parseJSON( window.projectJSON ) || null,
+                data: projectData,
                 url: window.projectJSON ? null : "testproject.json"
             });
 

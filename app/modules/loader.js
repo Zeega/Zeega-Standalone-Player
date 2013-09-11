@@ -36,8 +36,8 @@ function( app, Backbone, Spinner ) {
                 var r = p.get("remix");
 
                 return _.extend({
-                        token_class: r.remix && r.parent.id == r.root.id ? "two-up":
-                                        r.remix ? "three-up" : ""
+                        token_class: "poop" //r.remix && r.parent.id == r.root.id ? "two-up":
+                                        // r.remix ? "three-up" : ""
                     },
                     app.metadata,
                     p.toJSON()

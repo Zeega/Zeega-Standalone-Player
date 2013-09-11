@@ -25,7 +25,8 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites(),
-                    isEmbed: app.isEmbed()
+                    isEmbed: app.isEmbed(),
+                    remixData: this.model.zeega.getRemixData()
                 },
                     app.metadata,
                     this.model.zeega.getCurrentProject().toJSON()
@@ -40,7 +41,20 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );
 
-            this.model.on("change:currentProject", this.render, this );
+            this.model.on("change:currentProject", this.onProjectChange, this );
+        },
+
+        onProjectChange: function( project ) {
+            this.render();
+
+            var newID = this.model.zeega.getCurrentProject().id;
+
+            // do something here to indicate that a new project has been reached
+
+            // this.$("[data-project-id='" + newID + "'] .user-token").css({
+            //     height: "50px",
+            //     width: "50px"
+            // });
         },
 
         getFavorites: function(){
