@@ -446,16 +446,12 @@ this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
- if( remixData.remix ) { 
+ if( remixData.ancestors.length ) { 
 ;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        ';
  _.each( remixData.descendants, function( child ) { 
 ;__p+='\n        <li data-project-id="'+
 ( child.id )+
-'">\n            <a class="profile-link" href="';
- path 
-;__p+='profile/'+
-( userId )+
-'" ';
+'">\n            <a class="profile-link" href="#" ';
  if ( window != window.top ) { 
 ;__p+=' target="blank" ';
  } 
@@ -465,6 +461,8 @@ __p+='';
  } 
 ;__p+='"\n                    style="\n                        background-image: url('+
 ( child.user.thumbnail_url )+
+');\n                        background-size: cover;\n                    "\n                ></div>\n                <div class="remix-project-flag"\n                    style="\n                        background-image: url('+
+( child.cover_image )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n        ';
  }); 
 ;__p+='\n\n    </ul>\n</div>\n\n';
@@ -581,27 +579,7 @@ return __p;
 this["JST"]["app/templates/remix-endpage.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
-__p+='<div class="end-page-wrapper" >\n\n    <div class="column project-current">\n        <div class="title">just watched</div>\n        <div class="user-token user-token-medium" style="\n            background-image: url('+
-( user.thumbnail_url )+
-');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
-( user.display_name )+
-'</div>\n    </div>\n\n    <div class="column column-arrow">\n        <div class="remix-arrow gradient1"></div>\n    </div>\n\n';
- if ( remix.remix && false ) { 
-;__p+='\n    <div class="column project-parent">\n        <div class="title">up next</div>\n        <div class="user-token user-token-large" style="\n            background-image: url('+
-( remix.parent.user.thumbnail_url )+
-');\n            background-size: cover;\n            background-position: center;\n        "></div>\n        <div class="username">'+
-( remix.parent.user.display_name )+
-'</div>\n    </div>\n\n    ';
- if ( remix.parent.id != remix.root.id ) { 
-;__p+='\n\n        <div class="column column-arrow">\n            <div class="remix-arrow gradient2"></div>\n        </div>\n\n        <div class="column project-root">\n            <div class="title">remixed from</div>\n            <div class="user-token user-token-medium" style="\n                background-image: url('+
-( remix.root.user.thumbnail_url )+
-');\n                background-size: cover;\n                background-position: center;\n            "></div>\n            <div class="username">'+
-( remix.root.user.display_name )+
-'</div>\n        </div>\n\n    ';
- } 
-;__p+='\n';
- } 
-;__p+='\n</div>';
+__p+='';
 }
 return __p;
 };
@@ -37621,6 +37599,8 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 remix.descendants = [ this.projects.at(0).getSimpleJSON() ].concat( desc );
             }
             
+            console.log("rmxdata", remix)
+
             return remix;
         },
 
@@ -38587,7 +38567,6 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
         // prefers 'fresh' data from url
         getData: function() {
-            console.log("GET DATA:", this, projectJSON)
             if ( this.get("url") ) {
                 $.getJSON( this.get("url"), function( data ) {
                     this.initialParse( data );
@@ -39181,6 +39160,7 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
 
         serialize: function() {
             if ( this.model.zeega ) {
+                console.log("RMX:",this.model.zeega.getRemixData())
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites(),

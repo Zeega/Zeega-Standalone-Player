@@ -1,14 +1,20 @@
-<% if( remixData.remix ) { %>
+<% if( remixData.ancestors.length ) { %>
 
 <div class="remix-meta">
     <span class="remix-tab"></span>
     <ul class="remix-trail">
         <% _.each( remixData.descendants, function( child ) { %>
         <li data-project-id="<%= child.id %>">
-            <a class="profile-link" href="<% path %>profile/<%= userId %>" <% if ( window != window.top ) { %> target="blank" <% } %> data-bypass="true">
+            <a class="profile-link" href="#" <% if ( window != window.top ) { %> target="blank" <% } %> data-bypass="true">
                 <div class="user-token token-small<% if ( child.id == id ) { %> remix-current<% } %>"
                     style="
                         background-image: url(<%= child.user.thumbnail_url %>);
+                        background-size: cover;
+                    "
+                ></div>
+                <div class="remix-project-flag"
+                    style="
+                        background-image: url(<%= child.cover_image %>);
                         background-size: cover;
                     "
                 ></div>

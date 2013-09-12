@@ -2771,12 +2771,48 @@ a:active {
 .remix-meta .remix-trail li {
   float: left;
   margin-left: 5px;
+  position: relative;
+}
+.remix-meta .user-token {
+  z-index: 2;
+  position: relative;
 }
 .remix-meta .user-token.remix-current {
   border-color: #bb0070;
 }
 .remix-meta .user-token:hover {
   border-color: #0088bc;
+}
+.remix-meta .profile-link {
+  transition: margin-right 0.5s;
+  -webkit-transition: margin-right 0.5s;
+}
+.remix-meta .profile-link:hover .user-token {
+  z-index: 5;
+  margin-right: 70px;
+  transition: margin-right 0.5s;
+  -webkit-transition: margin-right 0.5s;
+}
+.remix-meta .profile-link:hover .remix-project-flag {
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  width: 100px;
+  height: 75px;
+  opacity: 1;
+}
+.remix-meta .remix-project-flag {
+  background-image: url(http://zeegadev.s3.amazonaws.com/386b0e3bb50b9445cb0a3ed3a52eeb4f_7.jpg);
+  background-size: cover;
+  width: 0;
+  height: 0;
+  border: 1px solid white;
+  position: absolute;
+  bottom: -3px;
+  z-index: 4;
+  left: -3px;
+  opacity: 0;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
 }
 .ZEEGA-chrome-metablock {
   color: white;

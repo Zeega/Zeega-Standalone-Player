@@ -22,6 +22,7 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
 
         serialize: function() {
             if ( this.model.zeega ) {
+                console.log("RMX:",this.model.zeega.getRemixData())
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites(),
