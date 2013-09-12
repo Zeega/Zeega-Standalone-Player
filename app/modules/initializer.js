@@ -26,8 +26,7 @@ function( app, Player, PlayerUI, Analytics ) {
             var projectData, hasEndpage;
 
             projectData = _.isObject( window.projectJSON ) ? window.projectJSON : $.parseJSON( window.projectJSON ) || null;
-            console.log("INIT", projectData)
-            hasEndpage = !(projectData && projectData.project.remix.remix);
+            hasEndpage = !( projectData && projectData.project.remix.descendants.length );
 
             app.player = new Player({
                 // debugEvents: true,

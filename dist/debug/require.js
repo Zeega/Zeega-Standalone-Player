@@ -37570,7 +37570,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         preloadNextZeega: function() {
             var remixData = this.getCurrentProject().getRemixData();
 
-            if ( remixData.remix && !this.waiting ) {
+            if ( remixData.descendants.length && !this.waiting ) {
                 var existingProjectIDs, projectUrl;
 
                 existingProjectIDs = _.difference( _.pluck( remixData.descendants, "id"), this.projects.pluck("id") );
@@ -37609,7 +37609,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 _.extend({},
                     this.toJSON(),
                     {
-                        endPage: false,
+                        endPage: data.project.remix.descendants.length === 0,
                         mode: "player"
                     })
                 );
@@ -40162,8 +40162,7 @@ function( app, Player, PlayerUI, Analytics ) {
             var projectData, hasEndpage;
 
             projectData = _.isObject( window.projectJSON ) ? window.projectJSON : $.parseJSON( window.projectJSON ) || null;
-            console.log("INIT", projectData)
-            hasEndpage = !(projectData && projectData.project.remix.remix);
+            hasEndpage = !( projectData && projectData.project.remix.descendants.length );
 
             app.player = new Player({
                 // debugEvents: true,
