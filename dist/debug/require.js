@@ -447,7 +447,7 @@ var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
  if( remixData.descendants.length ) { 
-;__p+='\n\n<div class="remix-meta">\n    <span class="remix-tab"></span>\n    <ul class="remix-trail">\n        ';
+;__p+='\n\n<div class="remix-meta">\n    <!-- <span class="remix-tab"></span> -->\n    <ul class="remix-trail">\n        ';
  _.each( remixData.descendants, function( child ) { 
 ;__p+='\n        <li data-project-id="'+
 ( child.id )+
@@ -455,19 +455,13 @@ __p+='';
  if ( window != window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true">\n                <div class="user-token token-small';
- if ( child.id == id ) { 
-;__p+=' remix-current';
- } 
-;__p+='"\n                    style="\n                        background-image: url('+
-( child.user.thumbnail_url )+
-');\n                        background-size: cover;\n                    "\n                ></div>\n                <div class="remix-project-flag"\n                        style="\n                            background-image: url('+
+;__p+=' data-bypass="true">\n                <div class="remix-project-flag"\n                        style="\n                            background-image: url('+
 ( child.cover_image )+
 ');\n                            background-size: cover;\n                            background-position: center\n                        "\n                    >\n                    <div class="text-overlay">Now Watching</div>\n                    <div class="text-overlay">';
  if ( remix.ancestors.length ) { 
 ;__p+='A Remix by';
  } else { 
-;__p+='The Original by';
+;__p+='A Zeega by';
  } 
 ;__p+=' '+
 ( user.display_name )+
@@ -535,7 +529,7 @@ __p+='\n';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btnz-join">Create Your Own Zeegas</a>\n';
+;__p+=' data-bypass="true" class="btnz btnz-join">create your own Zeega</a>\n';
  } else { 
 ;__p+='\n<a href="'+
 ( path )+
@@ -543,7 +537,7 @@ __p+='\n';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
-;__p+=' data-bypass="true" class="btnz btnz-join">Create Your Own Zeega</a>\n';
+;__p+=' data-bypass="true" class="btnz btnz-join">create your own Zeegas</a>\n';
  } 
 ;__p+='\n\n<div class="menu-right">\n\n    <ul class="social-actions">\n       <li>  \n    \n    ';
  if ( favorite && authenticated ) { 
@@ -561,7 +555,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random"></i> <span class="content">remix</span></a>\n        </li>\n    ';
+;__p+='><i class="icon-random icon-white"></i> <span class="content">remix</span></a>\n        </li>\n    ';
  } 
 ;__p+='\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
@@ -37613,8 +37607,6 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 remix.descendants = [ this.projects.at(0).getSimpleJSON() ].concat( desc );
             }
             
-            console.log("rmxdata", remix)
-
             return remix;
         },
 
@@ -39212,7 +39204,16 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
 
             this.remixTimer = setTimeout(function() { this._remix_hide(); }.bind(this), 3000 );
             this.remixVisible = true;
-            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").addClass("show");
+
+            var newSize = (window.innerHeight / 4) + "px";
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .remix-project-flag")
+                .css({
+                    height: newSize,
+                    width: newSize
+                });
+
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "']")
+                .addClass("show");
         },
 
         _remix_waitForNext: function( mod, e, o ) {
@@ -39227,7 +39228,7 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         _remix_hide: function(){
             this.visible = false;
             this.clearRemixTimer();
-            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").removeClass("show");
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "']").removeClass("show");
         },
 
         getFavorites: function(){

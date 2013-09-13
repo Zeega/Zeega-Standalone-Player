@@ -117,76 +117,47 @@
         float: left;
         opacity: 0.8;
     }
+
     .remix-trail {
         position: absolute;
         bottom: 5px;
-        margin-left: 75px;
 
         li {
-            float: left;
-            margin-left: 5px;
-            position: relative;
-        }
-    }
-
-    .user-token {
-        z-index: 2;
-        position: relative;
-
-        &.remix-current {
-            border-color: rgb(187,0,112);
-        }
-
-        &:hover {
-            border-color: rgb(0, 136, 188);
-        }
-    }
-
-
-    .profile-link {
-
-        cursor: default;
-
-        .remix-project-flag {
-            background-image: url(http://zeegadev.s3.amazonaws.com/386b0e3bb50b9445cb0a3ed3a52eeb4f_7.jpg);
-            background-size: cover;
-            width: 200px;
-            height: 200px;
-            border: 2px solid white;
-            position: absolute;
-            bottom: -3px;
-            z-index: 4;
-            left: -3px;
             opacity: 0;
             transition: opacity 0.5s;
             -webkit-transition: opacity 0.5s;
-            padding: 10px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.75);
-
-            .text-overlay {
-                color: black;
-                background: white;
-                display: inline-block;
-                padding: 2px;
-                margin-bottom: 5px;
-                font-family: "futura", sans-serif;
-                font-size: 13px;
-            }
-        }
-
-        &.show {
-            .user-token {
-                z-index: 5;
-            }
-            .remix-project-flag {
+            &.show {
+                opacity: 1;
                 transition: opacity 0.5s;
                 -webkit-transition: opacity 0.5s;
-                width: 200px;
-                height: 200px;
-                opacity: 1;
             }
         }
     }
+
+    .remix-project-flag {
+        background-image: url(http://zeegadev.s3.amazonaws.com/386b0e3bb50b9445cb0a3ed3a52eeb4f_7.jpg);
+        background-size: cover;
+        width: 200px;
+        height: 200px;
+        border: 2px solid white;
+        position: absolute;
+        bottom: 15px;
+        z-index: 4;
+        left: 20px;
+        padding: 10px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.75);
+
+        .text-overlay {
+            color: black;
+            background: white;
+            display: inline-block;
+            padding: 2px;
+            margin-bottom: 5px;
+            font-family: "futura", sans-serif;
+            font-size: 13px;
+        }
+    }
+
 
     
 }

@@ -58,7 +58,16 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
 
             this.remixTimer = setTimeout(function() { this._remix_hide(); }.bind(this), 3000 );
             this.remixVisible = true;
-            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").addClass("show");
+
+            var newSize = (window.innerHeight / 4) + "px";
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .remix-project-flag")
+                .css({
+                    height: newSize,
+                    width: newSize
+                });
+
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "']")
+                .addClass("show");
         },
 
         _remix_waitForNext: function( mod, e, o ) {
@@ -73,7 +82,7 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         _remix_hide: function(){
             this.visible = false;
             this.clearRemixTimer();
-            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").removeClass("show");
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "']").removeClass("show");
         },
 
         getFavorites: function(){

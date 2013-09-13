@@ -1,17 +1,11 @@
 <% if( remixData.descendants.length ) { %>
 
 <div class="remix-meta">
-    <span class="remix-tab"></span>
+    <!-- <span class="remix-tab"></span> -->
     <ul class="remix-trail">
         <% _.each( remixData.descendants, function( child ) { %>
         <li data-project-id="<%= child.id %>">
             <a class="profile-link" href="#" <% if ( window != window.top ) { %> target="blank" <% } %> data-bypass="true">
-                <div class="user-token token-small<% if ( child.id == id ) { %> remix-current<% } %>"
-                    style="
-                        background-image: url(<%= child.user.thumbnail_url %>);
-                        background-size: cover;
-                    "
-                ></div>
                 <div class="remix-project-flag"
                         style="
                             background-image: url(<%= child.cover_image %>);
@@ -20,7 +14,7 @@
                         "
                     >
                     <div class="text-overlay">Now Watching</div>
-                    <div class="text-overlay"><% if ( remix.ancestors.length ) { %>A Remix by<% } else { %>The Original by<% } %> <%= user.display_name %></div>
+                    <div class="text-overlay"><% if ( remix.ancestors.length ) { %>A Remix by<% } else { %>A Zeega by<% } %> <%= user.display_name %></div>
                 </div>
             </a>
         </li>

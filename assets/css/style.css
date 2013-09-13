@@ -2766,43 +2766,31 @@ a:active {
 .remix-meta .remix-trail {
   position: absolute;
   bottom: 5px;
-  margin-left: 75px;
 }
 .remix-meta .remix-trail li {
-  float: left;
-  margin-left: 5px;
-  position: relative;
+  opacity: 0;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
 }
-.remix-meta .user-token {
-  z-index: 2;
-  position: relative;
+.remix-meta .remix-trail li.show {
+  opacity: 1;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
 }
-.remix-meta .user-token.remix-current {
-  border-color: #bb0070;
-}
-.remix-meta .user-token:hover {
-  border-color: #0088bc;
-}
-.remix-meta .profile-link {
-  cursor: default;
-}
-.remix-meta .profile-link .remix-project-flag {
+.remix-meta .remix-project-flag {
   background-image: url(http://zeegadev.s3.amazonaws.com/386b0e3bb50b9445cb0a3ed3a52eeb4f_7.jpg);
   background-size: cover;
   width: 200px;
   height: 200px;
   border: 2px solid white;
   position: absolute;
-  bottom: -3px;
+  bottom: 15px;
   z-index: 4;
-  left: -3px;
-  opacity: 0;
-  transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
+  left: 20px;
   padding: 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.75);
 }
-.remix-meta .profile-link .remix-project-flag .text-overlay {
+.remix-meta .remix-project-flag .text-overlay {
   color: black;
   background: white;
   display: inline-block;
@@ -2810,16 +2798,6 @@ a:active {
   margin-bottom: 5px;
   font-family: "futura", sans-serif;
   font-size: 13px;
-}
-.remix-meta .profile-link.show .user-token {
-  z-index: 5;
-}
-.remix-meta .profile-link.show .remix-project-flag {
-  transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
-  width: 200px;
-  height: 200px;
-  opacity: 1;
 }
 .ZEEGA-chrome-metablock {
   color: white;
@@ -3038,8 +3016,10 @@ a:active {
   margin-left: 10px;
 }
 .ZEEGA-player-menu-bar .btnz.btn-remix {
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #42fffb));
   transition: all 0.5s;
   min-width: 52px;
+  color: white;
 }
 .ZEEGA-player-menu-bar .btnz.remix-endpage {
   background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #42fffb));
