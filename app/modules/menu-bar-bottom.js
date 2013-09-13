@@ -1,12 +1,11 @@
 define([
     "app",
     "modules/citation.view",
-    "modules/remix-heads.collection",
     // Libs
     "backbone"
 ],
 
-function( app, CitationView, RemixHeadsCollection, Backbone ) {
+function( app, CitationView, Backbone ) {
     
     return Backbone.View.extend({
         
@@ -25,15 +24,16 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
 
         serialize: function() {
             if ( this.model.zeega ) {
-                console.log("RMX:",this.model.zeega.getRemixData())
                 return _.extend({
                     path: "http:" + app.metadata.hostname + app.metadata.directory,
                     favorites: this.getFavorites(),
                     isEmbed: app.isEmbed(),
-                    remixData: this.model.zeega.getRemixData()
+                    remixData: this.model.zeega.getRemixData(),
+
+                    currentProject: this.model.zeega.getCurrentProject().toJSON(),
+                    rootProject: this.model.zeega.projects.at(0).toJSON()
                 },
-                    app.metadata,
-                    this.model.zeega.getCurrentProject().toJSON()
+                    app.metadata
                 );
             }
         },

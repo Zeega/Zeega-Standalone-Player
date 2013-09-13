@@ -18,7 +18,6 @@ function(app, Backbone) {
         sticky: false,
 
         template: "app/templates/remix-endpage",
-
         className: "ZEEGA-remix-endpage",
 
         initialize: function() {

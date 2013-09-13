@@ -15,18 +15,6 @@ function( $, _, Backbone, _App ) {
         // The root path to run the application.
         root: "/",
 
-        isEmbed: function() {
-            var isEmbed;
-
-            try {
-                isEmbed = window.frameElement !== null;
-            } catch ( err ) {
-                isEmbed = false;
-            }
-
-            return isEmbed;
-        },
-
         hasEndpage: function() {
             var hasEndpage;
 

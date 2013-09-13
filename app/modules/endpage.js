@@ -22,7 +22,7 @@ function(app, Backbone) {
         className: "ZEEGA-end-page",
 
         initialize: function() {
-            if ( !app.hasEndpage() ) this.template = "app/templates/endpage-embed";
+            if ( app.isEmbed() ) this.template = "app/templates/endpage-embed";
 
             this.model.on("endpage_enter", this.endPageEnter, this );
             this.model.on("endpage_exit", this.endPageExit, this );

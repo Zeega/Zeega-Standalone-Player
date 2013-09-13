@@ -26,12 +26,15 @@ function( app, Player, PlayerUI, Analytics ) {
             var projectData, hasEndpage;
 
             projectData = _.isObject( window.projectJSON ) ? window.projectJSON : $.parseJSON( window.projectJSON ) || null;
-            hasEndpage = !( projectData && projectData.project.remix.descendants.length );
+            hasEndpage = !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
+
+            console.log("is embed", app.isEmbed(), !app.isEmbed() );
 
             app.player = new Player({
                 // debugEvents: true,
                 // cover: false,
 
+                loop: !app.isEmbed(),
                 scalable: true,
                 endPage: hasEndpage,
                 controls: false,

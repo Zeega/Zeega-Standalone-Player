@@ -118,6 +118,23 @@
         opacity: 0.8;
     }
 
+    .remix-bg {
+        position: absolute;
+        float: left;
+        height: 100%;
+        width: 100%;
+        &.remix-bg-whole {
+
+        }
+
+        &.remix-bg-half {
+            width: 50%;
+            &:nth-child(2) {
+                left: 50%;
+            }
+        }
+    }
+
     .remix-trail {
         position: absolute;
         bottom: 5px;
@@ -144,7 +161,6 @@
         bottom: 15px;
         z-index: 4;
         left: 20px;
-        padding: 10px;
         box-shadow: 2px 2px 5px rgba(0,0,0,0.75);
 
         .text-overlay {
@@ -152,9 +168,11 @@
             background: white;
             display: inline-block;
             padding: 2px;
-            margin-bottom: 5px;
+            margin: 10px 10px 5px 10px;
             font-family: "futura", sans-serif;
             font-size: 13px;
+            z-index: 2;
+            position: relative;
         }
     }
 
