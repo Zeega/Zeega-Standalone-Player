@@ -123,9 +123,17 @@ __p+='';
  } 
 ;__p+='"\n                    style="\n                        background-image: url('+
 ( child.user.thumbnail_url )+
-');\n                        background-size: cover;\n                    "\n                ></div>\n                <div class="remix-project-flag"\n                    style="\n                        background-image: url('+
+');\n                        background-size: cover;\n                    "\n                ></div>\n                <div class="remix-project-flag"\n                        style="\n                            background-image: url('+
 ( child.cover_image )+
-');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n        ';
+');\n                            background-size: cover;\n                            background-position: center\n                        "\n                    >\n                    <div class="text-overlay">Now Watching</div>\n                    <div class="text-overlay">';
+ if ( remix.ancestors.length ) { 
+;__p+='A Remix by';
+ } else { 
+;__p+='The Original by';
+ } 
+;__p+=' '+
+( user.display_name )+
+'</div>\n                </div>\n            </a>\n        </li>\n        ';
  }); 
 ;__p+='\n\n    </ul>\n</div>\n\n';
  } 

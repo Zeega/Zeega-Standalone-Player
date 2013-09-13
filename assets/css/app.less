@@ -1416,35 +1416,42 @@ a:active {
   border-color: #0088bc;
 }
 .remix-meta .profile-link {
-  transition: margin-right 0.5s;
-  -webkit-transition: margin-right 0.5s;
+  cursor: default;
 }
-.remix-meta .profile-link:hover .user-token {
-  z-index: 5;
-  margin-right: 70px;
-  transition: margin-right 0.5s;
-  -webkit-transition: margin-right 0.5s;
-}
-.remix-meta .profile-link:hover .remix-project-flag {
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  width: 100px;
-  height: 75px;
-  opacity: 1;
-}
-.remix-meta .remix-project-flag {
+.remix-meta .profile-link .remix-project-flag {
   background-image: url(http://zeegadev.s3.amazonaws.com/386b0e3bb50b9445cb0a3ed3a52eeb4f_7.jpg);
   background-size: cover;
-  width: 0;
-  height: 0;
-  border: 1px solid white;
+  width: 200px;
+  height: 200px;
+  border: 2px solid white;
   position: absolute;
   bottom: -3px;
   z-index: 4;
   left: -3px;
   opacity: 0;
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  padding: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.75);
+}
+.remix-meta .profile-link .remix-project-flag .text-overlay {
+  color: black;
+  background: white;
+  display: inline-block;
+  padding: 2px;
+  margin-bottom: 5px;
+  font-family: "futura", sans-serif;
+  font-size: 13px;
+}
+.remix-meta .profile-link.show .user-token {
+  z-index: 5;
+}
+.remix-meta .profile-link.show .remix-project-flag {
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  width: 200px;
+  height: 200px;
+  opacity: 1;
 }
 .ZEEGA-chrome-metablock {
   color: white;

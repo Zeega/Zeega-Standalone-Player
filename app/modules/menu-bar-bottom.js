@@ -16,6 +16,9 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         hover: false,
         playing: false,
 
+        remixTimer: null,
+        remixVisible: false,
+
         template: "app/templates/menu-bar-bottom",
 
         className: "ZEEGA-player-citations",
@@ -48,14 +51,29 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         onProjectChange: function( project ) {
             this.render();
 
-            var newID = this.model.zeega.getCurrentProject().id;
+            this.clearRemixTimer();
+            this.model.off("page:focus");
 
-            // do something here to indicate that a new project has been reached
+            this.model.once("page:focus", this._remix_waitForNext, this );
 
-            // this.$("[data-project-id='" + newID + "'] .user-token").css({
-            //     height: "50px",
-            //     width: "50px"
-            // });
+            this.remixTimer = setTimeout(function() { this._remix_hide(); }.bind(this), 3000 );
+            this.remixVisible = true;
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").addClass("show");
+        },
+
+        _remix_waitForNext: function( mod, e, o ) {
+            this.model.once("page:focus", this._remix_hide, this );
+        },
+
+        clearRemixTimer: function() {
+            if ( this.remixTimer ) clearTimeout( this.remixTimer );
+            this.remixTimer = null;
+        },
+
+        _remix_hide: function(){
+            this.visible = false;
+            this.clearRemixTimer();
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").removeClass("show");
         },
 
         getFavorites: function(){

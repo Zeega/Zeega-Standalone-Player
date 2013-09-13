@@ -461,9 +461,17 @@ __p+='';
  } 
 ;__p+='"\n                    style="\n                        background-image: url('+
 ( child.user.thumbnail_url )+
-');\n                        background-size: cover;\n                    "\n                ></div>\n                <div class="remix-project-flag"\n                    style="\n                        background-image: url('+
+');\n                        background-size: cover;\n                    "\n                ></div>\n                <div class="remix-project-flag"\n                        style="\n                            background-image: url('+
 ( child.cover_image )+
-');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </li>\n        ';
+');\n                            background-size: cover;\n                            background-position: center\n                        "\n                    >\n                    <div class="text-overlay">Now Watching</div>\n                    <div class="text-overlay">';
+ if ( remix.ancestors.length ) { 
+;__p+='A Remix by';
+ } else { 
+;__p+='The Original by';
+ } 
+;__p+=' '+
+( user.display_name )+
+'</div>\n                </div>\n            </a>\n        </li>\n        ';
  }); 
 ;__p+='\n\n    </ul>\n</div>\n\n';
  } 
@@ -37446,6 +37454,8 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 nextPage = this.getCurrentProject().pages.at( p.get("_order") + 1 );
             } else if ( this.getNextProject() ) {
                 nextPage = this.getNextProject().pages.at(0);
+            } else if ( this.get("loop")) {
+                nextPage = this.projects.at(0).pages.at(0);
             }
 
             return nextPage;
@@ -37459,6 +37469,10 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 previousPage = this.getCurrentProject().pages.at( p.get("_order") - 1 );
             } else if ( this.getPreviousProject() ) {
                 previousPage = this.getPreviousProject().pages.at( this.getPreviousProject().pages.length - 1 );
+            } else if ( this.get("loop")) {
+                var project = this.projects.at( this.projects.length - 1 );
+
+                previousPage = project.pages.at( project.pages.length - 1 );
             }
 
             return previousPage;
@@ -37609,7 +37623,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
                 _.extend({},
                     this.toJSON(),
                     {
-                        endPage: data.project.remix.descendants.length === 0,
+                        endPage: this.get("loop") ? false : data.project.remix.descendants.length === 0,
                         mode: "player"
                     })
                 );
@@ -38411,6 +38425,8 @@ function( app, Engine, Relay, Status, PlayerLayout ) {
 
             layerOptions: {},
 
+            loop: false,
+
             /**
             Sets the player to operate in a mobile browser environment
 
@@ -39154,6 +39170,9 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         hover: false,
         playing: false,
 
+        remixTimer: null,
+        remixVisible: false,
+
         template: "app/templates/menu-bar-bottom",
 
         className: "ZEEGA-player-citations",
@@ -39186,14 +39205,29 @@ function( app, CitationView, RemixHeadsCollection, Backbone ) {
         onProjectChange: function( project ) {
             this.render();
 
-            var newID = this.model.zeega.getCurrentProject().id;
+            this.clearRemixTimer();
+            this.model.off("page:focus");
 
-            // do something here to indicate that a new project has been reached
+            this.model.once("page:focus", this._remix_waitForNext, this );
 
-            // this.$("[data-project-id='" + newID + "'] .user-token").css({
-            //     height: "50px",
-            //     width: "50px"
-            // });
+            this.remixTimer = setTimeout(function() { this._remix_hide(); }.bind(this), 3000 );
+            this.remixVisible = true;
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").addClass("show");
+        },
+
+        _remix_waitForNext: function( mod, e, o ) {
+            this.model.once("page:focus", this._remix_hide, this );
+        },
+
+        clearRemixTimer: function() {
+            if ( this.remixTimer ) clearTimeout( this.remixTimer );
+            this.remixTimer = null;
+        },
+
+        _remix_hide: function(){
+            this.visible = false;
+            this.clearRemixTimer();
+            this.$("[data-project-id='" + this.model.zeega.getCurrentProject().id + "'] .profile-link").removeClass("show");
         },
 
         getFavorites: function(){
