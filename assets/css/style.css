@@ -3005,6 +3005,57 @@ a:active {
 .ZEEGA-player-menu-bar a {
   cursor: pointer;
 }
+.ZEEGA-player-menu-bar .btnz {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: none;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.6);
+  text-shadow: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+}
+.ZEEGA-player-menu-bar .btnz i {
+  opacity: 0.6;
+  vertical-align: -3px;
+}
+.ZEEGA-player-menu-bar .btnz:hover {
+  color: orangered;
+  border-color: orangered;
+}
+.ZEEGA-player-menu-bar .btnz.favorited {
+  padding: 8px;
+  background: orangered;
+  border-radius: 50px;
+}
+.ZEEGA-player-menu-bar .btnz.favorited .content {
+  display: none;
+}
+.ZEEGA-player-menu-bar .btnz.favorited i {
+  opacity: 1;
+  background-image: url("../img/glyphicons-halflings-white.png");
+}
+.ZEEGA-player-menu-bar .btnz.btnz-join {
+  margin-left: 10px;
+}
+.ZEEGA-player-menu-bar .btnz.btn-remix {
+  transition: all 0.5s;
+  min-width: 52px;
+}
+.ZEEGA-player-menu-bar .btnz.remix-endpage {
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #42fffb));
+  width: 300px;
+  border-color: white;
+  color: white;
+  min-width: 125px;
+  transition: all 0.5s;
+}
+.ZEEGA-player-menu-bar .btnz.remix-endpage i {
+  opacity: 1;
+}
+.ZEEGA-player-menu-bar .btnz.remix-endpage:hover {
+  transition: all 0.5s;
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #ffff00));
+}
 .ZEEGA-player-menu-bar .menu-right {
   float: right;
   margin-top: 12px;
@@ -3024,57 +3075,6 @@ a:active {
 }
 .ZEEGA-player-menu-bar .menu-right ul:first-child {
   margin-right: 20px;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz {
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: none;
-  border: 2px solid rgba(0, 0, 0, 0.5);
-  color: rgba(0, 0, 0, 0.6);
-  text-shadow: none;
-  padding: 8px 14px;
-  border-radius: 4px;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz i {
-  opacity: 0.6;
-  vertical-align: -3px;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz:hover {
-  color: orangered;
-  border-color: orangered;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.favorited {
-  padding: 8px;
-  background: orangered;
-  border-radius: 50px;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.favorited .content {
-  display: none;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.favorited i {
-  opacity: 1;
-  background-image: url("../img/glyphicons-halflings-white.png");
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.btnz-join {
-  margin-left: 10px;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.btn-remix {
-  transition: all 0.5s;
-  min-width: 52px;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.remix-endpage {
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #42fffb));
-  width: 300px;
-  border-color: white;
-  color: white;
-  min-width: 125px;
-  transition: all 0.5s;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.remix-endpage i {
-  opacity: 1;
-}
-.ZEEGA-player-menu-bar .menu-right .btnz.remix-endpage:hover {
-  transition: all 0.5s;
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ff0066), color-stop(100%, #ffff00));
 }
 .ZEEGA-player-menu-bar .social-share-icon {
   opacity: 0.8;
