@@ -1,35 +1,32 @@
 define([
-    // Libraries.
-    "jquery",
-    "lodash",
-    "backbone",
-
     "common/_app.common",
-    // Plugins.
     "plugins/backbone.layoutmanager"
 ],
 
-function( $, _, Backbone, _App ) {
+function( _App ) {
     
     var app = {
         // The root path to run the application.
         root: "/",
 
-        hasEndpage: function() {
-            var hasEndpage;
+        getIframeAttributes: _.memoize(function() {
 
             try {
-                hasEndpage= ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
+                if ( window != window.top ) {
+                    return {
+                        hideChrome: window.frameElement.getAttribute("hideChrome") || false,
+                        loop: window.frameElement.getAttribute("loop") || false
+                    }
+                } else {
+                    return false;
+                }
             } catch ( err ) {
-                hasEndpage = true;
+                return false
             }
-
-            return hasEndpage;
-        },
+        }),
 
         Backbone: Backbone,
         $: $
-
     };
 
     // Localize or create a new JavaScript Template object.

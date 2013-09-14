@@ -28,13 +28,10 @@ function( app, Player, PlayerUI, Analytics ) {
             projectData = _.isObject( window.projectJSON ) ? window.projectJSON : $.parseJSON( window.projectJSON ) || null;
             hasEndpage = !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
 
-            console.log("is embed", app.isEmbed(), !app.isEmbed() );
-
             app.player = new Player({
                 // debugEvents: true,
-                // cover: false,
 
-                loop: !app.isEmbed(),
+                loop: !app.isEmbed() ? true : app.getIframeAttributes().loop,
                 scalable: true,
                 endPage: hasEndpage,
                 controls: false,

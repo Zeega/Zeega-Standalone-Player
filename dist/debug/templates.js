@@ -113,54 +113,60 @@ __p+='';
  _.each( remixData.descendants, function( child ) { 
 ;__p+='\n        <li data-project-id="'+
 ( child.id )+
-'">\n            <a class="profile-link" href="#" ';
- if ( window != window.top ) { 
-;__p+=' target="blank" ';
+'">\n            <div class="remix-project-flag">\n\n            ';
+ if ( currentProject.remix.ancestors.length ) { 
+;__p+='\n                <div class="remix-bg remix-bg-half remix-bg-root" style="\n                    background-image: url('+
+( rootProject.cover_image )+
+');\n                    background-position: center;\n                    background-size: cover;\n                "></div>\n                <div class="remix-bg remix-bg-half remix-bg-current" style="\n                    background-image: url('+
+( currentProject.cover_image )+
+');\n                    background-position: center;\n                    background-size: cover;\n                "></div>\n            ';
+ } else { 
+;__p+='\n                <div class="remix-bg remix-bg-whole remix-bg-root" style="\n                    background-image: url('+
+( currentProject.cover_image )+
+');\n                    background-position: center;\n                    background-size: cover;\n                "></div>\n            ';
  } 
-;__p+=' data-bypass="true">\n                <div class="remix-project-flag"\n                        style="\n                            background-image: url('+
-( child.cover_image )+
-');\n                            background-size: cover;\n                            background-position: center\n                        "\n                    >\n                    <div class="text-overlay">Now Watching</div>\n                    <div class="text-overlay">';
- if ( remix.ancestors.length ) { 
+;__p+='\n\n                <div class="text-overlay">Now Watching</div>\n                <div class="text-overlay">';
+ if ( currentProject.remix.ancestors.length ) { 
 ;__p+='A Remix by';
  } else { 
 ;__p+='A Zeega by';
  } 
 ;__p+=' '+
-( user.display_name )+
-'</div>\n                </div>\n            </a>\n        </li>\n        ';
+( currentProject.user.display_name )+
+'</div>\n            </div>\n        </li>\n        ';
  }); 
 ;__p+='\n\n    </ul>\n</div>\n\n';
  } 
 ;__p+='\n\n<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
 ;__p+='profile/'+
-( userId )+
+( currentProject.userId )+
 '" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
 ;__p+=' data-bypass="true">\n                <div class="profile-token"\n                    style="\n                        background-image: url('+
-( user.thumbnail_url )+
+( currentProject.user.thumbnail_url )+
 ');\n                        background-size: cover;\n                    "\n                ></div>\n            </a>\n        </div>\n        <div class="right-col">\n            <div class="caption">'+
-( title )+
+( currentProject.title )+
 '</div>\n            <div class="username">\n                <a class="profile-name profile-link" href="';
  path 
 ;__p+='profile/'+
-( userId )+
+( currentProject.userId )+
 '" data-bypass="true" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
  } 
 ;__p+=' >\n                    '+
-( user.display_name )+
+( currentProject.user.display_name )+
 '\n                </a>\n\n                <span class="zeega-favorite_count">'+
 ( favorites )+
 '</span>\n               \n                <span class="zeega-views"> <i class="icon-play icon-white"></i> ';
- if ( !_.isNumber( views ) ) { views = 0 ;} 
+ if ( !_.isNumber( currentProject.views ) ) { currentProject.views = 0 ;} 
 ;__p+=''+
-( views )+
+( currentProject.views )+
 ' ';
- if ( views != 1 ) { 
+ if ( currentProject.views != 1 ) { 
 ;__p+='views';
  } else { 
 ;__p+='view';

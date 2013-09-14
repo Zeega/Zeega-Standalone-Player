@@ -2763,6 +2763,18 @@ a:active {
   float: left;
   opacity: 0.8;
 }
+.remix-meta .remix-bg {
+  position: absolute;
+  float: left;
+  height: 100%;
+  width: 100%;
+}
+.remix-meta .remix-bg.remix-bg-half {
+  width: 50%;
+}
+.remix-meta .remix-bg.remix-bg-half:nth-child(2) {
+  left: 50%;
+}
 .remix-meta .remix-trail {
   position: absolute;
   bottom: 5px;
@@ -2787,7 +2799,6 @@ a:active {
   bottom: 15px;
   z-index: 4;
   left: 20px;
-  padding: 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.75);
 }
 .remix-meta .remix-project-flag .text-overlay {
@@ -2795,9 +2806,11 @@ a:active {
   background: white;
   display: inline-block;
   padding: 2px;
-  margin-bottom: 5px;
+  margin: 10px 10px 5px 10px;
   font-family: "futura", sans-serif;
   font-size: 13px;
+  z-index: 2;
+  position: relative;
 }
 .ZEEGA-chrome-metablock {
   color: white;
@@ -3247,14 +3260,13 @@ a:active {
   text-align: center;
   font-size: 23px;
   background-color: orangered;
-  text-shadow: 0 0 5px white;
   color: white;
   border: 2px solid white;
+  text-shadow: none;
 }
 .endpage-embed-inner .btnz.watch-more {
   background-color: aquamarine;
   color: #333;
-  text-shadow: 0 0 5px #333;
 }
 .endpage-embed-inner .btnz.create-zeega {
   background-color: orangered;
@@ -3346,14 +3358,13 @@ a:active {
   text-align: center;
   font-size: 23px;
   background-color: orangered;
-  text-shadow: 0 0 5px white;
   color: white;
   border: 2px solid white;
+  text-shadow: none;
 }
 .endpage-embed-inner .btnz.watch-more {
   background-color: aquamarine;
   color: #333;
-  text-shadow: 0 0 5px #333;
 }
 .endpage-embed-inner .btnz.create-zeega {
   background-color: orangered;
