@@ -30,11 +30,8 @@ function( app, Player, PlayerUI, Analytics ) {
             loops = !app.isEmbed() ? true : app.getIframeAttributes().loop;
             hasEndpage = !loops && !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
 
-
-console.log("INIT PLAYER", loops, hasEndpage, app.getIframeAttributes(), projectData)
-
             app.player = new Player({
-                // debugEvents: true,
+//                 debugEvents: true,
 
                 loop: loops,
                 scalable: true,

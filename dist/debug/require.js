@@ -454,7 +454,7 @@ __p+='';
 '">\n            <div class="remix-project-flag">\n\n            ';
  if ( currentProject.remix.ancestors.length ) { 
 ;__p+='\n                <div class="remix-bg remix-bg-half remix-bg-root" style="\n                    background-image: url('+
-( rootProject.cover_image )+
+( previousProject.cover_image )+
 ');\n                    background-position: center;\n                    background-size: cover;\n                "></div>\n                <div class="remix-bg remix-bg-half remix-bg-current" style="\n                    background-image: url('+
 ( currentProject.cover_image )+
 ');\n                    background-position: center;\n                    background-size: cover;\n                "></div>\n            ';
@@ -39078,8 +39078,9 @@ function(app, Backbone) {
 
     Controls.View = Backbone.View.extend({
         
-        template: "app/templates/controls",
+        hasAdvanced: false,
 
+        template: "app/templates/controls",
         className: "ZEEGA-player-controls",
 
         initialize: function() {
@@ -39113,8 +39114,11 @@ function(app, Backbone) {
             if( next ) this.enableArrow("next");
             else this.disableArrow("next");
             
-            if ( prev ) this.enableArrow("prev");
-            else this.disableArrow("prev");
+            if ( this.hasAdvanced ) {
+                if ( prev ) this.enableArrow("prev");
+                else this.disableArrow("prev");
+            }
+            this.hasAdvanced = true;
         },
 
         enableArrow: function(className) {
@@ -39210,6 +39214,7 @@ function( app, CitationView, Backbone ) {
                     isEmbed: app.isEmbed(),
                     remixData: this.model.zeega.getRemixData(),
 
+                    previousProject: this.model.zeega.getPreviousProject() ? this.model.zeega.getPreviousProject().toJSON() : false,
                     currentProject: this.model.zeega.getCurrentProject().toJSON(),
                     rootProject: this.model.zeega.projects.at(0).toJSON()
                 },
@@ -40234,11 +40239,8 @@ function( app, Player, PlayerUI, Analytics ) {
             loops = !app.isEmbed() ? true : app.getIframeAttributes().loop;
             hasEndpage = !loops && !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
 
-
-console.log("INIT PLAYER", loops, hasEndpage, app.getIframeAttributes(), projectData)
-
             app.player = new Player({
-                // debugEvents: true,
+//                 debugEvents: true,
 
                 loop: loops,
                 scalable: true,

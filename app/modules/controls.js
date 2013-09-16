@@ -9,8 +9,9 @@ function(app, Backbone) {
 
     Controls.View = Backbone.View.extend({
         
-        template: "app/templates/controls",
+        hasAdvanced: false,
 
+        template: "app/templates/controls",
         className: "ZEEGA-player-controls",
 
         initialize: function() {
@@ -44,8 +45,11 @@ function(app, Backbone) {
             if( next ) this.enableArrow("next");
             else this.disableArrow("next");
             
-            if ( prev ) this.enableArrow("prev");
-            else this.disableArrow("prev");
+            if ( this.hasAdvanced ) {
+                if ( prev ) this.enableArrow("prev");
+                else this.disableArrow("prev");
+            }
+            this.hasAdvanced = true;
         },
 
         enableArrow: function(className) {

@@ -30,6 +30,7 @@ function( app, CitationView, Backbone ) {
                     isEmbed: app.isEmbed(),
                     remixData: this.model.zeega.getRemixData(),
 
+                    previousProject: this.model.zeega.getPreviousProject() ? this.model.zeega.getPreviousProject().toJSON() : false,
                     currentProject: this.model.zeega.getCurrentProject().toJSON(),
                     rootProject: this.model.zeega.projects.at(0).toJSON()
                 },

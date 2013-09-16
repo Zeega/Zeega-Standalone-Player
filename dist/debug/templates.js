@@ -116,7 +116,7 @@ __p+='';
 '">\n            <div class="remix-project-flag">\n\n            ';
  if ( currentProject.remix.ancestors.length ) { 
 ;__p+='\n                <div class="remix-bg remix-bg-half remix-bg-root" style="\n                    background-image: url('+
-( rootProject.cover_image )+
+( previousProject.cover_image )+
 ');\n                    background-position: center;\n                    background-size: cover;\n                "></div>\n                <div class="remix-bg remix-bg-half remix-bg-current" style="\n                    background-image: url('+
 ( currentProject.cover_image )+
 ');\n                    background-position: center;\n                    background-size: cover;\n                "></div>\n            ';
