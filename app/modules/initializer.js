@@ -65,19 +65,19 @@ function( app, Player, PlayerUI, Analytics ) {
 
         },
 
-        // setContextVariables: function() {
-        //     try {
-        //         app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
-        //     } catch ( err ) {
-        //         app.showChrome = false;
-        //     }
+        setContextVariables: function() {
+            try {
+                app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+            } catch ( err ) {
+                app.showChrome = false;
+            }
 
-        //     try {
-        //         app.showEndPage = ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
-        //     } catch ( err ) {
-        //         app.showEndPage = true;
-        //     }
-        // },
+            try {
+                app.showEndPage = ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
+            } catch ( err ) {
+                app.showEndPage = true;
+            }
+        },
 
         initAnalytics: function() {
             var context;
