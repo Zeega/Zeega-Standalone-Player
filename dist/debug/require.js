@@ -17313,16 +17313,22 @@ function( _App ) {
         root: "/",
 
         getIframeAttributes: _.memoize(function() {
+            console.log("iframe attr:", window == window.top)
             try {
+
+                console.log("try",window.frameElement.getAttribute("loop"))
                 if ( window != window.top ) {
+                    console.log('correct')
                     return {
                         hideChrome: window.frameElement.getAttribute("hideChrome") || false,
                         loop: window.frameElement.getAttribute("loop") || false
                     }
                 } else {
+                    console.log("WRONG")
                     return false;
                 }
             } catch ( err ) {
+                console.log("EROR",err)
                 return false
             }
         }),
