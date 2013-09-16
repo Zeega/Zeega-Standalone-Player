@@ -10,21 +10,16 @@ function( _App ) {
         root: "/",
 
         getIframeAttributes: _.memoize(function() {
-            console.log("iframe attr:", window == window.top)
             try {
-
                 if ( window != window.top ) {
-                    console.log('correct')
                     return {
-                        hideChrome: window.frameElement && window.frameElement.getAttribute("hideChrome"),
-                        loop: window.frameElement && window.frameElement.getAttribute("loop")
+                        hideChrome: window.frameElement ? ( window.frameElement.getAttribute("hideChrome") || true ) : true,
+                        loop: window.frameElement ? ( window.frameElement.getAttribute("loop") || false ) : false;
                     }
                 } else {
-                    console.log("WRONG")
                     return false;
                 }
             } catch ( err ) {
-                console.log("EROR",err)
                 return false
             }
         }),
