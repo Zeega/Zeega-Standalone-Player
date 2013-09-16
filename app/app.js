@@ -11,6 +11,11 @@ function( _App ) {
 
         getIframeAttributes: _.memoize(function() {
 
+            return {
+                    hideChrome: false,
+                    loop: true
+                };
+
             try {
                 if ( window != window.top ) {
                     return {

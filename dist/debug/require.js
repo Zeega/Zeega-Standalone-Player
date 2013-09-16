@@ -16327,6 +16327,7 @@ function( Spinner ) {
         },
 
         isEmbed: _.memoize(function() {
+            return true;
             return window != window.top;
         }),
 
@@ -17313,6 +17314,11 @@ function( _App ) {
         root: "/",
 
         getIframeAttributes: _.memoize(function() {
+
+            return {
+                    hideChrome: false,
+                    loop: true
+                };
 
             try {
                 if ( window != window.top ) {
@@ -40228,15 +40234,17 @@ function( app, Player, PlayerUI, Analytics ) {
         },
 
         initPlayer: function() {
-            var projectData, hasEndpage;
+            var projectData, loops, hasEndpage;
 
             projectData = _.isObject( window.projectJSON ) ? window.projectJSON : $.parseJSON( window.projectJSON ) || null;
-            hasEndpage = !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
+            
+            loops = !app.isEmbed() ? true : app.getIframeAttributes().loop;
+            hasEndpage = !loops && !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
 
             app.player = new Player({
                 // debugEvents: true,
 
-                loop: !app.isEmbed() ? true : app.getIframeAttributes().loop,
+                loop: loops,
                 scalable: true,
                 endPage: hasEndpage,
                 controls: false,
@@ -40268,19 +40276,19 @@ function( app, Player, PlayerUI, Analytics ) {
 
         },
 
-        setContextVariables: function() {
-            try {
-                app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
-            } catch ( err ) {
-                app.showChrome = false;
-            }
+        // setContextVariables: function() {
+        //     try {
+        //         app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");
+        //     } catch ( err ) {
+        //         app.showChrome = false;
+        //     }
 
-            try {
-                app.showEndPage = ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
-            } catch ( err ) {
-                app.showEndPage = true;
-            }
-        },
+        //     try {
+        //         app.showEndPage = ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
+        //     } catch ( err ) {
+        //         app.showEndPage = true;
+        //     }
+        // },
 
         initAnalytics: function() {
             var context;
