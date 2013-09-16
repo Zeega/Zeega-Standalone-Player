@@ -13,10 +13,6 @@ function( _App ) {
             console.log("iframe attr:", window == window.top)
             try {
 
-                // app.showEndPage = ( window == window.top ) || ( window.frameElement && window.frameElement.getAttribute("endpage"));
-
-
-                console.log("try",window.frameElement.getAttribute("loop"))
                 if ( window != window.top ) {
                     console.log('correct')
                     return {
