@@ -16327,7 +16327,6 @@ function( Spinner ) {
         },
 
         isEmbed: _.memoize(function() {
-            return true;
             return window != window.top;
         }),
 
@@ -17314,12 +17313,6 @@ function( _App ) {
         root: "/",
 
         getIframeAttributes: _.memoize(function() {
-
-            return {
-                    hideChrome: false,
-                    loop: true
-                };
-
             try {
                 if ( window != window.top ) {
                     return {
@@ -40276,6 +40269,7 @@ function( app, Player, PlayerUI, Analytics ) {
 
         },
 
+        // remove this thing
         setContextVariables: function() {
             try {
                 app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");

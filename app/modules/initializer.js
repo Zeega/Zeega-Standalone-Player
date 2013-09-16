@@ -65,6 +65,7 @@ function( app, Player, PlayerUI, Analytics ) {
 
         },
 
+        // remove this thing
         setContextVariables: function() {
             try {
                 app.showChrome = !window.frameElement || !window.frameElement.getAttribute("hidechrome");

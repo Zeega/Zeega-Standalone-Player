@@ -10,12 +10,6 @@ function( _App ) {
         root: "/",
 
         getIframeAttributes: _.memoize(function() {
-
-            return {
-                    hideChrome: false,
-                    loop: true
-                };
-
             try {
                 if ( window != window.top ) {
                     return {
