@@ -17314,7 +17314,7 @@ function( _App ) {
 
         getIframeAttributes: _.memoize(function() {
             console.log("iframe attr:", window == window.top)
-            try {
+            // try {
 
                 console.log("try",window.frameElement.getAttribute("loop"))
                 if ( window != window.top ) {
@@ -17327,10 +17327,10 @@ function( _App ) {
                     console.log("WRONG")
                     return false;
                 }
-            } catch ( err ) {
-                console.log("EROR",err)
-                return false
-            }
+            // } catch ( err ) {
+            //     console.log("EROR",err)
+            //     return false
+            // }
         }),
 
         Backbone: Backbone,
