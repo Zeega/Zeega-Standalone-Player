@@ -14,7 +14,7 @@ function( _App ) {
                 if ( window != window.top ) {
                     return {
                         hideChrome: window.frameElement ? ( window.frameElement.getAttribute("hideChrome") || true ) : true,
-                        loop: window.frameElement ? ( window.frameElement.getAttribute("loop") || false ) : false;
+                        loop: window.frameElement ? ( window.frameElement.getAttribute("loop") || false ) : false
                     }
                 } else {
                     return false;
