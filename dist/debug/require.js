@@ -465,7 +465,7 @@ __p+='';
  } 
 ;__p+='\n\n                <div class="text-overlay">Now Watching</div>\n                <div class="text-overlay">';
  if ( currentProject.remix.ancestors.length ) { 
-;__p+='A Remix by';
+;__p+='A reply by';
  } else { 
 ;__p+='A Zeega by';
  } 
@@ -477,8 +477,8 @@ __p+='';
  } 
 ;__p+='\n\n<div class="ZEEGA-chrome-metablock">\n    <div class="meta-inner">\n        <div class="left-col">\n            <a class="profile-link" href="';
  path 
-;__p+='profile/'+
-( currentProject.userId )+
+;__p+='@'+
+( currentProject.user.username )+
 '" ';
  if (window!=window.top) { 
 ;__p+=' target="blank" ';
@@ -561,7 +561,7 @@ __p+='\n';
  if (window!=window.top ) { 
 ;__p+=' target="blank" ';
  } 
-;__p+='><i class="icon-random icon-white"></i> <span class="content">remix</span></a>\n        </li>\n    ';
+;__p+='><i class="icon-comment icon-white"></i> <span class="content">reply</span></a>\n        </li>\n    ';
  } 
 ;__p+='\n    </ul>\n\n    <ul class ="share-network">\n        <li>\n            <a name="twitter" class="social-share-icon" href="'+
 ( share_links.twitter )+
