@@ -39048,7 +39048,6 @@ function( app, Backbone, Spinner ) {
         },
 
         onCanPlay: _.once(function() {
-            console.log("**ON CAN PLAY")
             app.spinStop();
             this.$el.fadeOut(function() {
                 this.remove();
