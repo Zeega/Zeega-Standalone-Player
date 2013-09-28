@@ -38991,7 +38991,7 @@ function( app, Backbone, Spinner ) {
 
     Loader.View = Backbone.View.extend({
 
-        MIN_LOAD_TIME: 50,//2000,
+        MIN_LOAD_TIME: 0,//2000,
         loadTimer: null,
         playerCanplay: false,
         isReady: false,
