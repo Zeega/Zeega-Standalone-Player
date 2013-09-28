@@ -31,7 +31,7 @@ function( app, Player, PlayerUI, Analytics ) {
             hasEndpage = !loops && !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
 
             app.player = new Player({
-//                 debugEvents: true,
+                 debugEvents: true,
 
                 loop: loops,
                 scalable: true,

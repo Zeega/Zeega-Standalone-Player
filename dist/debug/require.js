@@ -38991,7 +38991,7 @@ function( app, Backbone, Spinner ) {
 
     Loader.View = Backbone.View.extend({
 
-        MIN_LOAD_TIME: 2000,
+        MIN_LOAD_TIME: 50,//2000,
         loadTimer: null,
         playerCanplay: false,
         isReady: false,
@@ -39033,6 +39033,7 @@ function( app, Backbone, Spinner ) {
                 this.loadTimer = "done";
                 if ( this.playerCanplay ) {
                     this.onCanPlay();
+//                    this.onPlayerCanplay();
                 }
             }.bind( this ), this.MIN_LOAD_TIME );
 
@@ -39051,6 +39052,7 @@ function( app, Backbone, Spinner ) {
         },
 
         onCanPlay: _.once(function() {
+            console.log("**ON CAN PLAY")
             app.spinStop();
             this.$el.fadeOut(function() {
                 this.remove();
@@ -39088,6 +39090,7 @@ function(app, Backbone) {
         },
 
         onLoaderComplete: function() {
+            console.log("** LOADER COMPLETE")
             this.updateArrowState( this.model.zeega.getCurrentPage() );
             this.model.on("page:play", this.updateArrowState, this);
         },
@@ -40240,7 +40243,7 @@ function( app, Player, PlayerUI, Analytics ) {
             hasEndpage = !loops && !( projectData && projectData.project.remix.descendants.length ) && app.isEmbed();
 
             app.player = new Player({
-//                 debugEvents: true,
+                 debugEvents: true,
 
                 loop: loops,
                 scalable: true,

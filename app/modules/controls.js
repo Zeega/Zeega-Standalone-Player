@@ -19,6 +19,7 @@ function(app, Backbone) {
         },
 
         onLoaderComplete: function() {
+            console.log("** LOADER COMPLETE")
             this.updateArrowState( this.model.zeega.getCurrentPage() );
             this.model.on("page:play", this.updateArrowState, this);
         },
