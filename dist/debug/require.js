@@ -39738,7 +39738,7 @@ function(app, Backbone) {
                 this.show();
                 $(".btn-remix").addClass("remix-endpage");
                 $(".btn-remix i").addClass("icon-white");
-                $(".btn-remix .content").text("remix this Zeega");
+                $(".btn-remix .content").text("reply to this Zeega");
             }
         },
 
@@ -39746,7 +39746,7 @@ function(app, Backbone) {
             this.hide();
             $(".btn-remix").removeClass("remix-endpage");
             $(".btn-remix i").removeClass("icon-white");
-            $(".btn-remix .content").text("remix");
+            $(".btn-remix .content").text("reply");
         },
 
         show: function(){
