@@ -64,15 +64,15 @@ function(app, Backbone) {
             if ( !this.model.zeega.getNextPage() ) {
                 this.show();
                 $(".btn-remix").addClass("remix-endpage");
-                $(".btn-remix i").addClass("icon-white");
-                $(".btn-remix .content").text("reply to this Zeega");
+                _.delay(function() {
+                    $(".btn-remix .content").text("reply to this Zeega");
+                }, 300 );
             }
         },
 
         endPageExit: function() {
             this.hide();
             $(".btn-remix").removeClass("remix-endpage");
-            $(".btn-remix i").removeClass("icon-white");
             $(".btn-remix .content").text("reply");
         },
 
