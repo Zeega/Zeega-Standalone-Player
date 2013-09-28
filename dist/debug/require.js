@@ -446,7 +446,7 @@ this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
- if( remixData.remix && remixData.descendants && remixData.descendants.length ) { 
+ if( remixData.descendants.length ) { 
 ;__p+='\n\n<div class="remix-meta">\n    <!-- <span class="remix-tab"></span> -->\n    <ul class="remix-trail">\n        ';
  _.each( remixData.descendants, function( child ) { 
 ;__p+='\n        <li data-project-id="'+
@@ -36476,6 +36476,7 @@ function( app, PageModel, LayerCollection ) {
 
         model: PageModel,
         zeega: null,
+        remixPageMax: 5,
 
         initialize: function() {
             if ( this.zeega.get("mode") == "editor" ) {
@@ -37624,7 +37625,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         preloadNextZeega: function() {
             var remixData = this.getRemixData();
 
-            if ( remixData.remix && remixData.descendants && remixData.descendants.length && !this.waiting ) {
+            if ( remixData.descendants.length && !this.waiting ) {
                 var existingProjectIDs = _.difference( _.pluck( remixData.descendants, "id"), this.projects.pluck("id") );
                 
                 if ( existingProjectIDs.length ) {
@@ -37635,6 +37636,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
 
                     $.getJSON( projectUrl, function( data ) {
                         this._onDataLoaded( data );
+                        console.log("got json", data)
                         this.waiting = false;
                         this.emit("project:fetch_success");
                     }.bind(this));
