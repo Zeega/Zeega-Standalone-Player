@@ -446,7 +446,7 @@ this["JST"]["app/templates/menu-bar-bottom.html"] = function(obj){
 var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};
 with(obj||{}){
 __p+='';
- if( remixData.descendants.length ) { 
+ if( remixData.remix && remixData.descendants.length ) { 
 ;__p+='\n\n<div class="remix-meta">\n    <!-- <span class="remix-tab"></span> -->\n    <ul class="remix-trail">\n        ';
  _.each( remixData.descendants, function( child ) { 
 ;__p+='\n        <li data-project-id="'+
@@ -37624,7 +37624,7 @@ function( app, Parser, ProjectCollection, ProjectModel, PageCollection, PageMode
         preloadNextZeega: function() {
             var remixData = this.getRemixData();
 
-            if ( remixData.descendants.length && !this.waiting ) {
+            if ( remixData.remix && remixData.descendants.length && !this.waiting ) {
                 var existingProjectIDs = _.difference( _.pluck( remixData.descendants, "id"), this.projects.pluck("id") );
                 
                 if ( existingProjectIDs.length ) {
