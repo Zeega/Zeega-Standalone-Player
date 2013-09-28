@@ -38991,7 +38991,7 @@ function( app, Backbone, Spinner ) {
 
     Loader.View = Backbone.View.extend({
 
-        MIN_LOAD_TIME: 0,//2000,
+        MIN_LOAD_TIME: 2000,
         loadTimer: null,
         playerCanplay: false,
         isReady: false,
@@ -39001,7 +39001,7 @@ function( app, Backbone, Spinner ) {
 
         initialize: function() {
             if( window != window.top ){
-                this.MIN_LOAD_TIME =0;
+                this.MIN_LOAD_TIME = 50;
             }
             if ( this.model.ready ) {
                 this.onPlayerCanplay();
@@ -39015,10 +39015,7 @@ function( app, Backbone, Spinner ) {
                 var p = this.model.zeega.getCurrentProject();
                 var r = p.get("remix");
 
-                return _.extend({
-                        token_class: "poop" //r.remix && r.parent.id == r.root.id ? "two-up":
-                                        // r.remix ? "three-up" : ""
-                    },
+                return _.extend({},
                     app.metadata,
                     p.toJSON()
                 );
@@ -39033,7 +39030,6 @@ function( app, Backbone, Spinner ) {
                 this.loadTimer = "done";
                 if ( this.playerCanplay ) {
                     this.onCanPlay();
-//                    this.onPlayerCanplay();
                 }
             }.bind( this ), this.MIN_LOAD_TIME );
 
@@ -39090,7 +39086,6 @@ function(app, Backbone) {
         },
 
         onLoaderComplete: function() {
-            console.log("** LOADER COMPLETE")
             this.updateArrowState( this.model.zeega.getCurrentPage() );
             this.model.on("page:play", this.updateArrowState, this);
         },
